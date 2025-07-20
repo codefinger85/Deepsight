@@ -249,6 +249,37 @@ export default function TradingPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeSessionTrades, setActiveSessionTrades] = useState<Trade[]>([]);
 
+  // Auto-enter fullscreen mode to hide all browser UI
+  useEffect(() => {
+    const enterFullscreen = async () => {
+      try {
+        // Check if already in fullscreen
+        if (!document.fullscreenElement) {
+          await document.documentElement.requestFullscreen({ navigationUI: "hide" });
+          console.log('Trading tool entered fullscreen mode');
+        }
+      } catch (error) {
+        console.log('Fullscreen failed:', error);
+        // Fallback: Try clicking anywhere to trigger fullscreen
+        const handleClick = async () => {
+          try {
+            if (!document.fullscreenElement) {
+              await document.documentElement.requestFullscreen({ navigationUI: "hide" });
+              document.removeEventListener('click', handleClick);
+            }
+          } catch (err) {
+            console.log('Fullscreen on click failed:', err);
+          }
+        };
+        document.addEventListener('click', handleClick, { once: true });
+      }
+    };
+    
+    // Small delay to ensure page is fully loaded
+    const timer = setTimeout(enterFullscreen, 500);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Load active session ID from sessionStorage after mount
   useEffect(() => {
     const storedSessionId = sessionStorage.getItem(SESSION_STORAGE_KEY);

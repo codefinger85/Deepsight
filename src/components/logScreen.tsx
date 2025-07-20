@@ -104,7 +104,7 @@ export default function LogScreen({ sessions = [], onTradeDeleted }: LogScreenPr
   }, [sessions]);
 
   // Use React Query for persistent caching
-  const { data: sessionsWithTrades, isLoading: isLoadingData, error: dataError } = useSessionsWithTrades();
+  const { data: sessionsWithTrades, error: dataError } = useSessionsWithTrades();
   
   // Update local state when React Query data changes
   useEffect(() => {
@@ -126,8 +126,14 @@ export default function LogScreen({ sessions = [], onTradeDeleted }: LogScreenPr
         })
       );
       
+      // Convert trades data to match TradeData type
+      const convertedTrades: Record<string, TradeData[]> = {};
+      Object.entries(sessionsWithTrades.trades).forEach(([sessionId, trades]) => {
+        convertedTrades[sessionId] = trades.map(trade => trade as TradeData);
+      });
+      
       setLocalSessions(formattedSessions);
-      setSessionTrades(sessionsWithTrades.trades);
+      setSessionTrades(convertedTrades);
       setIsInitialLoad(false);
     }
   }, [sessionsWithTrades]);

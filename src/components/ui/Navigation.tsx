@@ -68,14 +68,6 @@ export default function Navigation({ hasActiveSession }: NavigationProps) {
         >
           Log
         </Link>
-        <Link
-          href="/trading/analyze"
-          className={`font-medium text-xs text-slate-400 hover:text-slate-700 transition-colors duration-200  ${
-            pathname === "/trading/analyze" ? "text-slate-700 underline" : ""
-          }`}
-        >
-          Analyze
-        </Link>
         
         </div>
       <Link
