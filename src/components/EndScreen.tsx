@@ -102,8 +102,8 @@ export default function EndScreen({ sessionId, onSessionEnd, initialTradesCount 
       sessionStorage.removeItem('tradeConfirmer_sessionId');
       sessionStorage.removeItem('tradeConfirmer_lastTrade');
       
-      // Navigate to start screen
-      window.location.href = '/';
+      // Navigate to trading tool start screen
+      window.location.href = '/trading';
     } catch (error) {
       console.error("Error deleting session:", error);
     }

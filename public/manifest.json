@@ -1,0 +1,32 @@
+{
+  "name": "Deepsight Trading Tool",
+  "short_name": "Deepsight",
+  "description": "Professional trading analysis tool",
+  "start_url": "/trading",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#1e293b",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable any"
+    },
+    {
+      "src": "/icon-512.png", 
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable any"
+    }
+  ],
+  "prefer_related_applications": false,
+  "categories": ["finance", "productivity", "business"],
+  "related_applications": [{
+    "platform": "webapp",
+    "url": "/manifest.json",
+    "id": "http://localhost:3000"
+  }]
+}

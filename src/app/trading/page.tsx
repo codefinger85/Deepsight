@@ -249,35 +249,26 @@ export default function TradingPage() {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [activeSessionTrades, setActiveSessionTrades] = useState<Trade[]>([]);
 
-  // Auto-enter fullscreen mode to hide all browser UI
+  // Force PWA window to 300px width
   useEffect(() => {
-    const enterFullscreen = async () => {
-      try {
-        // Check if already in fullscreen
-        if (!document.fullscreenElement) {
-          await document.documentElement.requestFullscreen({ navigationUI: "hide" });
-          console.log('Trading tool entered fullscreen mode');
+    // Check if running as PWA (standalone mode)
+    if (window.matchMedia('(display-mode: standalone)').matches) {
+      // Force resize to 300px width
+      window.resizeTo(300, window.screen.height);
+      
+      // Add resize listener to maintain 300px width
+      const handleResize = () => {
+        if (window.outerWidth !== 300) {
+          window.resizeTo(300, window.screen.height);
         }
-      } catch (error) {
-        console.log('Fullscreen failed:', error);
-        // Fallback: Try clicking anywhere to trigger fullscreen
-        const handleClick = async () => {
-          try {
-            if (!document.fullscreenElement) {
-              await document.documentElement.requestFullscreen({ navigationUI: "hide" });
-              document.removeEventListener('click', handleClick);
-            }
-          } catch (err) {
-            console.log('Fullscreen on click failed:', err);
-          }
-        };
-        document.addEventListener('click', handleClick, { once: true });
-      }
-    };
-    
-    // Small delay to ensure page is fully loaded
-    const timer = setTimeout(enterFullscreen, 500);
-    return () => clearTimeout(timer);
+      };
+      
+      window.addEventListener('resize', handleResize);
+      
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
   }, []);
 
   // Load active session ID from sessionStorage after mount
@@ -370,7 +361,7 @@ export default function TradingPage() {
   const currentSessionData = sessions.find(s => s.sessionId === activeSessionId);
 
   return (
-    <div>
+    <div style={{ maxWidth: '300px', margin: '0 auto', height: '100vh' }}>
       <Navigation hasActiveSession={!!activeSessionId} />
       
       {!activeSessionId ? (

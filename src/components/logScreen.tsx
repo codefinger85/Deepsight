@@ -408,7 +408,7 @@ export default function LogScreen({ sessions = [], onTradeDeleted }: LogScreenPr
                           onClick={() => {
                             setShowEndPrompt(false);
                             setSessionToEnd(null);
-                            window.location.href = '/';
+                            window.location.href = '/trading';
                           }}
                           className="w-[67px] flex justify-center items-center gap-2.5 bg-slate-800 hover:bg-slate-700 px-2.5 py-1.5 rounded-md transition-colors duration-200"
                         >

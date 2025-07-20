@@ -1,30 +1,76 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { ExternalLink, TrendingUp, Home, BarChart3, PieChart, FileText, Users, Settings, HelpCircle, Search } from "lucide-react";
+import { ExternalLink, TrendingUp, Home, BarChart3, PieChart, FileText, Users, Settings, HelpCircle, Search, Download } from "lucide-react";
 import MetricsCards from "@/components/dashboard/MetricsCards";
 import PerformanceChart from "@/components/dashboard/PerformanceChart";
 import SessionsTable from "@/components/dashboard/SessionsTable";
 
-// Function to open trading tool in popup window
-const openTradingTool = () => {
-  const width = 300;
-  const height = window.screen.height; // Full viewport height
-  const left = window.screen.width - width - 50; // Position on right side with margin
-  const top = 0;
-  
-  // Modern browsers ignore UI hiding parameters for security
-  // Use Chrome application mode for cleaner UI
-  const popup = window.open(
-    '/trading',
-    'trading-tool',
-    `width=${width},height=${height},left=${left},top=${top},scrollbars=yes,resizable=yes`
-  );
-  
-  // Focus the popup window
-  if (popup) {
-    popup.focus();
-  }
+// PWA Install functionality
+const usePWAInstall = () => {
+  const [installPrompt, setInstallPrompt] = useState<any>(null);
+  const [isInstalled, setIsInstalled] = useState(false);
+  const [canInstall, setCanInstall] = useState(false);
+
+  useEffect(() => {
+    // Check if PWA is already installed
+    const checkInstalled = async () => {
+      if ('getInstalledRelatedApps' in navigator) {
+        try {
+          const relatedApps = await (navigator as any).getInstalledRelatedApps();
+          setIsInstalled(relatedApps.length > 0);
+        } catch (error) {
+          console.log('getInstalledRelatedApps not available');
+        }
+      }
+    };
+
+    // Listen for the beforeinstallprompt event
+    const handleBeforeInstallPrompt = (e: any) => {
+      e.preventDefault();
+      setInstallPrompt(e);
+      setCanInstall(true);
+      setIsInstalled(false); // If this event fires, PWA is not installed
+    };
+
+    // Listen for app installation
+    const handleAppInstalled = () => {
+      setInstallPrompt(null);
+      setCanInstall(false);
+      setIsInstalled(true);
+    };
+
+    checkInstalled();
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const handleClick = async () => {
+    if (canInstall && installPrompt) {
+      // PWA can be installed - install it
+      const result = await installPrompt.prompt();
+      if (result.outcome === 'accepted') {
+        setInstallPrompt(null);
+        setCanInstall(false);
+        setIsInstalled(true);
+      }
+    } else if (isInstalled) {
+      // PWA is installed - open it
+      window.open('/trading', '_blank');
+    }
+  };
+
+  return {
+    isInstalled,
+    canInstall,
+    handleClick
+  };
 };
 
 const sidebarItems = [
@@ -41,6 +87,8 @@ const bottomSidebarItems = [
 ];
 
 export default function Dashboard() {
+  const { isInstalled, canInstall, handleClick } = usePWAInstall();
+
   return (
     <div className="min-h-screen bg-slate-50 flex">
       {/* Sidebar */}
@@ -144,11 +192,26 @@ export default function Dashboard() {
               
               <div className="flex items-center gap-3">
                 <Button 
-                  onClick={openTradingTool}
-                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-slate-900 text-white hover:bg-slate-800 px-3 py-2 gap-2"
+                  onClick={handleClick}
+                  disabled={!isInstalled && !canInstall}
+                  className="inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium transition-colors bg-slate-900 text-white hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed px-3 py-2 gap-2"
                 >
-                  <ExternalLink className="w-4 h-4" />
-                  <span>Open Trading Tool</span>
+                  {isInstalled ? (
+                    <>
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Open Trading Tool</span>
+                    </>
+                  ) : canInstall ? (
+                    <>
+                      <Download className="w-4 h-4" />
+                      <span>Install Trading Tool</span>
+                    </>
+                  ) : (
+                    <>
+                      <ExternalLink className="w-4 h-4" />
+                      <span>Trading Tool Unavailable</span>
+                    </>
+                  )}
                 </Button>
               </div>
             </div>
