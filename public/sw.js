@@ -1,4 +1,4 @@
-// Basic service worker for PWA
+// Service worker for PWA with proper fetch handler
 self.addEventListener('install', (event) => {
   console.log('Service worker installing...');
   self.skipWaiting();
@@ -10,6 +10,10 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-  // Let the browser handle all fetch requests normally
-  // This is a minimal service worker just to meet PWA requirements
+  // Required fetch handler for PWA installability
+  event.respondWith(
+    caches.match(event.request).then((response) => {
+      return response || fetch(event.request);
+    })
+  );
 });
