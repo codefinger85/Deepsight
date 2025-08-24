@@ -10,14 +10,26 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 
-export function SectionCards() {
+interface SectionCardsProps {
+  totalEarnings: number;
+  overallWinRate: number;
+  totalSessions: number;
+  totalTrades: number;
+}
+
+export function SectionCards({ 
+  totalEarnings = 0, 
+  overallWinRate = 0, 
+  totalSessions = 0, 
+  totalTrades = 0 
+}: SectionCardsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total Revenue</CardDescription>
+          <CardDescription>Total Earnings</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            $1,250.00
+            ${(totalEarnings || 0).toFixed(2)}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -37,9 +49,9 @@ export function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>New Customers</CardDescription>
+          <CardDescription>Overall Win Rate</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            1,234
+            {(overallWinRate || 0)}%
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -59,9 +71,9 @@ export function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Active Accounts</CardDescription>
+          <CardDescription>Total Sessions</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            45,678
+            {(totalSessions || 0).toLocaleString()}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
@@ -79,9 +91,9 @@ export function SectionCards() {
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Growth Rate</CardDescription>
+          <CardDescription>Total Trades</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            4.5%
+            {(totalTrades || 0).toLocaleString()}
           </CardTitle>
           <CardAction>
             <Badge variant="outline">

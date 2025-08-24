@@ -1,0 +1,59 @@
+import {
+  SidebarInset,
+  SidebarProvider,
+} from "@/components/ui/sidebar"
+import { AppSidebar } from "@/app/dashboard/components/app-sidebar"
+import { ChartAreaInteractive } from "@/app/dashboard/components/chart-area-interactive"
+import { DataTable } from "@/app/dashboard/components/data-table"
+import { SectionCards } from "@/app/dashboard/components/section-cards"
+import { SiteHeader } from "@/app/dashboard/components/site-header"
+import { 
+  getTotalEarnings, 
+  getOverallWinRate, 
+  getTotalSessions, 
+  getTotalTrades 
+} from "@/lib/database"
+
+import data from "./data.json"
+
+export default async function Page() {
+  // Fetch trading data from Supabase
+  const [totalEarnings, overallWinRate, totalSessions, totalTrades] = await Promise.all([
+    getTotalEarnings(),
+    getOverallWinRate(),
+    getTotalSessions(),
+    getTotalTrades(),
+  ]);
+
+  return (
+    <SidebarProvider
+        style={
+          {
+            "--sidebar-width": "calc(var(--spacing) * 64)",
+            "--header-height": "calc(var(--spacing) * 12 + 1px)",
+          } as React.CSSProperties
+        }
+      >
+        <AppSidebar variant="sidebar" />
+        <SidebarInset>
+          <SiteHeader />
+          <div className="flex flex-1 flex-col">
+            <div className="@container/main flex flex-1 flex-col gap-2">
+              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+                <SectionCards 
+                  totalEarnings={totalEarnings}
+                  overallWinRate={overallWinRate}
+                  totalSessions={totalSessions}
+                  totalTrades={totalTrades}
+                />
+                <div className="px-4 lg:px-6">
+                  <ChartAreaInteractive />
+                </div>
+                <DataTable data={data} />
+              </div>
+            </div>
+          </div>
+        </SidebarInset>
+      </SidebarProvider>
+  )
+}
