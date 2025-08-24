@@ -53,16 +53,15 @@ import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { toast } from "sonner"
 import { z } from "zod"
 
-import { useIsMobile } from "@/registry/new-york-v4/hooks/use-mobile"
-import { Badge } from "@/registry/new-york-v4/ui/badge"
-import { Button } from "@/registry/new-york-v4/ui/button"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
-} from "@/registry/new-york-v4/ui/chart"
-import { Checkbox } from "@/registry/new-york-v4/ui/checkbox"
+} from "@/components/ui/chart"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Drawer,
   DrawerClose,
@@ -72,7 +71,7 @@ import {
   DrawerHeader,
   DrawerTitle,
   DrawerTrigger,
-} from "@/registry/new-york-v4/ui/drawer"
+} from "@/components/ui/drawer"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -80,17 +79,17 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/registry/new-york-v4/ui/dropdown-menu"
-import { Input } from "@/registry/new-york-v4/ui/input"
-import { Label } from "@/registry/new-york-v4/ui/label"
+} from "@/components/ui/dropdown-menu"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/registry/new-york-v4/ui/select"
-import { Separator } from "@/registry/new-york-v4/ui/separator"
+} from "@/components/ui/select"
+import { Separator } from "@/components/ui/separator"
 import {
   Table,
   TableBody,
@@ -98,13 +97,13 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/registry/new-york-v4/ui/table"
+} from "@/components/ui/table"
 import {
   Tabs,
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/registry/new-york-v4/ui/tabs"
+} from "@/components/ui/tabs"
 
 export const schema = z.object({
   id: z.number(),
@@ -648,10 +647,8 @@ const chartConfig = {
 } satisfies ChartConfig
 
 function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
-  const isMobile = useIsMobile()
-
   return (
-    <Drawer direction={isMobile ? "bottom" : "right"}>
+    <Drawer direction="right">
       <DrawerTrigger asChild>
         <Button variant="link" className="text-foreground w-fit px-0 text-left">
           {item.header}
@@ -665,8 +662,7 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
           </DrawerDescription>
         </DrawerHeader>
         <div className="flex flex-col gap-4 overflow-y-auto px-4 text-sm">
-          {!isMobile && (
-            <>
+          <>
               <ChartContainer config={chartConfig}>
                 <AreaChart
                   accessibilityLayer
@@ -721,7 +717,6 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
               </div>
               <Separator />
             </>
-          )}
           <form className="flex flex-col gap-4">
             <div className="flex flex-col gap-3">
               <Label htmlFor="header">Header</Label>

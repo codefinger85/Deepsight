@@ -1,40 +1,18 @@
-import Image from "next/image"
-
 import {
   SidebarInset,
   SidebarProvider,
-} from "@/registry/new-york-v4/ui/sidebar"
-import { AppSidebar } from "@/app/(app)/examples/dashboard/components/app-sidebar"
-import { ChartAreaInteractive } from "@/app/(app)/examples/dashboard/components/chart-area-interactive"
-import { DataTable } from "@/app/(app)/examples/dashboard/components/data-table"
-import { SectionCards } from "@/app/(app)/examples/dashboard/components/section-cards"
-import { SiteHeader } from "@/app/(app)/examples/dashboard/components/site-header"
+} from "@/components/ui/sidebar"
+import { AppSidebar } from "@/app/shadcn dashboard/components/app-sidebar"
+import { ChartAreaInteractive } from "@/app/shadcn dashboard/components/chart-area-interactive"
+import { DataTable } from "@/app/shadcn dashboard/components/data-table"
+import { SectionCards } from "@/app/shadcn dashboard/components/section-cards"
+import { SiteHeader } from "@/app/shadcn dashboard/components/site-header"
 
 import data from "./data.json"
 
 export default function Page() {
   return (
-    <>
-      <div className="md:hidden">
-        <Image
-          src="/examples/dashboard-light.png"
-          width={1280}
-          height={843}
-          alt="Authentication"
-          className="block dark:hidden"
-          priority
-        />
-        <Image
-          src="/examples/dashboard-dark.png"
-          width={1280}
-          height={843}
-          alt="Authentication"
-          className="hidden dark:block"
-          priority
-        />
-      </div>
-      <SidebarProvider
-        className="hidden md:flex"
+    <SidebarProvider
         style={
           {
             "--sidebar-width": "calc(var(--spacing) * 64)",
@@ -58,6 +36,5 @@ export default function Page() {
           </div>
         </SidebarInset>
       </SidebarProvider>
-    </>
   )
 }
