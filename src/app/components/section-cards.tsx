@@ -17,6 +17,8 @@ interface SectionCardsProps {
   totalTrades: number;
   totalWinningTrades: number;
   totalLosingTrades: number;
+  sessionsAbove60: number;
+  sessionsBelow60: number;
 }
 
 export function SectionCards({ 
@@ -25,7 +27,9 @@ export function SectionCards({
   totalSessions = 0, 
   totalTrades = 0,
   totalWinningTrades = 0,
-  totalLosingTrades = 0
+  totalLosingTrades = 0,
+  sessionsAbove60 = 0,
+  sessionsBelow60 = 0
 }: SectionCardsProps) {
   return (
     <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
@@ -44,10 +48,10 @@ export function SectionCards({
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Trending up this month <IconTrendingUp className="size-4" />
+            Data is coming stay tuned.
           </div>
           <div className="text-muted-foreground">
-            Visitors for the last 6 months
+            Data is coming stay tuned.
           </div>
         </CardFooter>
       </Card>
@@ -66,10 +70,10 @@ export function SectionCards({
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Down 20% this period <IconTrendingDown className="size-4" />
+            Data is coming stay tuned.
           </div>
           <div className="text-muted-foreground">
-            Acquisition needs attention
+            Data is coming stay tuned.
           </div>
         </CardFooter>
       </Card>
@@ -88,9 +92,9 @@ export function SectionCards({
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Strong user retention <IconTrendingUp className="size-4" />
+            Sessions with more than 60% winrate: {sessionsAbove60.toLocaleString()}
           </div>
-          <div className="text-muted-foreground">Engagement exceed targets</div>
+          <div className="text-muted-foreground">Sessions with less than 60% winrate: {sessionsBelow60.toLocaleString()}</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
