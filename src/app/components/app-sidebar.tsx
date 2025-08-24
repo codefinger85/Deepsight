@@ -29,10 +29,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar"
-import { NavDocuments } from "@/app/dashboard/components/nav-documents"
-import { NavMain } from "@/app/dashboard/components/nav-main"
-import { NavSecondary } from "@/app/dashboard/components/nav-secondary"
-import { NavUser } from "@/app/dashboard/components/nav-user"
+import { NavDocuments } from "@/app/components/nav-documents"
+import { NavMain } from "@/app/components/nav-main"
+import { NavSecondary } from "@/app/components/nav-secondary"
+import { NavUser } from "@/app/components/nav-user"
 
 // Deepsight Icon Component
 const DeepsightIcon = ({ className }: { className?: string }) => (

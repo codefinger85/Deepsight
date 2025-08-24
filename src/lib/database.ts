@@ -121,6 +121,38 @@ export async function getAllSessions(): Promise<Session[]> {
   }
 }
 
+export async function getTotalWinningTrades(): Promise<number> {
+  try {
+    const { data, error } = await supabase
+      .from('trades')
+      .select('result')
+      .eq('result', 'win');
+
+    if (error) throw error;
+
+    return data?.length || 0;
+  } catch (error) {
+    console.error('Error getting total winning trades:', error);
+    return 0;
+  }
+}
+
+export async function getTotalLosingTrades(): Promise<number> {
+  try {
+    const { data, error } = await supabase
+      .from('trades')
+      .select('result')
+      .eq('result', 'loss');
+
+    if (error) throw error;
+
+    return data?.length || 0;
+  } catch (error) {
+    console.error('Error getting total losing trades:', error);
+    return 0;
+  }
+}
+
 // Get all trades for a specific session
 export async function getSessionTrades(sessionId: string): Promise<Trade[]> {
   try {
