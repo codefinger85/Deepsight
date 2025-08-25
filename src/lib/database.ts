@@ -66,6 +66,20 @@ export type ConfirmationAnalysis = {
   conf6: string;
 };
 
+export type TradesAnalysis = {
+  confirmation: string;
+  totalCount: number;
+  winCount: number;
+  lossCount: number;
+  winPercentage: number;
+  conf1: string;
+  conf2: string;
+  conf3: string;
+  conf4: string;
+  conf5: string;
+  conf6: string;
+};
+
 // Read-only functions for dashboard metrics
 export async function getTotalEarnings(): Promise<number> {
   try {
@@ -90,16 +104,17 @@ export async function getTotalEarnings(): Promise<number> {
 export async function getOverallWinRate(): Promise<number> {
   try {
     const { data, error } = await supabase
-      .from('sessions')
-      .select('winRate')
-      .not('winRate', 'is', null);
+      .from('trades')
+      .select('result');
 
     if (error) throw error;
 
     if (!data || data.length === 0) return 0;
 
-    const totalWinRate = data.reduce((sum, session) => sum + (parseFloat(session.winRate) || 0), 0);
-    return Math.round(totalWinRate / data.length);
+    const totalTrades = data.length;
+    const wins = data.filter(trade => trade.result === 'win').length;
+    
+    return Math.round((wins / totalTrades) * 100);
   } catch (error) {
     console.error('Error getting overall win rate:', error);
     return 0;
@@ -525,5 +540,110 @@ export async function getSessionTrades(sessionId: string): Promise<Trade[]> {
   } catch (error) {
     console.error('Error getting session trades:', error);
     return [];
+  }
+}
+
+export async function getTradesAnalysis(): Promise<TradesAnalysis[]> {
+  try {
+    const { data, error } = await supabase
+      .from('trades')
+      .select('confirmationsCount, result');
+
+    if (error) throw error;
+
+    // Initialize counters
+    const analysis = {
+      totalTrades: 0,
+      totalWins: 0,
+      totalLosses: 0,
+      conf1Wins: 0,
+      conf1Losses: 0,
+      conf2Wins: 0,
+      conf2Losses: 0,
+      conf3Wins: 0,
+      conf3Losses: 0,
+      conf4Wins: 0,
+      conf4Losses: 0,
+      conf5Wins: 0,
+      conf5Losses: 0,
+      conf6Wins: 0,
+      conf6Losses: 0,
+    };
+
+    // Process each trade
+    data?.forEach(trade => {
+      const { confirmationsCount, result } = trade;
+      const isWin = result === 'win';
+
+      analysis.totalTrades++;
+      
+      if (isWin) {
+        analysis.totalWins++;
+      } else {
+        analysis.totalLosses++;
+      }
+
+      // Count by confirmation level
+      switch (confirmationsCount) {
+        case 1:
+          if (isWin) analysis.conf1Wins++;
+          else analysis.conf1Losses++;
+          break;
+        case 2:
+          if (isWin) analysis.conf2Wins++;
+          else analysis.conf2Losses++;
+          break;
+        case 3:
+          if (isWin) analysis.conf3Wins++;
+          else analysis.conf3Losses++;
+          break;
+        case 4:
+          if (isWin) analysis.conf4Wins++;
+          else analysis.conf4Losses++;
+          break;
+        case 5:
+          if (isWin) analysis.conf5Wins++;
+          else analysis.conf5Losses++;
+          break;
+        case 6:
+          if (isWin) analysis.conf6Wins++;
+          else analysis.conf6Losses++;
+          break;
+      }
+    });
+
+    // Calculate win percentage
+    const winPercentage = analysis.totalTrades > 0 
+      ? Math.round((analysis.totalWins / analysis.totalTrades) * 100) 
+      : 0;
+
+    return [{
+      confirmation: "All Trades",
+      totalCount: analysis.totalTrades,
+      winCount: analysis.totalWins,
+      lossCount: analysis.totalLosses,
+      winPercentage,
+      conf1: `${analysis.conf1Wins}|${analysis.conf1Losses}`,
+      conf2: `${analysis.conf2Wins}|${analysis.conf2Losses}`,
+      conf3: `${analysis.conf3Wins}|${analysis.conf3Losses}`,
+      conf4: `${analysis.conf4Wins}|${analysis.conf4Losses}`,
+      conf5: `${analysis.conf5Wins}|${analysis.conf5Losses}`,
+      conf6: `${analysis.conf6Wins}|${analysis.conf6Losses}`,
+    }];
+  } catch (error) {
+    console.error('Error getting trades analysis:', error);
+    return [{
+      confirmation: "All Trades",
+      totalCount: 0,
+      winCount: 0,
+      lossCount: 0,
+      winPercentage: 0,
+      conf1: '0|0',
+      conf2: '0|0',
+      conf3: '0|0',
+      conf4: '0|0',
+      conf5: '0|0',
+      conf6: '0|0',
+    }];
   }
 }

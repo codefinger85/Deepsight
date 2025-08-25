@@ -38,6 +38,11 @@ import {
   Tag,
   UserCircle,
   X,
+  TrendingUp,
+  TrendingDown,
+  BarChart3,
+  Target,
+  Activity,
 } from "lucide-react";
 import { Dispatch, SetStateAction, useRef, useState, useEffect } from "react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -152,8 +157,39 @@ export enum DueDate {
   IN_3_MONTHS = "3 months from now",
 }
 
+// Trading-specific enums
+export enum PerformanceTier {
+  HIGH = "High (70%+)",
+  MEDIUM = "Medium (50-70%)",
+  LOW = "Low (<50%)",
+}
+
+export enum VolumeTier {
+  HIGH = "High Volume (50+)",
+  MEDIUM = "Medium Volume (20-50)",
+  LOW = "Low Volume (<20)",
+}
+
+export enum WinPercentageRange {
+  EXCELLENT = "90%+ (Excellent)",
+  VERY_HIGH = "80-90% (Very High)",
+  HIGH = "70-80% (High)",
+  GOOD = "60-70% (Good)",
+  AVERAGE = "50-60% (Average)",
+  POOR = "40-50% (Poor)",
+  VERY_POOR = "<40% (Very Poor)",
+}
+
+export enum TotalCountRange {
+  VERY_HIGH = "100+ trades",
+  HIGH = "50-100 trades",
+  MEDIUM = "20-50 trades",
+  LOW = "10-20 trades",
+  VERY_LOW = "<10 trades",
+}
+
 export type FilterOption = {
-  name: FilterType | Status | Assignee | Labels | Priority | DueDate;
+  name: FilterType | Status | Assignee | Labels | Priority | DueDate | PerformanceTier | VolumeTier | WinPercentageRange | TotalCountRange | string;
   icon: React.ReactNode | undefined;
   label?: string;
 };
@@ -168,7 +204,7 @@ export type Filter = {
 const FilterIcon = ({
   type,
 }: {
-  type: FilterType | Status | Assignee | Labels | Priority;
+  type: FilterType | Status | Assignee | Labels | Priority | PerformanceTier | VolumeTier | WinPercentageRange | TotalCountRange | string;
 }) => {
   switch (type) {
     case Assignee.ANDREW_LUO:
@@ -193,6 +229,17 @@ const FilterIcon = ({
       return <CalendarPlus className="size-3.5" />;
     case FilterType.UPDATED_DATE:
       return <CalendarSync className="size-3.5" />;
+    // Trading-specific filter type icons
+    case FilterType.CONFIRMATION_TYPE:
+      return <Tag className="size-3.5" />;
+    case FilterType.WIN_PERCENTAGE:
+      return <Target className="size-3.5" />;
+    case FilterType.TOTAL_COUNT:
+      return <BarChart3 className="size-3.5" />;
+    case FilterType.PERFORMANCE_TIER:
+      return <Activity className="size-3.5" />;
+    case FilterType.VOLUME_TIER:
+      return <SignalHigh className="size-3.5" />;
     case Status.BACKLOG:
       return <CircleDashed className="size-3.5 text-muted-foreground" />;
     case Status.TODO:
@@ -221,6 +268,44 @@ const FilterIcon = ({
       return <div className="bg-amber-400 rounded-full size-2.5" />;
     case Labels.RELEASE:
       return <div className="bg-green-400 rounded-full size-2.5" />;
+    // Performance tier icons
+    case PerformanceTier.HIGH:
+      return <TrendingUp className="size-3.5 text-green-600" />;
+    case PerformanceTier.MEDIUM:
+      return <Activity className="size-3.5 text-yellow-600" />;
+    case PerformanceTier.LOW:
+      return <TrendingDown className="size-3.5 text-red-600" />;
+    // Volume tier icons
+    case VolumeTier.HIGH:
+      return <SignalHigh className="size-3.5 text-blue-600" />;
+    case VolumeTier.MEDIUM:
+      return <SignalMedium className="size-3.5 text-blue-500" />;
+    case VolumeTier.LOW:
+      return <SignalLow className="size-3.5 text-blue-400" />;
+    // Win percentage range icons
+    case WinPercentageRange.EXCELLENT:
+    case WinPercentageRange.VERY_HIGH:
+      return <div className="bg-green-500 rounded-full size-2.5" />;
+    case WinPercentageRange.HIGH:
+    case WinPercentageRange.GOOD:
+      return <div className="bg-green-400 rounded-full size-2.5" />;
+    case WinPercentageRange.AVERAGE:
+      return <div className="bg-yellow-400 rounded-full size-2.5" />;
+    case WinPercentageRange.POOR:
+    case WinPercentageRange.VERY_POOR:
+      return <div className="bg-red-400 rounded-full size-2.5" />;
+    // Total count range icons
+    case TotalCountRange.VERY_HIGH:
+    case TotalCountRange.HIGH:
+      return <div className="bg-purple-500 rounded-full size-2.5" />;
+    case TotalCountRange.MEDIUM:
+      return <div className="bg-purple-400 rounded-full size-2.5" />;
+    case TotalCountRange.LOW:
+    case TotalCountRange.VERY_LOW:
+      return <div className="bg-purple-300 rounded-full size-2.5" />;
+    // Default for confirmation names
+    default:
+      return <Tag className="size-3.5 text-muted-foreground" />;
   }
 };
 
@@ -294,6 +379,35 @@ export const dateFilterOptions: FilterOption[] = Object.values(DueDate).map(
   })
 );
 
+// Trading-specific filter options
+export const performanceTierFilterOptions: FilterOption[] = Object.values(PerformanceTier).map(
+  (tier) => ({
+    name: tier,
+    icon: <FilterIcon type={tier} />,
+  })
+);
+
+export const volumeTierFilterOptions: FilterOption[] = Object.values(VolumeTier).map(
+  (tier) => ({
+    name: tier,
+    icon: <FilterIcon type={tier} />,
+  })
+);
+
+export const winPercentageRangeFilterOptions: FilterOption[] = Object.values(WinPercentageRange).map(
+  (range) => ({
+    name: range,
+    icon: <FilterIcon type={range} />,
+  })
+);
+
+export const totalCountRangeFilterOptions: FilterOption[] = Object.values(TotalCountRange).map(
+  (range) => ({
+    name: range,
+    icon: <FilterIcon type={range} />,
+  })
+);
+
 export const filterViewToFilterOptions: Record<FilterType, FilterOption[]> = {
   [FilterType.STATUS]: statusFilterOptions,
   [FilterType.ASSIGNEE]: assigneeFilterOptions,
@@ -302,6 +416,12 @@ export const filterViewToFilterOptions: Record<FilterType, FilterOption[]> = {
   [FilterType.DUE_DATE]: dateFilterOptions,
   [FilterType.CREATED_DATE]: dateFilterOptions,
   [FilterType.UPDATED_DATE]: dateFilterOptions,
+  // Trading-specific filters
+  [FilterType.CONFIRMATION_TYPE]: [], // Will be populated dynamically
+  [FilterType.PERFORMANCE_TIER]: performanceTierFilterOptions,
+  [FilterType.VOLUME_TIER]: volumeTierFilterOptions,
+  [FilterType.WIN_PERCENTAGE]: winPercentageRangeFilterOptions,
+  [FilterType.TOTAL_COUNT]: totalCountRangeFilterOptions,
 };
 
 const filterOperators = ({
@@ -338,6 +458,22 @@ const filterOperators = ({
         return [FilterOperator.IS, FilterOperator.IS_NOT];
       } else {
         return [FilterOperator.BEFORE, FilterOperator.AFTER];
+      }
+    // Trading-specific filter operators
+    case FilterType.CONFIRMATION_TYPE:
+      if (Array.isArray(filterValues) && filterValues.length > 1) {
+        return [FilterOperator.INCLUDE_ANY_OF, FilterOperator.EXCLUDE_ALL_OF];
+      } else {
+        return [FilterOperator.INCLUDE, FilterOperator.DO_NOT_INCLUDE];
+      }
+    case FilterType.PERFORMANCE_TIER:
+    case FilterType.VOLUME_TIER:
+    case FilterType.WIN_PERCENTAGE:
+    case FilterType.TOTAL_COUNT:
+      if (Array.isArray(filterValues) && filterValues.length > 1) {
+        return [FilterOperator.IS_ANY_OF, FilterOperator.IS_NOT];
+      } else {
+        return [FilterOperator.IS, FilterOperator.IS_NOT];
       }
     default:
       return [];
@@ -429,7 +565,9 @@ const FilterValueCombobox = ({
               </AnimatePresence>
             </div>
           )}
-          {filterValues?.length === 1
+          {filterValues?.length === 0
+            ? "Click to select"
+            : filterValues?.length === 1
             ? filterValues?.[0]
             : `${filterValues?.length} selected`}
         </div>
@@ -538,7 +676,7 @@ const FilterValueDateCombobox = ({
         className="rounded-none px-1.5 py-1 bg-muted hover:bg-muted/50 transition
   text-muted-foreground hover:text-primary shrink-0"
       >
-        {filterValues?.[0]}
+        {filterValues?.length === 0 ? "Click to select" : filterValues?.[0]}
       </PopoverTrigger>
       <PopoverContent className="w-fit p-0">
         <AnimateChangeInHeight>
@@ -602,7 +740,6 @@ export default function Filters({
   return (
     <div className="flex gap-2">
       {filters
-        .filter((filter) => filter.value?.length > 0)
         .map((filter) => (
           <div key={filter.id} className="flex gap-[1px] items-center text-xs">
             <div className="flex gap-1.5 shrink-0 rounded-l bg-muted px-1.5 py-1 items-center">

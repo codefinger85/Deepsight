@@ -14,6 +14,97 @@ import {
   IconPlus,
   IconTrendingUp,
 } from "@tabler/icons-react"
+import { PlusCircle, Target, Tag, BarChart3, Activity, SignalHigh } from "lucide-react"
+
+// Types for range analysis
+type RangeKey = 'conf1' | 'conf2' | 'conf3' | 'conf4' | 'conf5' | 'conf6';
+type RangeAnalysis = {
+  bestRanges: RangeKey[];
+  worstRanges: RangeKey[];
+};
+
+// Utility functions for range calculations
+const calculateRangeWinPercentage = (wins: number, losses: number): number => {
+  const total = wins + losses;
+  return total === 0 ? 0 : Math.round((wins / total) * 100);
+};
+
+const parseRangeData = (rangeValue: string): { wins: number; losses: number; total: number } => {
+  try {
+    const [winsStr, lossesStr] = rangeValue.split('|');
+    const wins = parseInt(winsStr) || 0;
+    const losses = parseInt(lossesStr) || 0;
+    return { wins, losses, total: wins + losses };
+  } catch {
+    return { wins: 0, losses: 0, total: 0 };
+  }
+};
+
+const findBestWorstRanges = (rowData: z.infer<typeof confirmationAnalysisSchema>): RangeAnalysis => {
+  const ranges: RangeKey[] = ['conf1', 'conf2', 'conf3', 'conf4', 'conf5', 'conf6'];
+  const rangePerformances = ranges
+    .map(range => {
+      const { wins, losses, total } = parseRangeData(rowData[range]);
+      const percentage = total > 0 ? calculateRangeWinPercentage(wins, losses) : null;
+      return { range, percentage, total };
+    })
+    .filter(item => item.total > 0 && item.percentage !== null); // Only consider ranges with data
+
+  if (rangePerformances.length === 0) {
+    return { bestRanges: [], worstRanges: [] };
+  }
+
+  const maxPercentage = Math.max(...rangePerformances.map(item => item.percentage!));
+  const minPercentage = Math.min(...rangePerformances.map(item => item.percentage!));
+
+  // Handle ties by including all ranges with the same percentage
+  const bestRanges = rangePerformances
+    .filter(item => item.percentage === maxPercentage)
+    .map(item => item.range);
+
+  const worstRanges = rangePerformances
+    .filter(item => item.percentage === minPercentage)
+    .map(item => item.range);
+
+  // Don't highlight if all ranges have the same performance
+  if (maxPercentage === minPercentage) {
+    return { bestRanges: [], worstRanges: [] };
+  }
+
+  return { bestRanges, worstRanges };
+};
+
+// Reusable range cell renderer following DRY principle
+const createRangeCell = (rangeKey: RangeKey) => {
+  const RangeCell = ({ row }: { row: Row<z.infer<typeof confirmationAnalysisSchema>> }) => {
+    const rangeValue = row.original[rangeKey];
+    const { wins, losses, total } = parseRangeData(rangeValue);
+    const percentage = calculateRangeWinPercentage(wins, losses);
+    const { bestRanges, worstRanges } = findBestWorstRanges(row.original);
+    
+    const isBest = bestRanges.includes(rangeKey);
+    const isWorst = worstRanges.includes(rangeKey);
+    const shouldBold = isBest || isWorst;
+
+    return (
+      <div className={`text-center text-sm ${shouldBold ? 'font-bold' : ''}`}>
+        <div>
+          <span className="text-green-600">{wins}</span>
+          <span className="text-gray-400">|</span>
+          <span className="text-red-600">{losses}</span>
+        </div>
+        {total > 0 && (
+          <div className="text-muted-foreground text-xs mt-0.5">
+            ({percentage}%)
+          </div>
+        )}
+      </div>
+    );
+  };
+  return RangeCell;
+};
+
+
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -32,7 +123,8 @@ import {
 import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { toast } from "sonner"
 import { z } from "zod"
-import { LossReasonAnalysis, WinningConfirmationAnalysis, ConfirmationAnalysis } from "@/lib/database"
+import { LossReasonAnalysis, WinningConfirmationAnalysis, ConfirmationAnalysis, TradesAnalysis } from "@/lib/database"
+import Filters, { Filter, FilterType, filterViewToFilterOptions, FilterOption, PerformanceTier, VolumeTier, WinPercentageRange, TotalCountRange } from "@/components/ui/filters"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -109,6 +201,20 @@ export const winningConfirmationSchema = z.object({
 })
 
 export const confirmationAnalysisSchema = z.object({
+  confirmation: z.string(),
+  totalCount: z.number(),
+  winCount: z.number(),
+  lossCount: z.number(),
+  winPercentage: z.number(),
+  conf1: z.string(),
+  conf2: z.string(),
+  conf3: z.string(),
+  conf4: z.string(),
+  conf5: z.string(),
+  conf6: z.string(),
+})
+
+export const tradesAnalysisSchema = z.object({
   confirmation: z.string(),
   totalCount: z.number(),
   winCount: z.number(),
@@ -327,95 +433,125 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
   {
     accessorKey: "conf1",
     header: () => <div className="text-center">1 Conf</div>,
-    cell: ({ row }) => {
-      const [wins, losses] = row.original.conf1.split('|');
-      return (
-        <div className="text-center text-sm">
-          <span className="text-green-600">{wins}</span>
-          <span className="text-gray-400">|</span>
-          <span className="text-red-600">{losses}</span>
-        </div>
-      );
-    },
+    cell: createRangeCell('conf1'),
   },
   {
     accessorKey: "conf2",
     header: () => <div className="text-center">2 Conf</div>,
-    cell: ({ row }) => {
-      const [wins, losses] = row.original.conf2.split('|');
-      return (
-        <div className="text-center text-sm">
-          <span className="text-green-600">{wins}</span>
-          <span className="text-gray-400">|</span>
-          <span className="text-red-600">{losses}</span>
-        </div>
-      );
-    },
+    cell: createRangeCell('conf2'),
   },
   {
     accessorKey: "conf3",
     header: () => <div className="text-center">3 Conf</div>,
-    cell: ({ row }) => {
-      const [wins, losses] = row.original.conf3.split('|');
-      return (
-        <div className="text-center text-sm">
-          <span className="text-green-600">{wins}</span>
-          <span className="text-gray-400">|</span>
-          <span className="text-red-600">{losses}</span>
-        </div>
-      );
-    },
+    cell: createRangeCell('conf3'),
   },
   {
     accessorKey: "conf4",
     header: () => <div className="text-center">4 Conf</div>,
-    cell: ({ row }) => {
-      const [wins, losses] = row.original.conf4.split('|');
-      return (
-        <div className="text-center text-sm">
-          <span className="text-green-600">{wins}</span>
-          <span className="text-gray-400">|</span>
-          <span className="text-red-600">{losses}</span>
-        </div>
-      );
-    },
+    cell: createRangeCell('conf4'),
   },
   {
     accessorKey: "conf5",
     header: () => <div className="text-center">5 Conf</div>,
+    cell: createRangeCell('conf5'),
+  },
+  {
+    accessorKey: "conf6",
+    header: () => <div className="text-center">6 Conf</div>,
+    cell: createRangeCell('conf6'),
+  },
+]
+
+const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] = [
+  {
+    accessorKey: "confirmation",
+    header: "Trades Analysis",
+    cell: ({ row }) => (
+      <div className="font-medium max-w-48">
+        {row.original.confirmation}
+      </div>
+    ),
+    enableHiding: false,
+  },
+  {
+    accessorKey: "totalCount",
+    header: () => <div className="text-center">Total</div>,
+    cell: ({ row }) => (
+      <div className="text-center font-medium">
+        {row.original.totalCount}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "winCount",
+    header: () => <div className="text-center">Wins</div>,
+    cell: ({ row }) => (
+      <div className="text-center text-green-600 font-medium">
+        {row.original.winCount}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "lossCount",
+    header: () => <div className="text-center">Losses</div>,
+    cell: ({ row }) => (
+      <div className="text-center text-red-600 font-medium">
+        {row.original.lossCount}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "winPercentage",
+    header: () => <div className="text-center">Win %</div>,
     cell: ({ row }) => {
-      const [wins, losses] = row.original.conf5.split('|');
+      const percentage = row.original.winPercentage;
       return (
-        <div className="text-center text-sm">
-          <span className="text-green-600">{wins}</span>
-          <span className="text-gray-400">|</span>
-          <span className="text-red-600">{losses}</span>
+        <div className={`text-center font-medium ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+          {percentage}%
         </div>
       );
     },
   },
   {
+    accessorKey: "conf1",
+    header: () => <div className="text-center">1 Conf</div>,
+    cell: createRangeCell('conf1'),
+  },
+  {
+    accessorKey: "conf2",
+    header: () => <div className="text-center">2 Conf</div>,
+    cell: createRangeCell('conf2'),
+  },
+  {
+    accessorKey: "conf3",
+    header: () => <div className="text-center">3 Conf</div>,
+    cell: createRangeCell('conf3'),
+  },
+  {
+    accessorKey: "conf4",
+    header: () => <div className="text-center">4 Conf</div>,
+    cell: createRangeCell('conf4'),
+  },
+  {
+    accessorKey: "conf5",
+    header: () => <div className="text-center">5 Conf</div>,
+    cell: createRangeCell('conf5'),
+  },
+  {
     accessorKey: "conf6",
     header: () => <div className="text-center">6 Conf</div>,
-    cell: ({ row }) => {
-      const [wins, losses] = row.original.conf6.split('|');
-      return (
-        <div className="text-center text-sm">
-          <span className="text-green-600">{wins}</span>
-          <span className="text-gray-400">|</span>
-          <span className="text-red-600">{losses}</span>
-        </div>
-      );
-    },
+    cell: createRangeCell('conf6'),
   },
 ]
 
 export function DataTable({
   lossReasonsData,
   confirmationAnalysisData,
+  tradesAnalysisData,
 }: {
   lossReasonsData: z.infer<typeof lossReasonSchema>[]
   confirmationAnalysisData: z.infer<typeof confirmationAnalysisSchema>[]
+  tradesAnalysisData: z.infer<typeof tradesAnalysisSchema>[]
 }) {
   const [activeTab, setActiveTab] = React.useState("outline")
   const [columnVisibility, setColumnVisibility] =
@@ -428,10 +564,121 @@ export function DataTable({
     pageIndex: 0,
     pageSize: 10,
   })
+  const [filters, setFilters] = React.useState<Filter[]>([])
+
+  // Generate confirmation type options from actual data
+  const confirmationTypeOptions: FilterOption[] = React.useMemo(() => {
+    const uniqueConfirmations = Array.from(new Set(confirmationAnalysisData.map(item => item.confirmation)))
+    return uniqueConfirmations.map(confirmation => ({
+      name: confirmation,
+      icon: <IconTrendingUp className="size-3.5 text-muted-foreground" />
+    }))
+  }, [confirmationAnalysisData])
+
+  // Update the filter options for confirmation types
+  React.useEffect(() => {
+    filterViewToFilterOptions[FilterType.CONFIRMATION_TYPE] = confirmationTypeOptions
+  }, [confirmationTypeOptions])
+
+  // Filter confirmation analysis data based on active filters
+  const filteredConfirmationData = React.useMemo(() => {
+    if (activeTab === "outline" || filters.length === 0) return confirmationAnalysisData
+    
+    return confirmationAnalysisData.filter(item => {
+      return filters.every(filter => {
+        // Skip filters with no values (they shouldn't filter anything)
+        if (!filter.value || filter.value.length === 0) return true
+        
+        switch (filter.type) {
+          case FilterType.CONFIRMATION_TYPE:
+            return filter.value.includes(item.confirmation)
+          case FilterType.WIN_PERCENTAGE:
+            return filter.value.some(range => {
+              switch (range) {
+                case WinPercentageRange.EXCELLENT:
+                  return item.winPercentage >= 90
+                case WinPercentageRange.VERY_HIGH:
+                  return item.winPercentage >= 80 && item.winPercentage < 90
+                case WinPercentageRange.HIGH:
+                  return item.winPercentage >= 70 && item.winPercentage < 80
+                case WinPercentageRange.GOOD:
+                  return item.winPercentage >= 60 && item.winPercentage < 70
+                case WinPercentageRange.AVERAGE:
+                  return item.winPercentage >= 50 && item.winPercentage < 60
+                case WinPercentageRange.POOR:
+                  return item.winPercentage >= 40 && item.winPercentage < 50
+                case WinPercentageRange.VERY_POOR:
+                  return item.winPercentage < 40
+                default:
+                  return false
+              }
+            })
+          case FilterType.TOTAL_COUNT:
+            return filter.value.some(range => {
+              switch (range) {
+                case TotalCountRange.VERY_HIGH:
+                  return item.totalCount >= 100
+                case TotalCountRange.HIGH:
+                  return item.totalCount >= 50 && item.totalCount < 100
+                case TotalCountRange.MEDIUM:
+                  return item.totalCount >= 20 && item.totalCount < 50
+                case TotalCountRange.LOW:
+                  return item.totalCount >= 10 && item.totalCount < 20
+                case TotalCountRange.VERY_LOW:
+                  return item.totalCount < 10
+                default:
+                  return false
+              }
+            })
+          case FilterType.PERFORMANCE_TIER:
+            return filter.value.some(tier => {
+              switch (tier) {
+                case PerformanceTier.HIGH:
+                  return item.winPercentage >= 70
+                case PerformanceTier.MEDIUM:
+                  return item.winPercentage >= 50 && item.winPercentage < 70
+                case PerformanceTier.LOW:
+                  return item.winPercentage < 50
+                default:
+                  return false
+              }
+            })
+          case FilterType.VOLUME_TIER:
+            return filter.value.some(tier => {
+              switch (tier) {
+                case VolumeTier.HIGH:
+                  return item.totalCount >= 50
+                case VolumeTier.MEDIUM:
+                  return item.totalCount >= 20 && item.totalCount < 50
+                case VolumeTier.LOW:
+                  return item.totalCount < 20
+                default:
+                  return false
+              }
+            })
+          default:
+            return true
+        }
+      })
+    })
+  }, [confirmationAnalysisData, filters, activeTab])
 
   // Determine which data and columns to use based on active tab
-  const currentData = activeTab === "outline" ? lossReasonsData : confirmationAnalysisData
-  const currentColumns = activeTab === "outline" ? lossReasonColumns : confirmationAnalysisColumns
+  const currentData = activeTab === "outline" 
+    ? lossReasonsData 
+    : activeTab === "past-performance" 
+    ? filteredConfirmationData
+    : activeTab === "trades"
+    ? tradesAnalysisData
+    : []
+  
+  const currentColumns = activeTab === "outline" 
+    ? lossReasonColumns 
+    : activeTab === "past-performance"
+    ? confirmationAnalysisColumns
+    : activeTab === "trades"
+    ? tradesAnalysisColumns
+    : []
 
   const table = useReactTable({
     data: currentData,
@@ -475,23 +722,107 @@ export function DataTable({
             <SelectValue placeholder="Select a view" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="outline">Most Common Loss Reasons</SelectItem>
-            <SelectItem value="past-performance">Confirmation Analysis</SelectItem>
-            <SelectItem value="key-personnel">Key Personnel</SelectItem>
+            <SelectItem value="outline">Loss reasons</SelectItem>
+            <SelectItem value="past-performance">Confirmations</SelectItem>
+            <SelectItem value="trades">Trades</SelectItem>
+            <SelectItem value="key-personnel">Days</SelectItem>
             <SelectItem value="focus-documents">Focus Documents</SelectItem>
           </SelectContent>
         </Select>
         <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-          <TabsTrigger value="outline">Most Common Loss Reasons</TabsTrigger>
-          <TabsTrigger value="past-performance">
-            Confirmation Analysis
-          </TabsTrigger>
+          <TabsTrigger value="outline">Loss reasons</TabsTrigger>
+          <TabsTrigger value="past-performance">Confirmations</TabsTrigger>
+          <TabsTrigger value="trades">Trades</TabsTrigger>
           <TabsTrigger value="key-personnel">
-            Key Personnel <Badge variant="secondary">2</Badge>
+            Days <Badge variant="secondary">2</Badge>
           </TabsTrigger>
           <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
+          {/* Add Filter button - Only show for Confirmations tab */}
+          {activeTab === "past-performance" && (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="gap-2">
+                  <PlusCircle className="size-4" />
+                  <span className="hidden lg:inline">Add Filter</span>
+                  <span className="lg:hidden">Filter</span>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56">
+                <DropdownMenuItem
+                  onClick={() => {
+                    const newFilter: Filter = {
+                      id: Math.random().toString(36).substr(2, 9),
+                      type: FilterType.CONFIRMATION_TYPE,
+                      operator: "include" as any,
+                      value: [],
+                    }
+                    setFilters(prev => [...prev, newFilter])
+                  }}
+                >
+                  <Tag className="size-4 mr-2" />
+                  Confirmation Type
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    const newFilter: Filter = {
+                      id: Math.random().toString(36).substr(2, 9),
+                      type: FilterType.WIN_PERCENTAGE,
+                      operator: "is" as any,
+                      value: [],
+                    }
+                    setFilters(prev => [...prev, newFilter])
+                  }}
+                >
+                  <Target className="size-4 mr-2" />
+                  Win Percentage
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    const newFilter: Filter = {
+                      id: Math.random().toString(36).substr(2, 9),
+                      type: FilterType.TOTAL_COUNT,
+                      operator: "is" as any,
+                      value: [],
+                    }
+                    setFilters(prev => [...prev, newFilter])
+                  }}
+                >
+                  <BarChart3 className="size-4 mr-2" />
+                  Total Count
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    const newFilter: Filter = {
+                      id: Math.random().toString(36).substr(2, 9),
+                      type: FilterType.PERFORMANCE_TIER,
+                      operator: "is" as any,
+                      value: [],
+                    }
+                    setFilters(prev => [...prev, newFilter])
+                  }}
+                >
+                  <Activity className="size-4 mr-2" />
+                  Performance Tier
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    const newFilter: Filter = {
+                      id: Math.random().toString(36).substr(2, 9),
+                      type: FilterType.VOLUME_TIER,
+                      operator: "is" as any,
+                      value: [],
+                    }
+                    setFilters(prev => [...prev, newFilter])
+                  }}
+                >
+                  <SignalHigh className="size-4 mr-2" />
+                  Volume Tier
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )}
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm">
@@ -527,6 +858,29 @@ export function DataTable({
           </DropdownMenu>
         </div>
       </div>
+
+      {/* Active Filters Display - Only show for Confirmations tab */}
+      {activeTab === "past-performance" && filters.length > 0 && (
+        <div className="px-4 lg:px-6">
+          <div className="flex items-center justify-between gap-4 pb-4">
+            <div className="flex items-center gap-2 flex-1">
+              <Filters filters={filters} setFilters={setFilters} />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setFilters([])}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Clear All
+              </Button>
+            </div>
+            <div className="text-sm text-muted-foreground">
+              {filters.length} filter{filters.length !== 1 ? 's' : ''} active
+            </div>
+          </div>
+        </div>
+      )}
+
       <TabsContent
         value="outline"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
@@ -568,7 +922,7 @@ export function DataTable({
                     colSpan={currentColumns.length}
                     className="h-24 text-center"
                   >
-                    {activeTab === "outline" ? "No loss reason data available." : "No confirmation analysis data available."}
+                    {activeTab === "outline" ? "No loss reason data available." : activeTab === "past-performance" ? "No confirmation analysis data available." : "No data available."}
                   </TableCell>
                 </TableRow>
               )}
@@ -577,7 +931,7 @@ export function DataTable({
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing {table.getFilteredRowModel().rows.length} {activeTab === "outline" ? "loss reasons" : "confirmations"}
+            Showing {table.getFilteredRowModel().rows.length} {activeTab === "outline" ? "loss reasons" : activeTab === "past-performance" ? "confirmations" : "trades"}
           </div>
           <div className="flex w-full items-center gap-8 lg:w-fit">
             <div className="hidden items-center gap-2 lg:flex">
@@ -777,8 +1131,64 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
+      <TabsContent
+        value="trades"
+        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+      >
+        <div className="overflow-hidden rounded-lg border">
+          <Table>
+            <TableHeader className="bg-muted sticky top-0 z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={currentColumns.length}
+                    className="h-24 text-center"
+                  >
+                    No trades data available.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex items-center justify-between px-4">
+          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+            Showing trades analysis
+          </div>
+        </div>
+      </TabsContent>
       <TabsContent value="key-personnel" className="flex flex-col px-4 lg:px-6">
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
+        <div className="flex items-center justify-center h-64 text-muted-foreground">
+          Days data coming soon
+        </div>
       </TabsContent>
       <TabsContent
         value="focus-documents"
