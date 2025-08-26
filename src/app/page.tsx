@@ -18,13 +18,14 @@ import {
   getSessionsBelow60Percent,
   getLossReasonsWithConfirmations,
   getConfirmationAnalysisWithCounts,
-  getTradesAnalysis
+  getTradesAnalysis,
+  getDayAnalysis
 } from "@/lib/database"
 
 
 export default async function Page() {
   // Fetch trading data from Supabase
-  const [totalEarnings, overallWinRate, totalSessions, totalTrades, totalWinningTrades, totalLosingTrades, sessionsAbove60, sessionsBelow60, lossReasonsData, confirmationAnalysisData, tradesAnalysisData] = await Promise.all([
+  const [totalEarnings, overallWinRate, totalSessions, totalTrades, totalWinningTrades, totalLosingTrades, sessionsAbove60, sessionsBelow60, lossReasonsData, confirmationAnalysisData, tradesAnalysisData, dayAnalysisData] = await Promise.all([
     getTotalEarnings(),
     getOverallWinRate(),
     getTotalSessions(),
@@ -36,6 +37,7 @@ export default async function Page() {
     getLossReasonsWithConfirmations(),
     getConfirmationAnalysisWithCounts(),
     getTradesAnalysis(),
+    getDayAnalysis(),
   ]);
 
   return (
@@ -70,6 +72,7 @@ export default async function Page() {
                   lossReasonsData={lossReasonsData}
                   confirmationAnalysisData={confirmationAnalysisData}
                   tradesAnalysisData={tradesAnalysisData}
+                  dayAnalysisData={dayAnalysisData}
                 />
               </div>
             </div>

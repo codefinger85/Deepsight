@@ -80,6 +80,14 @@ export type TradesAnalysis = {
   conf6: string;
 };
 
+export type DayAnalysis = {
+  dayOfWeek: string;
+  totalTrades: number;
+  winCount: number;
+  lossCount: number;
+  winPercentage: number;
+};
+
 // Read-only functions for dashboard metrics
 export async function getTotalEarnings(): Promise<number> {
   try {
@@ -645,5 +653,69 @@ export async function getTradesAnalysis(): Promise<TradesAnalysis[]> {
       conf5: '0|0',
       conf6: '0|0',
     }];
+  }
+}
+
+export async function getDayAnalysis(): Promise<DayAnalysis[]> {
+  try {
+    const { data, error } = await supabase
+      .from('trades')
+      .select('date, result');
+
+    if (error) throw error;
+
+    // Initialize day counters
+    const dayStats = {
+      Monday: { totalTrades: 0, winCount: 0, lossCount: 0 },
+      Tuesday: { totalTrades: 0, winCount: 0, lossCount: 0 },
+      Wednesday: { totalTrades: 0, winCount: 0, lossCount: 0 },
+      Thursday: { totalTrades: 0, winCount: 0, lossCount: 0 },
+      Friday: { totalTrades: 0, winCount: 0, lossCount: 0 },
+      Saturday: { totalTrades: 0, winCount: 0, lossCount: 0 },
+      Sunday: { totalTrades: 0, winCount: 0, lossCount: 0 },
+    };
+
+    // Process each trade
+    data?.forEach(trade => {
+      const date = new Date(trade.date);
+      const dayOfWeek = date.toLocaleDateString('en-US', { weekday: 'long' });
+      
+      if (dayStats[dayOfWeek as keyof typeof dayStats]) {
+        dayStats[dayOfWeek as keyof typeof dayStats].totalTrades++;
+        
+        if (trade.result === 'win') {
+          dayStats[dayOfWeek as keyof typeof dayStats].winCount++;
+        } else {
+          dayStats[dayOfWeek as keyof typeof dayStats].lossCount++;
+        }
+      }
+    });
+
+    // Convert to array format
+    const results: DayAnalysis[] = Object.entries(dayStats).map(([dayOfWeek, stats]) => ({
+      dayOfWeek,
+      totalTrades: stats.totalTrades,
+      winCount: stats.winCount,
+      lossCount: stats.lossCount,
+      winPercentage: stats.totalTrades > 0 
+        ? Math.round((stats.winCount / stats.totalTrades) * 100) 
+        : 0,
+    }));
+
+    // Return in weekday order
+    const dayOrder = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+    return dayOrder.map(day => results.find(result => result.dayOfWeek === day)!);
+
+  } catch (error) {
+    console.error('Error getting day analysis:', error);
+    return [
+      { dayOfWeek: 'Monday', totalTrades: 0, winCount: 0, lossCount: 0, winPercentage: 0 },
+      { dayOfWeek: 'Tuesday', totalTrades: 0, winCount: 0, lossCount: 0, winPercentage: 0 },
+      { dayOfWeek: 'Wednesday', totalTrades: 0, winCount: 0, lossCount: 0, winPercentage: 0 },
+      { dayOfWeek: 'Thursday', totalTrades: 0, winCount: 0, lossCount: 0, winPercentage: 0 },
+      { dayOfWeek: 'Friday', totalTrades: 0, winCount: 0, lossCount: 0, winPercentage: 0 },
+      { dayOfWeek: 'Saturday', totalTrades: 0, winCount: 0, lossCount: 0, winPercentage: 0 },
+      { dayOfWeek: 'Sunday', totalTrades: 0, winCount: 0, lossCount: 0, winPercentage: 0 },
+    ];
   }
 }

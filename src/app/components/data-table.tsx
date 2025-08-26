@@ -1,6 +1,83 @@
 "use client"
 
 import * as React from "react"
+
+// Fixed width styles
+const tableStyles = `
+  .fixed-width-table {
+    table-layout: fixed !important;
+    width: 100% !important;
+  }
+  
+  .fixed-width-table thead tr th:first-child,
+  .fixed-width-table tbody tr td:first-child {
+    width: 192px !important;
+    max-width: 192px !important;
+    min-width: 192px !important;
+    box-sizing: border-box !important;
+  }
+  
+  .fixed-width-table thead tr th:not(:first-child),
+  .fixed-width-table tbody tr td:not(:first-child) {
+    width: 60px !important;
+    max-width: 60px !important;
+    min-width: 60px !important;
+    box-sizing: border-box !important;
+  }
+
+  .trade-grid {
+    display: grid;
+    grid-template-columns: 1fr repeat(6, minmax(60px, 120px));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .grid-header {
+    background-color: hsl(var(--muted));
+    border-bottom: 1px solid hsl(var(--border));
+    border-right: 1px solid hsl(var(--border));
+    padding: 0.5rem;
+    font-medium: 500;
+    text-align: center;
+    font-size: 0.875rem;
+    color: hsl(var(--muted-foreground));
+  }
+  
+  .grid-header:first-child {
+    text-align: left;
+  }
+  
+  .grid-header:last-child {
+    border-right: none;
+  }
+  
+  .grid-cell {
+    border-bottom: 1px solid hsl(var(--border));
+    border-right: 1px solid hsl(var(--border));
+    padding: 0.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .grid-cell:first-child {
+    text-align: left;
+    justify-content: flex-start;
+    justify-self: start;
+    font-weight: 500;
+  }
+  
+  .grid-cell:last-child {
+    border-right: none;
+  }
+  
+  .grid-row:hover .grid-cell {
+    background-color: hsl(var(--muted) / 0.5);
+  }
+`
 import {
   IconChevronDown,
   IconChevronLeft,
@@ -18,17 +95,8 @@ import { PlusCircle, Target, Tag, BarChart3, Activity, SignalHigh } from "lucide
 
 // Types for range analysis
 type RangeKey = 'conf1' | 'conf2' | 'conf3' | 'conf4' | 'conf5' | 'conf6';
-type RangeAnalysis = {
-  bestRanges: RangeKey[];
-  worstRanges: RangeKey[];
-};
 
 // Utility functions for range calculations
-const calculateRangeWinPercentage = (wins: number, losses: number): number => {
-  const total = wins + losses;
-  return total === 0 ? 0 : Math.round((wins / total) * 100);
-};
-
 const parseRangeData = (rangeValue: string): { wins: number; losses: number; total: number } => {
   try {
     const [winsStr, lossesStr] = rangeValue.split('|');
@@ -40,61 +108,27 @@ const parseRangeData = (rangeValue: string): { wins: number; losses: number; tot
   }
 };
 
-const findBestWorstRanges = (rowData: z.infer<typeof confirmationAnalysisSchema>): RangeAnalysis => {
-  const ranges: RangeKey[] = ['conf1', 'conf2', 'conf3', 'conf4', 'conf5', 'conf6'];
-  const rangePerformances = ranges
-    .map(range => {
-      const { wins, losses, total } = parseRangeData(rowData[range]);
-      const percentage = total > 0 ? calculateRangeWinPercentage(wins, losses) : null;
-      return { range, percentage, total };
-    })
-    .filter(item => item.total > 0 && item.percentage !== null); // Only consider ranges with data
-
-  if (rangePerformances.length === 0) {
-    return { bestRanges: [], worstRanges: [] };
-  }
-
-  const maxPercentage = Math.max(...rangePerformances.map(item => item.percentage!));
-  const minPercentage = Math.min(...rangePerformances.map(item => item.percentage!));
-
-  // Handle ties by including all ranges with the same percentage
-  const bestRanges = rangePerformances
-    .filter(item => item.percentage === maxPercentage)
-    .map(item => item.range);
-
-  const worstRanges = rangePerformances
-    .filter(item => item.percentage === minPercentage)
-    .map(item => item.range);
-
-  // Don't highlight if all ranges have the same performance
-  if (maxPercentage === minPercentage) {
-    return { bestRanges: [], worstRanges: [] };
-  }
-
-  return { bestRanges, worstRanges };
+const calculateRangeWinPercentage = (wins: number, losses: number): number => {
+  const total = wins + losses;
+  return total === 0 ? 0 : Math.round((wins / total) * 100);
 };
 
-// Reusable range cell renderer following DRY principle
-const createRangeCell = (rangeKey: RangeKey) => {
-  const RangeCell = ({ row }: { row: Row<z.infer<typeof confirmationAnalysisSchema>> }) => {
+// Generic range cell renderer that works with both confirmation and trades analysis
+const createRangeCell = <T extends Record<RangeKey, string>>(rangeKey: RangeKey) => {
+  const RangeCell = ({ row }: { row: Row<T> }) => {
     const rangeValue = row.original[rangeKey];
     const { wins, losses, total } = parseRangeData(rangeValue);
     const percentage = calculateRangeWinPercentage(wins, losses);
-    const { bestRanges, worstRanges } = findBestWorstRanges(row.original);
-    
-    const isBest = bestRanges.includes(rangeKey);
-    const isWorst = worstRanges.includes(rangeKey);
-    const shouldBold = isBest || isWorst;
 
     return (
-      <div className={`text-center text-sm ${shouldBold ? 'font-bold' : ''}`}>
+      <div className="text-center text-sm w-20">
         <div>
           <span className="text-green-600">{wins}</span>
           <span className="text-gray-400">|</span>
           <span className="text-red-600">{losses}</span>
         </div>
         {total > 0 && (
-          <div className="text-muted-foreground text-xs mt-0.5">
+          <div className="text-muted-foreground text-[12px] mt-0.5">
             ({percentage}%)
           </div>
         )}
@@ -228,12 +262,22 @@ export const tradesAnalysisSchema = z.object({
   conf6: z.string(),
 })
 
+export const dayAnalysisSchema = z.object({
+  dayOfWeek: z.string(),
+  totalTrades: z.number(),
+  winCount: z.number(),
+  lossCount: z.number(),
+  winPercentage: z.number(),
+})
+
 const lossReasonColumns: ColumnDef<z.infer<typeof lossReasonSchema>>[] = [
   {
     accessorKey: "lossReason",
-    header: "Loss Reason",
+    header: ({ column }) => (
+      <div>Loss Reason</div>
+    ),
     cell: ({ row }) => (
-      <div className="font-medium max-w-48">
+      <div className="font-medium">
         {row.original.lossReason}
       </div>
     ),
@@ -383,9 +427,11 @@ const winningConfirmationColumns: ColumnDef<z.infer<typeof winningConfirmationSc
 const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysisSchema>>[] = [
   {
     accessorKey: "confirmation",
-    header: "Confirmation",
+    header: ({ column }) => (
+      <div className="w-48">Confirmation</div>
+    ),
     cell: ({ row }) => (
-      <div className="font-medium max-w-48">
+      <div className="font-medium max-w-48 w-48">
         {row.original.confirmation}
       </div>
     ),
@@ -393,38 +439,38 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
   },
   {
     accessorKey: "totalCount",
-    header: () => <div className="text-center">Total</div>,
+    header: () => <div className="text-center w-20">Total</div>,
     cell: ({ row }) => (
-      <div className="text-center font-medium">
+      <div className="text-center font-medium w-20">
         {row.original.totalCount}
       </div>
     ),
   },
   {
     accessorKey: "winCount",
-    header: () => <div className="text-center">Wins</div>,
+    header: () => <div className="text-center w-20">Wins</div>,
     cell: ({ row }) => (
-      <div className="text-center text-green-600 font-medium">
+      <div className="text-center text-green-600 font-medium w-20">
         {row.original.winCount}
       </div>
     ),
   },
   {
     accessorKey: "lossCount",
-    header: () => <div className="text-center">Losses</div>,
+    header: () => <div className="text-center w-20">Losses</div>,
     cell: ({ row }) => (
-      <div className="text-center text-red-600 font-medium">
+      <div className="text-center text-red-600 font-medium w-20">
         {row.original.lossCount}
       </div>
     ),
   },
   {
     accessorKey: "winPercentage",
-    header: () => <div className="text-center">Win %</div>,
+    header: () => <div className="text-center w-20">Win %</div>,
     cell: ({ row }) => {
       const percentage = row.original.winPercentage;
       return (
-        <div className={`text-center font-medium ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+        <div className={`text-center font-medium w-20 ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
           {percentage}%
         </div>
       );
@@ -432,32 +478,32 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
   },
   {
     accessorKey: "conf1",
-    header: () => <div className="text-center">1 Conf</div>,
+    header: () => <div className="text-center w-20">1 Conf</div>,
     cell: createRangeCell('conf1'),
   },
   {
     accessorKey: "conf2",
-    header: () => <div className="text-center">2 Conf</div>,
+    header: () => <div className="text-center w-20">2 Conf</div>,
     cell: createRangeCell('conf2'),
   },
   {
     accessorKey: "conf3",
-    header: () => <div className="text-center">3 Conf</div>,
+    header: () => <div className="text-center w-20">3 Conf</div>,
     cell: createRangeCell('conf3'),
   },
   {
     accessorKey: "conf4",
-    header: () => <div className="text-center">4 Conf</div>,
+    header: () => <div className="text-center w-20">4 Conf</div>,
     cell: createRangeCell('conf4'),
   },
   {
     accessorKey: "conf5",
-    header: () => <div className="text-center">5 Conf</div>,
+    header: () => <div className="text-center w-20">5 Conf</div>,
     cell: createRangeCell('conf5'),
   },
   {
     accessorKey: "conf6",
-    header: () => <div className="text-center">6 Conf</div>,
+    header: () => <div className="text-center w-20">6 Conf</div>,
     cell: createRangeCell('conf6'),
   },
 ]
@@ -465,9 +511,11 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
 const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] = [
   {
     accessorKey: "confirmation",
-    header: "Trades Analysis",
+    header: ({ column }) => (
+      <div className="w-48">Trades Analysis</div>
+    ),
     cell: ({ row }) => (
-      <div className="font-medium max-w-48">
+      <div className="font-medium max-w-48 w-48">
         {row.original.confirmation}
       </div>
     ),
@@ -475,38 +523,38 @@ const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] =
   },
   {
     accessorKey: "totalCount",
-    header: () => <div className="text-center">Total</div>,
+    header: () => <div className="text-center w-20">Total</div>,
     cell: ({ row }) => (
-      <div className="text-center font-medium">
+      <div className="text-center font-medium w-20">
         {row.original.totalCount}
       </div>
     ),
   },
   {
     accessorKey: "winCount",
-    header: () => <div className="text-center">Wins</div>,
+    header: () => <div className="text-center w-20">Wins</div>,
     cell: ({ row }) => (
-      <div className="text-center text-green-600 font-medium">
+      <div className="text-center text-green-600 font-medium w-20">
         {row.original.winCount}
       </div>
     ),
   },
   {
     accessorKey: "lossCount",
-    header: () => <div className="text-center">Losses</div>,
+    header: () => <div className="text-center w-20">Losses</div>,
     cell: ({ row }) => (
-      <div className="text-center text-red-600 font-medium">
+      <div className="text-center text-red-600 font-medium w-20">
         {row.original.lossCount}
       </div>
     ),
   },
   {
     accessorKey: "winPercentage",
-    header: () => <div className="text-center">Win %</div>,
+    header: () => <div className="text-center w-20">Win %</div>,
     cell: ({ row }) => {
       const percentage = row.original.winPercentage;
       return (
-        <div className={`text-center font-medium ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+        <div className={`text-center font-medium w-20 ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
           {percentage}%
         </div>
       );
@@ -514,33 +562,87 @@ const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] =
   },
   {
     accessorKey: "conf1",
-    header: () => <div className="text-center">1 Conf</div>,
+    header: () => <div className="text-center w-20">1 Conf</div>,
     cell: createRangeCell('conf1'),
   },
   {
     accessorKey: "conf2",
-    header: () => <div className="text-center">2 Conf</div>,
+    header: () => <div className="text-center w-20">2 Conf</div>,
     cell: createRangeCell('conf2'),
   },
   {
     accessorKey: "conf3",
-    header: () => <div className="text-center">3 Conf</div>,
+    header: () => <div className="text-center w-20">3 Conf</div>,
     cell: createRangeCell('conf3'),
   },
   {
     accessorKey: "conf4",
-    header: () => <div className="text-center">4 Conf</div>,
+    header: () => <div className="text-center w-20">4 Conf</div>,
     cell: createRangeCell('conf4'),
   },
   {
     accessorKey: "conf5",
-    header: () => <div className="text-center">5 Conf</div>,
+    header: () => <div className="text-center w-20">5 Conf</div>,
     cell: createRangeCell('conf5'),
   },
   {
     accessorKey: "conf6",
-    header: () => <div className="text-center">6 Conf</div>,
+    header: () => <div className="text-center w-20">6 Conf</div>,
     cell: createRangeCell('conf6'),
+  },
+]
+
+const dayAnalysisColumns: ColumnDef<z.infer<typeof dayAnalysisSchema>>[] = [
+  {
+    accessorKey: "dayOfWeek",
+    header: ({ column }) => (
+      <div className="w-48">Day of Week</div>
+    ),
+    cell: ({ row }) => (
+      <div className="font-medium w-48">
+        {row.original.dayOfWeek}
+      </div>
+    ),
+    enableHiding: false,
+  },
+  {
+    accessorKey: "totalTrades",
+    header: () => <div className="text-center w-20">Total Trades</div>,
+    cell: ({ row }) => (
+      <div className="text-center font-medium w-20">
+        {row.original.totalTrades}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "winCount",
+    header: () => <div className="text-center w-20">Wins</div>,
+    cell: ({ row }) => (
+      <div className="text-center text-green-600 font-medium w-20">
+        {row.original.winCount}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "lossCount",
+    header: () => <div className="text-center w-20">Losses</div>,
+    cell: ({ row }) => (
+      <div className="text-center text-red-600 font-medium w-20">
+        {row.original.lossCount}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "winPercentage",
+    header: () => <div className="text-center w-20">Win %</div>,
+    cell: ({ row }) => {
+      const percentage = row.original.winPercentage;
+      return (
+        <div className={`text-center font-medium w-20 ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+          {percentage}%
+        </div>
+      );
+    },
   },
 ]
 
@@ -548,10 +650,12 @@ export function DataTable({
   lossReasonsData,
   confirmationAnalysisData,
   tradesAnalysisData,
+  dayAnalysisData,
 }: {
   lossReasonsData: z.infer<typeof lossReasonSchema>[]
   confirmationAnalysisData: z.infer<typeof confirmationAnalysisSchema>[]
   tradesAnalysisData: z.infer<typeof tradesAnalysisSchema>[]
+  dayAnalysisData: z.infer<typeof dayAnalysisSchema>[]
 }) {
   const [activeTab, setActiveTab] = React.useState("outline")
   const [columnVisibility, setColumnVisibility] =
@@ -670,6 +774,10 @@ export function DataTable({
     ? filteredConfirmationData
     : activeTab === "trades"
     ? tradesAnalysisData
+    : activeTab === "trades2"
+    ? tradesAnalysisData
+    : activeTab === "days"
+    ? dayAnalysisData
     : []
   
   const currentColumns = activeTab === "outline" 
@@ -678,6 +786,10 @@ export function DataTable({
     ? confirmationAnalysisColumns
     : activeTab === "trades"
     ? tradesAnalysisColumns
+    : activeTab === "trades2"
+    ? tradesAnalysisColumns
+    : activeTab === "days"
+    ? dayAnalysisColumns
     : []
 
   const table = useReactTable({
@@ -704,11 +816,13 @@ export function DataTable({
 
 
   return (
-    <Tabs
-      defaultValue="outline"
-      onValueChange={setActiveTab}
-      className="w-full flex-col justify-start gap-6"
-    >
+    <>
+      <style dangerouslySetInnerHTML={{ __html: tableStyles }} />
+      <Tabs
+        defaultValue="outline"
+        onValueChange={setActiveTab}
+        className="w-full flex-col justify-start gap-6"
+      >
       <div className="flex items-center justify-between px-4 lg:px-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
@@ -725,18 +839,16 @@ export function DataTable({
             <SelectItem value="outline">Loss reasons</SelectItem>
             <SelectItem value="past-performance">Confirmations</SelectItem>
             <SelectItem value="trades">Trades</SelectItem>
-            <SelectItem value="key-personnel">Days</SelectItem>
-            <SelectItem value="focus-documents">Focus Documents</SelectItem>
+            <SelectItem value="trades2">Trades 2</SelectItem>
+            <SelectItem value="days">Days</SelectItem>
           </SelectContent>
         </Select>
         <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
           <TabsTrigger value="outline">Loss reasons</TabsTrigger>
           <TabsTrigger value="past-performance">Confirmations</TabsTrigger>
           <TabsTrigger value="trades">Trades</TabsTrigger>
-          <TabsTrigger value="key-personnel">
-            Days <Badge variant="secondary">2</Badge>
-          </TabsTrigger>
-          <TabsTrigger value="focus-documents">Focus Documents</TabsTrigger>
+          <TabsTrigger value="trades2">Trades 2</TabsTrigger>
+          <TabsTrigger value="days">Days</TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
           {/* Add Filter button - Only show for Confirmations tab */}
@@ -886,7 +998,7 @@ export function DataTable({
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
         <div className="overflow-hidden rounded-lg border">
-          <Table>
+          <Table className="fixed-width-table">
             <TableHeader className="bg-muted sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -1011,7 +1123,7 @@ export function DataTable({
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
         <div className="overflow-hidden rounded-lg border">
-          <Table>
+          <Table className="fixed-width-table">
             <TableHeader className="bg-muted sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -1136,7 +1248,7 @@ export function DataTable({
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
         <div className="overflow-hidden rounded-lg border">
-          <Table>
+          <Table className="fixed-width-table">
             <TableHeader className="bg-muted sticky top-0 z-10">
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow key={headerGroup.id}>
@@ -1185,18 +1297,127 @@ export function DataTable({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="key-personnel" className="flex flex-col px-4 lg:px-6">
-        <div className="flex items-center justify-center h-64 text-muted-foreground">
-          Days data coming soon
+      <TabsContent
+        value="trades2"
+        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+      >
+        <div className="trade-grid">
+          {/* Grid Headers */}
+          <div className="grid-header">Trades Analysis</div>
+          <div className="grid-header">Total</div>
+          <div className="grid-header">Wins</div>
+          <div className="grid-header">Losses</div>
+          <div className="grid-header">Win %</div>
+          <div className="grid-header">1 Conf</div>
+          <div className="grid-header">2 Conf</div>
+          
+          {/* Grid Data */}
+          {tradesAnalysisData.length > 0 ? (
+            tradesAnalysisData.map((row, index) => (
+              <React.Fragment key={index}>
+                <div className="grid-cell">{row.confirmation}</div>
+                <div className="grid-cell">{row.totalCount}</div>
+                <div className="grid-cell text-green-600 font-medium">{row.winCount}</div>
+                <div className="grid-cell text-red-600 font-medium">{row.lossCount}</div>
+                <div className={`grid-cell font-medium ${row.winPercentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+                  {row.winPercentage}%
+                </div>
+                <div className="grid-cell">
+                  <div className="text-sm">
+                    <div>
+                      <span className="text-green-600">{parseRangeData(row.conf1).wins}</span>
+                      <span className="text-gray-400">|</span>
+                      <span className="text-red-600">{parseRangeData(row.conf1).losses}</span>
+                    </div>
+                    {parseRangeData(row.conf1).total > 0 && (
+                      <div className="text-muted-foreground text-[12px] mt-0.5">
+                        ({calculateRangeWinPercentage(parseRangeData(row.conf1).wins, parseRangeData(row.conf1).losses)}%)
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="grid-cell">
+                  <div className="text-sm">
+                    <div>
+                      <span className="text-green-600">{parseRangeData(row.conf2).wins}</span>
+                      <span className="text-gray-400">|</span>
+                      <span className="text-red-600">{parseRangeData(row.conf2).losses}</span>
+                    </div>
+                    {parseRangeData(row.conf2).total > 0 && (
+                      <div className="text-muted-foreground text-[12px] mt-0.5">
+                        ({calculateRangeWinPercentage(parseRangeData(row.conf2).wins, parseRangeData(row.conf2).losses)}%)
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </React.Fragment>
+            ))
+          ) : (
+            <div className="grid-cell" style={{gridColumn: '1 / -1'}}>No trades data available.</div>
+          )}
+        </div>
+        <div className="flex items-center justify-between px-4">
+          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+            Showing trades analysis (CSS Grid)
+          </div>
         </div>
       </TabsContent>
       <TabsContent
-        value="focus-documents"
-        className="flex flex-col px-4 lg:px-6"
+        value="days"
+        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <div className="aspect-video w-full flex-1 rounded-lg border border-dashed"></div>
+        <div className="overflow-hidden rounded-lg border">
+          <Table className="fixed-width-table">
+            <TableHeader className="bg-muted sticky top-0 z-10">
+              {table.getHeaderGroups().map((headerGroup) => (
+                <TableRow key={headerGroup.id}>
+                  {headerGroup.headers.map((header) => {
+                    return (
+                      <TableHead key={header.id} colSpan={header.colSpan}>
+                        {header.isPlaceholder
+                          ? null
+                          : flexRender(
+                              header.column.columnDef.header,
+                              header.getContext()
+                            )}
+                      </TableHead>
+                    )
+                  })}
+                </TableRow>
+              ))}
+            </TableHeader>
+            <TableBody>
+              {table.getRowModel().rows?.length ? (
+                table.getRowModel().rows.map((row) => (
+                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
+                    {row.getVisibleCells().map((cell) => (
+                      <TableCell key={cell.id}>
+                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                      </TableCell>
+                    ))}
+                  </TableRow>
+                ))
+              ) : (
+                <TableRow>
+                  <TableCell
+                    colSpan={currentColumns.length}
+                    className="h-24 text-center"
+                  >
+                    No days data available.
+                  </TableCell>
+                </TableRow>
+              )}
+            </TableBody>
+          </Table>
+        </div>
+        <div className="flex items-center justify-between px-4">
+          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
+            Showing day-by-day analysis
+          </div>
+        </div>
       </TabsContent>
     </Tabs>
+    </>
   )
 }
 
