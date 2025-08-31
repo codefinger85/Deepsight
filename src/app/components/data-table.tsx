@@ -110,6 +110,10 @@ const tableStyles = `
   .grid-row:hover .grid-cell-data {
     background-color: hsl(var(--muted) / 0.5);
   }
+  
+  [hidden] {
+    display: none !important;
+  }
 `
 import {
   IconChevronDown,
@@ -852,7 +856,7 @@ export function DataTable({
         onValueChange={setActiveTab}
         className="w-full flex-col justify-start gap-6"
       >
-      <div className="flex items-center justify-between px-4 lg:px-6">
+      <div className="flex items-center justify-between px-4 lg:px-6 mb-6">
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
