@@ -852,7 +852,7 @@ export function DataTable({
     <>
       <style dangerouslySetInnerHTML={{ __html: tableStyles }} />
       <Tabs
-        defaultValue="outline"
+        defaultValue="trades"
         onValueChange={setActiveTab}
         className="w-full flex-col justify-start gap-6"
       >
@@ -860,7 +860,7 @@ export function DataTable({
         <Label htmlFor="view-selector" className="sr-only">
           View
         </Label>
-        <Select defaultValue="outline">
+        <Select defaultValue="trades">
           <SelectTrigger
             className="flex w-fit @4xl/main:hidden"
             size="sm"
@@ -869,16 +869,16 @@ export function DataTable({
             <SelectValue placeholder="Select a view" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="outline">Loss reasons</SelectItem>
-            <SelectItem value="past-performance">Confirmations</SelectItem>
             <SelectItem value="trades">Trades</SelectItem>
+            <SelectItem value="past-performance">Confirmations</SelectItem>
+            <SelectItem value="outline">Loss reasons</SelectItem>
             <SelectItem value="days">Days</SelectItem>
           </SelectContent>
         </Select>
         <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
-          <TabsTrigger value="outline">Loss reasons</TabsTrigger>
-          <TabsTrigger value="past-performance">Confirmations</TabsTrigger>
           <TabsTrigger value="trades">Trades</TabsTrigger>
+          <TabsTrigger value="past-performance">Confirmations</TabsTrigger>
+          <TabsTrigger value="outline">Loss reasons</TabsTrigger>
           <TabsTrigger value="days">Days</TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
