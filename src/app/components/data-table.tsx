@@ -33,6 +33,30 @@ const tableStyles = `
     overflow: hidden;
   }
   
+  .loss-grid {
+    display: grid;
+    grid-template-columns: 1fr repeat(7, minmax(80px, 120px));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .confirmation-grid {
+    display: grid;
+    grid-template-columns: 1fr repeat(10, minmax(80px, 120px));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
+  .day-grid {
+    display: grid;
+    grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
+    border: 1px solid hsl(var(--border));
+    border-radius: 0.5rem;
+    overflow: hidden;
+  }
+  
   .grid-header {
     background-color: hsl(var(--muted));
     border-bottom: 1px solid hsl(var(--border));
@@ -62,6 +86,7 @@ const tableStyles = `
     align-items: center;
     justify-content: flex-start;
     font-weight: 500;
+    min-height: 60px;
   }
   
   .grid-cell-data {
@@ -73,6 +98,7 @@ const tableStyles = `
     display: flex;
     align-items: center;
     justify-content: center;
+    min-height: 60px;
   }
   
   .grid-cell-name:last-child,
@@ -998,124 +1024,38 @@ export function DataTable({
         value="outline"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <div className="overflow-hidden rounded-lg border">
-          <Table className="fixed-width-table">
-            <TableHeader className="bg-muted sticky top-0 z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    )
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={currentColumns.length}
-                    className="h-24 text-center"
-                  >
-                    {activeTab === "outline" ? "No loss reason data available." : activeTab === "past-performance" ? "No confirmation analysis data available." : "No data available."}
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+        <div className="loss-grid">
+          {/* Grid Headers */}
+          <div className="grid-header">Loss Reason</div>
+          <div className="grid-header">Total</div>
+          <div className="grid-header">1 Conf</div>
+          <div className="grid-header">2 Conf</div>
+          <div className="grid-header">3 Conf</div>
+          <div className="grid-header">4 Conf</div>
+          <div className="grid-header">5 Conf</div>
+          <div className="grid-header">6 Conf</div>
+          
+          {/* Grid Data */}
+          {lossReasonsData.length > 0 ? (
+            lossReasonsData.map((row, index) => (
+              <React.Fragment key={index}>
+                <div className="grid-cell-name">{row.lossReason}</div>
+                <div className="grid-cell-data font-medium">{row.totalCount}</div>
+                <div className="grid-cell-data">{row.conf1}</div>
+                <div className="grid-cell-data">{row.conf2}</div>
+                <div className="grid-cell-data">{row.conf3}</div>
+                <div className="grid-cell-data">{row.conf4}</div>
+                <div className="grid-cell-data">{row.conf5}</div>
+                <div className="grid-cell-data">{row.conf6}</div>
+              </React.Fragment>
+            ))
+          ) : (
+            <div className="grid-cell-name" style={{gridColumn: '1 / -1'}}>No loss reason data available.</div>
+          )}
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing {table.getFilteredRowModel().rows.length} {activeTab === "outline" ? "loss reasons" : activeTab === "past-performance" ? "confirmations" : "trades"}
-          </div>
-          <div className="flex w-full items-center gap-8 lg:w-fit">
-            <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page" className="text-sm font-medium">
-                Rows per page
-              </Label>
-              <Select
-                value={`${table.getState().pagination.pageSize}`}
-                onValueChange={(value) => {
-                  table.setPageSize(Number(value))
-                }}
-              >
-                <SelectTrigger size="sm" className="w-20" id="rows-per-page">
-                  <SelectValue
-                    placeholder={table.getState().pagination.pageSize}
-                  />
-                </SelectTrigger>
-                <SelectContent side="top">
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                      {pageSize}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </div>
-            <div className="ml-auto flex items-center gap-2 lg:ml-0">
-              <Button
-                variant="outline"
-                className="hidden h-8 w-8 p-0 lg:flex"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to first page</span>
-                <IconChevronsLeft />
-              </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to previous page</span>
-                <IconChevronLeft />
-              </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to next page</span>
-                <IconChevronRight />
-              </Button>
-              <Button
-                variant="outline"
-                className="hidden size-8 lg:flex"
-                size="icon"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to last page</span>
-                <IconChevronsRight />
-              </Button>
-            </div>
+            Showing {lossReasonsData.length} loss reasons (CSS Grid)
           </div>
         </div>
       </TabsContent>
@@ -1123,124 +1063,172 @@ export function DataTable({
         value="past-performance"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <div className="overflow-hidden rounded-lg border">
-          <Table className="fixed-width-table">
-            <TableHeader className="bg-muted sticky top-0 z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    )
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={currentColumns.length}
-                    className="h-24 text-center"
-                  >
-                    No confirmation analysis data available.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+        <div className="confirmation-grid">
+          {/* Grid Headers */}
+          <div className="grid-header">Confirmation</div>
+          <div className="grid-header">Total</div>
+          <div className="grid-header">Wins</div>
+          <div className="grid-header">Losses</div>
+          <div className="grid-header">Win %</div>
+          <div className="grid-header">1 Conf</div>
+          <div className="grid-header">2 Conf</div>
+          <div className="grid-header">3 Conf</div>
+          <div className="grid-header">4 Conf</div>
+          <div className="grid-header">5 Conf</div>
+          <div className="grid-header">6 Conf</div>
+          
+          {/* Grid Data */}
+          {filteredConfirmationData.length > 0 ? (
+            filteredConfirmationData.map((row, index) => (
+              <React.Fragment key={index}>
+                <div className="grid-cell-name">{row.confirmation}</div>
+                <div className="grid-cell-data font-medium">{row.totalCount}</div>
+                <div className="grid-cell-data text-green-600 font-medium">{row.winCount}</div>
+                <div className="grid-cell-data text-red-600 font-medium">{row.lossCount}</div>
+                <div className={`grid-cell-data font-medium ${row.winPercentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+                  {row.winPercentage}%
+                </div>
+                <div className="grid-cell-data">
+                  <div className="text-center text-sm">
+                    {(() => {
+                      const { wins, losses, total } = parseRangeData(row.conf1);
+                      const percentage = calculateRangeWinPercentage(wins, losses);
+                      return (
+                        <div>
+                          <div>
+                            <span className="text-green-600">{wins}</span>
+                            <span className="text-gray-400">|</span>
+                            <span className="text-red-600">{losses}</span>
+                          </div>
+                          {total > 0 && (
+                            <div className="text-muted-foreground text-[12px] mt-0.5">
+                              ({percentage}%)
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+                <div className="grid-cell-data">
+                  <div className="text-center text-sm">
+                    {(() => {
+                      const { wins, losses, total } = parseRangeData(row.conf2);
+                      const percentage = calculateRangeWinPercentage(wins, losses);
+                      return (
+                        <div>
+                          <div>
+                            <span className="text-green-600">{wins}</span>
+                            <span className="text-gray-400">|</span>
+                            <span className="text-red-600">{losses}</span>
+                          </div>
+                          {total > 0 && (
+                            <div className="text-muted-foreground text-[12px] mt-0.5">
+                              ({percentage}%)
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+                <div className="grid-cell-data">
+                  <div className="text-center text-sm">
+                    {(() => {
+                      const { wins, losses, total } = parseRangeData(row.conf3);
+                      const percentage = calculateRangeWinPercentage(wins, losses);
+                      return (
+                        <div>
+                          <div>
+                            <span className="text-green-600">{wins}</span>
+                            <span className="text-gray-400">|</span>
+                            <span className="text-red-600">{losses}</span>
+                          </div>
+                          {total > 0 && (
+                            <div className="text-muted-foreground text-[12px] mt-0.5">
+                              ({percentage}%)
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+                <div className="grid-cell-data">
+                  <div className="text-center text-sm">
+                    {(() => {
+                      const { wins, losses, total } = parseRangeData(row.conf4);
+                      const percentage = calculateRangeWinPercentage(wins, losses);
+                      return (
+                        <div>
+                          <div>
+                            <span className="text-green-600">{wins}</span>
+                            <span className="text-gray-400">|</span>
+                            <span className="text-red-600">{losses}</span>
+                          </div>
+                          {total > 0 && (
+                            <div className="text-muted-foreground text-[12px] mt-0.5">
+                              ({percentage}%)
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+                <div className="grid-cell-data">
+                  <div className="text-center text-sm">
+                    {(() => {
+                      const { wins, losses, total } = parseRangeData(row.conf5);
+                      const percentage = calculateRangeWinPercentage(wins, losses);
+                      return (
+                        <div>
+                          <div>
+                            <span className="text-green-600">{wins}</span>
+                            <span className="text-gray-400">|</span>
+                            <span className="text-red-600">{losses}</span>
+                          </div>
+                          {total > 0 && (
+                            <div className="text-muted-foreground text-[12px] mt-0.5">
+                              ({percentage}%)
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+                <div className="grid-cell-data">
+                  <div className="text-center text-sm">
+                    {(() => {
+                      const { wins, losses, total } = parseRangeData(row.conf6);
+                      const percentage = calculateRangeWinPercentage(wins, losses);
+                      return (
+                        <div>
+                          <div>
+                            <span className="text-green-600">{wins}</span>
+                            <span className="text-gray-400">|</span>
+                            <span className="text-red-600">{losses}</span>
+                          </div>
+                          {total > 0 && (
+                            <div className="text-muted-foreground text-[12px] mt-0.5">
+                              ({percentage}%)
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })()}
+                  </div>
+                </div>
+              </React.Fragment>
+            ))
+          ) : (
+            <div className="grid-cell-name" style={{gridColumn: '1 / -1'}}>No confirmation analysis data available.</div>
+          )}
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing {table.getFilteredRowModel().rows.length} confirmations
-          </div>
-          <div className="flex w-full items-center gap-8 lg:w-fit">
-            <div className="hidden items-center gap-2 lg:flex">
-              <Label htmlFor="rows-per-page-2" className="text-sm font-medium">
-                Rows per page
-              </Label>
-              <Select
-                value={`${table.getState().pagination.pageSize}`}
-                onValueChange={(value) => {
-                  table.setPageSize(Number(value))
-                }}
-              >
-                <SelectTrigger size="sm" className="w-20" id="rows-per-page-2">
-                  <SelectValue
-                    placeholder={table.getState().pagination.pageSize}
-                  />
-                </SelectTrigger>
-                <SelectContent side="top">
-                  {[10, 20, 30, 40, 50].map((pageSize) => (
-                    <SelectItem key={pageSize} value={`${pageSize}`}>
-                      {pageSize}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="flex w-fit items-center justify-center text-sm font-medium">
-              Page {table.getState().pagination.pageIndex + 1} of{" "}
-              {table.getPageCount()}
-            </div>
-            <div className="ml-auto flex items-center gap-2 lg:ml-0">
-              <Button
-                variant="outline"
-                className="hidden h-8 w-8 p-0 lg:flex"
-                onClick={() => table.setPageIndex(0)}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to first page</span>
-                <IconChevronsLeft />
-              </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.previousPage()}
-                disabled={!table.getCanPreviousPage()}
-              >
-                <span className="sr-only">Go to previous page</span>
-                <IconChevronLeft />
-              </Button>
-              <Button
-                variant="outline"
-                className="size-8"
-                size="icon"
-                onClick={() => table.nextPage()}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to next page</span>
-                <IconChevronRight />
-              </Button>
-              <Button
-                variant="outline"
-                className="hidden size-8 lg:flex"
-                size="icon"
-                onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-                disabled={!table.getCanNextPage()}
-              >
-                <span className="sr-only">Go to last page</span>
-                <IconChevronsRight />
-              </Button>
-            </div>
+            Showing {filteredConfirmationData.length} confirmations (CSS Grid)
           </div>
         </div>
       </TabsContent>
@@ -1323,53 +1311,34 @@ export function DataTable({
         value="days"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
-        <div className="overflow-hidden rounded-lg border">
-          <Table className="fixed-width-table">
-            <TableHeader className="bg-muted sticky top-0 z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    )
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={currentColumns.length}
-                    className="h-24 text-center"
-                  >
-                    No days data available.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
+        <div className="day-grid">
+          {/* Grid Headers */}
+          <div className="grid-header">Day of Week</div>
+          <div className="grid-header">Total Trades</div>
+          <div className="grid-header">Wins</div>
+          <div className="grid-header">Losses</div>
+          <div className="grid-header">Win %</div>
+          
+          {/* Grid Data */}
+          {dayAnalysisData.length > 0 ? (
+            dayAnalysisData.map((row, index) => (
+              <React.Fragment key={index}>
+                <div className="grid-cell-name">{row.dayOfWeek}</div>
+                <div className="grid-cell-data font-medium">{row.totalTrades}</div>
+                <div className="grid-cell-data text-green-600 font-medium">{row.winCount}</div>
+                <div className="grid-cell-data text-red-600 font-medium">{row.lossCount}</div>
+                <div className={`grid-cell-data font-medium ${row.winPercentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+                  {row.winPercentage}%
+                </div>
+              </React.Fragment>
+            ))
+          ) : (
+            <div className="grid-cell-name" style={{gridColumn: '1 / -1'}}>No days data available.</div>
+          )}
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing day-by-day analysis
+            Showing {dayAnalysisData.length} days (CSS Grid)
           </div>
         </div>
       </TabsContent>
