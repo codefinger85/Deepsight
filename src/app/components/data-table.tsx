@@ -781,8 +781,6 @@ export function DataTable({
     ? filteredConfirmationData
     : activeTab === "trades"
     ? tradesAnalysisData
-    : activeTab === "trades2"
-    ? tradesAnalysisData
     : activeTab === "days"
     ? dayAnalysisData
     : []
@@ -792,8 +790,6 @@ export function DataTable({
     : activeTab === "past-performance"
     ? confirmationAnalysisColumns
     : activeTab === "trades"
-    ? tradesAnalysisColumns
-    : activeTab === "trades2"
     ? tradesAnalysisColumns
     : activeTab === "days"
     ? dayAnalysisColumns
@@ -846,7 +842,6 @@ export function DataTable({
             <SelectItem value="outline">Loss reasons</SelectItem>
             <SelectItem value="past-performance">Confirmations</SelectItem>
             <SelectItem value="trades">Trades</SelectItem>
-            <SelectItem value="trades2">Trades 2</SelectItem>
             <SelectItem value="days">Days</SelectItem>
           </SelectContent>
         </Select>
@@ -854,7 +849,6 @@ export function DataTable({
           <TabsTrigger value="outline">Loss reasons</TabsTrigger>
           <TabsTrigger value="past-performance">Confirmations</TabsTrigger>
           <TabsTrigger value="trades">Trades</TabsTrigger>
-          <TabsTrigger value="trades2">Trades 2</TabsTrigger>
           <TabsTrigger value="days">Days</TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
@@ -1252,60 +1246,6 @@ export function DataTable({
       </TabsContent>
       <TabsContent
         value="trades"
-        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
-      >
-        <div className="overflow-hidden rounded-lg border">
-          <Table className="fixed-width-table">
-            <TableHeader className="bg-muted sticky top-0 z-10">
-              {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <TableHead key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder
-                          ? null
-                          : flexRender(
-                              header.column.columnDef.header,
-                              header.getContext()
-                            )}
-                      </TableHead>
-                    )
-                  })}
-                </TableRow>
-              ))}
-            </TableHeader>
-            <TableBody>
-              {table.getRowModel().rows?.length ? (
-                table.getRowModel().rows.map((row) => (
-                  <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
-                    {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
-                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                      </TableCell>
-                    ))}
-                  </TableRow>
-                ))
-              ) : (
-                <TableRow>
-                  <TableCell
-                    colSpan={currentColumns.length}
-                    className="h-24 text-center"
-                  >
-                    No trades data available.
-                  </TableCell>
-                </TableRow>
-              )}
-            </TableBody>
-          </Table>
-        </div>
-        <div className="flex items-center justify-between px-4">
-          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing trades analysis
-          </div>
-        </div>
-      </TabsContent>
-      <TabsContent
-        value="trades2"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
         <div className="trade-grid">
