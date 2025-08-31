@@ -27,7 +27,7 @@ const tableStyles = `
 
   .trade-grid {
     display: grid;
-    grid-template-columns: 1fr repeat(6, minmax(60px, 120px));
+    grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
     border: 1px solid hsl(var(--border));
     border-radius: 0.5rem;
     overflow: hidden;
@@ -52,7 +52,19 @@ const tableStyles = `
     border-right: none;
   }
   
-  .grid-cell {
+  .grid-cell-name {
+    border-bottom: 1px solid hsl(var(--border));
+    border-right: 1px solid hsl(var(--border));
+    padding: 0.5rem;
+    text-align: left;
+    font-size: 0.875rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    font-weight: 500;
+  }
+  
+  .grid-cell-data {
     border-bottom: 1px solid hsl(var(--border));
     border-right: 1px solid hsl(var(--border));
     padding: 0.5rem;
@@ -63,18 +75,13 @@ const tableStyles = `
     justify-content: center;
   }
   
-  .grid-cell:first-child {
-    text-align: left;
-    justify-content: flex-start;
-    justify-self: start;
-    font-weight: 500;
-  }
-  
-  .grid-cell:last-child {
+  .grid-cell-name:last-child,
+  .grid-cell-data:last-child {
     border-right: none;
   }
   
-  .grid-row:hover .grid-cell {
+  .grid-row:hover .grid-cell-name,
+  .grid-row:hover .grid-cell-data {
     background-color: hsl(var(--muted) / 0.5);
   }
 `
@@ -1303,57 +1310,67 @@ export function DataTable({
       >
         <div className="trade-grid">
           {/* Grid Headers */}
-          <div className="grid-header">Trades Analysis</div>
+          <div className="grid-header">Analysis</div>
           <div className="grid-header">Total</div>
           <div className="grid-header">Wins</div>
           <div className="grid-header">Losses</div>
           <div className="grid-header">Win %</div>
-          <div className="grid-header">1 Conf</div>
-          <div className="grid-header">2 Conf</div>
           
           {/* Grid Data */}
           {tradesAnalysisData.length > 0 ? (
-            tradesAnalysisData.map((row, index) => (
-              <React.Fragment key={index}>
-                <div className="grid-cell">{row.confirmation}</div>
-                <div className="grid-cell">{row.totalCount}</div>
-                <div className="grid-cell text-green-600 font-medium">{row.winCount}</div>
-                <div className="grid-cell text-red-600 font-medium">{row.lossCount}</div>
-                <div className={`grid-cell font-medium ${row.winPercentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
-                  {row.winPercentage}%
-                </div>
-                <div className="grid-cell">
-                  <div className="text-sm">
-                    <div>
-                      <span className="text-green-600">{parseRangeData(row.conf1).wins}</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-red-600">{parseRangeData(row.conf1).losses}</span>
-                    </div>
-                    {parseRangeData(row.conf1).total > 0 && (
+            (() => {
+              const allTradesRow = tradesAnalysisData[0];
+              const totalAllTrades = allTradesRow.totalCount;
+              
+              // Create rows for All Trades + each confirmation level
+              const rows = [
+                {
+                  name: "All Trades",
+                  total: allTradesRow.totalCount,
+                  percentage: 100,
+                  wins: allTradesRow.winCount,
+                  losses: allTradesRow.lossCount,
+                  winRate: allTradesRow.winPercentage
+                }
+              ];
+              
+              // Add confirmation level rows
+              for (let i = 1; i <= 6; i++) {
+                const confKey = `conf${i}` as keyof typeof allTradesRow;
+                const confData = parseRangeData(allTradesRow[confKey]);
+                const percentage = totalAllTrades > 0 ? Math.round((confData.total / totalAllTrades) * 100) : 0;
+                
+                rows.push({
+                  name: `${i} Confirmation${i > 1 ? 's' : ''}`,
+                  total: confData.total,
+                  percentage,
+                  wins: confData.wins,
+                  losses: confData.losses,
+                  winRate: calculateRangeWinPercentage(confData.wins, confData.losses)
+                });
+              }
+              
+              return rows.map((row, index) => (
+                <React.Fragment key={index}>
+                  <div className="grid-cell-name">{row.name}</div>
+                  <div className="grid-cell-data">
+                    <div className="text-sm">
+                      <div>{row.total}</div>
                       <div className="text-muted-foreground text-[12px] mt-0.5">
-                        ({calculateRangeWinPercentage(parseRangeData(row.conf1).wins, parseRangeData(row.conf1).losses)}%)
+                        ({row.percentage}%)
                       </div>
-                    )}
-                  </div>
-                </div>
-                <div className="grid-cell">
-                  <div className="text-sm">
-                    <div>
-                      <span className="text-green-600">{parseRangeData(row.conf2).wins}</span>
-                      <span className="text-gray-400">|</span>
-                      <span className="text-red-600">{parseRangeData(row.conf2).losses}</span>
                     </div>
-                    {parseRangeData(row.conf2).total > 0 && (
-                      <div className="text-muted-foreground text-[12px] mt-0.5">
-                        ({calculateRangeWinPercentage(parseRangeData(row.conf2).wins, parseRangeData(row.conf2).losses)}%)
-                      </div>
-                    )}
                   </div>
-                </div>
-              </React.Fragment>
-            ))
+                  <div className="grid-cell-data text-green-600 font-medium">{row.wins}</div>
+                  <div className="grid-cell-data text-red-600 font-medium">{row.losses}</div>
+                  <div className={`grid-cell-data font-medium ${row.winRate >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+                    {row.winRate}%
+                  </div>
+                </React.Fragment>
+              ));
+            })()
           ) : (
-            <div className="grid-cell" style={{gridColumn: '1 / -1'}}>No trades data available.</div>
+            <div className="grid-cell-name" style={{gridColumn: '1 / -1'}}>No trades data available.</div>
           )}
         </div>
         <div className="flex items-center justify-between px-4">
