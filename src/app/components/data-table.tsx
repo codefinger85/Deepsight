@@ -1074,7 +1074,7 @@ export function DataTable({
           </div>
           
           {/* Scrollable Content */}
-          <div className="max-h-[400px] overflow-y-auto scrollbar-hide">
+          <div className="max-h-[420px] overflow-y-auto scrollbar-hide">
             <div className="loss-grid-content">
               {lossReasonsData.length > 0 ? (
                 lossReasonsData.map((row, index) => (
@@ -1122,7 +1122,7 @@ export function DataTable({
           </div>
           
           {/* Scrollable Content */}
-          <div className="max-h-[400px] overflow-y-auto scrollbar-hide">
+          <div className="max-h-[420px] overflow-y-auto scrollbar-hide">
             <div className="confirmation-grid-content">
               {filteredConfirmationData.length > 0 ? (
                 filteredConfirmationData.map((row, index) => (
@@ -1376,7 +1376,7 @@ export function DataTable({
           </div>
           
           {/* Scrollable Content */}
-          <div className="max-h-[400px] overflow-y-auto scrollbar-hide">
+          <div className="max-h-[420px] overflow-y-auto scrollbar-hide">
             <div className="day-grid-content">
               {dayAnalysisData.length > 0 ? (
                 dayAnalysisData.map((row, index) => (
