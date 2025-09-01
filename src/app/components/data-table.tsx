@@ -90,18 +90,24 @@ const tableStyles = `
   }
   
   .grid-header {
-    background-color: hsl(var(--muted));
+    background-color: rgb(248 250 252);
     border-bottom: 1px solid hsl(var(--border));
     border-right: 1px solid hsl(var(--border));
+    height: 50px;
     padding: 0.5rem;
-    font-medium: 500;
+    font-weight: 600;
     text-align: center;
-    font-size: 0.875rem;
-    color: hsl(var(--muted-foreground));
+    font-size: 0.75rem;
+    color: rgb(51 65 85);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .grid-header:first-child {
     text-align: left;
+    justify-content: flex-start;
+    padding-left: 16px;
   }
   
   .grid-header:last-child {
@@ -119,6 +125,7 @@ const tableStyles = `
     justify-content: flex-start;
     font-weight: 500;
     min-height: 60px;
+    padding-left: 16px;
   }
   
   .grid-cell-data {
@@ -726,7 +733,7 @@ export function DataTable({
   tradesAnalysisData: z.infer<typeof tradesAnalysisSchema>[]
   dayAnalysisData: z.infer<typeof dayAnalysisSchema>[]
 }) {
-  const [activeTab, setActiveTab] = React.useState("outline")
+  const [activeTab, setActiveTab] = React.useState("trades")
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -755,7 +762,7 @@ export function DataTable({
 
   // Filter confirmation analysis data based on active filters
   const filteredConfirmationData = React.useMemo(() => {
-    if (activeTab === "outline" || filters.length === 0) return confirmationAnalysisData
+    if (activeTab !== "confirmations" || filters.length === 0) return confirmationAnalysisData
     
     return confirmationAnalysisData.filter(item => {
       return filters.every(filter => {
@@ -837,9 +844,9 @@ export function DataTable({
   }, [confirmationAnalysisData, filters, activeTab])
 
   // Determine which data and columns to use based on active tab
-  const currentData = activeTab === "outline" 
+  const currentData = activeTab === "loss-reasons" 
     ? lossReasonsData 
-    : activeTab === "past-performance" 
+    : activeTab === "confirmations" 
     ? filteredConfirmationData
     : activeTab === "trades"
     ? tradesAnalysisData
@@ -847,9 +854,9 @@ export function DataTable({
     ? dayAnalysisData
     : []
   
-  const currentColumns = activeTab === "outline" 
+  const currentColumns = activeTab === "loss-reasons" 
     ? lossReasonColumns 
-    : activeTab === "past-performance"
+    : activeTab === "confirmations"
     ? confirmationAnalysisColumns
     : activeTab === "trades"
     ? tradesAnalysisColumns
@@ -902,20 +909,34 @@ export function DataTable({
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="trades">Trades</SelectItem>
-            <SelectItem value="past-performance">Confirmations</SelectItem>
-            <SelectItem value="outline">Loss reasons</SelectItem>
+            <SelectItem value="confirmations">Confirmations</SelectItem>
+            <SelectItem value="loss-reasons">Loss reasons</SelectItem>
             <SelectItem value="days">Days</SelectItem>
           </SelectContent>
         </Select>
-        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex">
+        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
           <TabsTrigger value="trades">Trades</TabsTrigger>
-          <TabsTrigger value="past-performance">Confirmations</TabsTrigger>
-          <TabsTrigger value="outline">Loss reasons</TabsTrigger>
+          <TabsTrigger value="confirmations">Confirmations</TabsTrigger>
+          <TabsTrigger value="loss-reasons">Loss reasons</TabsTrigger>
           <TabsTrigger value="days">Days</TabsTrigger>
         </TabsList>
         <div className="flex items-center gap-2">
+          {/* Active Filters Display - Only show for Confirmations tab */}
+          {activeTab === "confirmations" && filters.length > 0 && (
+            <div className="flex items-center gap-2">
+              <Filters filters={filters} setFilters={setFilters} />
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => setFilters([])}
+                className="text-muted-foreground hover:text-foreground"
+              >
+                Clear All
+              </Button>
+            </div>
+          )}
           {/* Add Filter button - Only show for Confirmations tab */}
-          {activeTab === "past-performance" && (
+          {activeTab === "confirmations" && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="gap-2">
@@ -1034,30 +1055,9 @@ export function DataTable({
         </div>
       </div>
 
-      {/* Active Filters Display - Only show for Confirmations tab */}
-      {activeTab === "past-performance" && filters.length > 0 && (
-        <div className="px-4 lg:px-6">
-          <div className="flex items-center justify-between gap-4 pb-4">
-            <div className="flex items-center gap-2 flex-1">
-              <Filters filters={filters} setFilters={setFilters} />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setFilters([])}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Clear All
-              </Button>
-            </div>
-            <div className="text-sm text-muted-foreground">
-              {filters.length} filter{filters.length !== 1 ? 's' : ''} active
-            </div>
-          </div>
-        </div>
-      )}
 
       <TabsContent
-        value="outline"
+        value="loss-reasons"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
         <div className="loss-grid-container">
@@ -1102,7 +1102,7 @@ export function DataTable({
         </div>
       </TabsContent>
       <TabsContent
-        value="past-performance"
+        value="confirmations"
         className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
       >
         <div className="confirmation-grid-container">
