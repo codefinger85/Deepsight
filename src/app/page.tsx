@@ -1,8 +1,9 @@
-import {
-  SidebarInset,
-  SidebarProvider,
-} from "@/components/ui/sidebar"
-import { AppSidebar } from "@/app/components/app-sidebar"
+// Sidebar components kept for future use but not currently imported
+// import {
+//   SidebarInset,
+//   SidebarProvider,
+// } from "@/components/ui/sidebar"
+// import { AppSidebar } from "@/app/components/app-sidebar"
 import { ChartAreaInteractive } from "@/app/components/chart-area-interactive"
 import { DataTable } from "@/app/components/data-table"
 import { SectionCards } from "@/app/components/section-cards"
@@ -41,43 +42,33 @@ export default async function Page() {
   ]);
 
   return (
-    <SidebarProvider
-        style={
-          {
-            "--sidebar-width": "calc(var(--spacing) * 64)",
-            "--header-height": "calc(var(--spacing) * 12 + 1px)",
-          } as React.CSSProperties
-        }
-      >
-        <AppSidebar variant="sidebar" />
-        <SidebarInset>
-          <SiteHeader />
-          <div className="flex flex-1 flex-col">
-            <div className="@container/main flex flex-1 flex-col gap-2">
-              <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
-                <SectionCards 
-                  totalEarnings={totalEarnings}
-                  overallWinRate={overallWinRate}
-                  totalSessions={totalSessions}
-                  totalTrades={totalTrades}
-                  totalWinningTrades={totalWinningTrades}
-                  totalLosingTrades={totalLosingTrades}
-                  sessionsAbove60={sessionsAbove60}
-                  sessionsBelow60={sessionsBelow60}
-                />
-                <div className="px-4 lg:px-6">
-                  <ChartAreaInteractive />
-                </div>
-                <DataTable 
-                  lossReasonsData={lossReasonsData}
-                  confirmationAnalysisData={confirmationAnalysisData}
-                  tradesAnalysisData={tradesAnalysisData}
-                  dayAnalysisData={dayAnalysisData}
-                />
-              </div>
+    <div className="flex flex-1 flex-col min-h-screen max-w-[1600px] mx-auto">
+      <SiteHeader />
+      <div className="flex flex-1 flex-col">
+        <div className="@container/main flex flex-1 flex-col gap-2">
+          <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
+            <SectionCards 
+              totalEarnings={totalEarnings}
+              overallWinRate={overallWinRate}
+              totalSessions={totalSessions}
+              totalTrades={totalTrades}
+              totalWinningTrades={totalWinningTrades}
+              totalLosingTrades={totalLosingTrades}
+              sessionsAbove60={sessionsAbove60}
+              sessionsBelow60={sessionsBelow60}
+            />
+            <div className="px-4 lg:px-6">
+              <ChartAreaInteractive />
             </div>
+            <DataTable 
+              lossReasonsData={lossReasonsData}
+              confirmationAnalysisData={confirmationAnalysisData}
+              tradesAnalysisData={tradesAnalysisData}
+              dayAnalysisData={dayAnalysisData}
+            />
           </div>
-        </SidebarInset>
-      </SidebarProvider>
+        </div>
+      </div>
+    </div>
   )
 }

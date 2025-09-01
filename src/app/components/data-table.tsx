@@ -140,9 +140,19 @@ const tableStyles = `
     min-height: 60px;
   }
   
+  /* Dynamic border removal - works with any number of columns/rows */
+  
+  /* Remove right border on rightmost cells (last column) */
   .grid-cell-name:last-child,
   .grid-cell-data:last-child {
     border-right: none;
+  }
+  
+  /* Remove bottom border on bottom row cells - generous selector to cover all grid sizes */
+  /* This targets the last 20 cells, which covers our largest grid (11 columns) with room to spare */
+  .grid-content .grid-cell-name:nth-last-child(-n+20),
+  .grid-content .grid-cell-data:nth-last-child(-n+20) {
+    border-bottom: none;
   }
   
   .grid-row:hover .grid-cell-name,
