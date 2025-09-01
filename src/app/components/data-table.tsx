@@ -25,7 +25,11 @@ const tableStyles = `
     box-sizing: border-box !important;
   }
 
-  .trade-grid-container {
+  /* Grid containers with clean borders */
+  .trade-grid-container,
+  .loss-grid-container,
+  .confirmation-grid-container,
+  .day-grid-container {
     border: 1px solid hsl(var(--border));
     border-radius: 0.5rem;
     overflow: hidden;
@@ -34,6 +38,7 @@ const tableStyles = `
   .trade-grid-header {
     display: grid;
     grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
+    border-bottom: 1px solid hsl(var(--border));
   }
   
   .trade-grid-content {
@@ -41,15 +46,10 @@ const tableStyles = `
     grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
   }
   
-  .loss-grid-container {
-    border: 1px solid hsl(var(--border));
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }
-  
   .loss-grid-header {
     display: grid;
     grid-template-columns: 1fr repeat(7, minmax(80px, 120px));
+    border-bottom: 1px solid hsl(var(--border));
   }
   
   .loss-grid-content {
@@ -57,15 +57,10 @@ const tableStyles = `
     grid-template-columns: 1fr repeat(7, minmax(80px, 120px));
   }
   
-  .confirmation-grid-container {
-    border: 1px solid hsl(var(--border));
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }
-  
   .confirmation-grid-header {
     display: grid;
     grid-template-columns: 1fr repeat(10, minmax(80px, 120px));
+    border-bottom: 1px solid hsl(var(--border));
   }
   
   .confirmation-grid-content {
@@ -73,15 +68,10 @@ const tableStyles = `
     grid-template-columns: 1fr repeat(10, minmax(80px, 120px));
   }
   
-  .day-grid-container {
-    border: 1px solid hsl(var(--border));
-    border-radius: 0.5rem;
-    overflow: hidden;
-  }
-  
   .day-grid-header {
     display: grid;
     grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
+    border-bottom: 1px solid hsl(var(--border));
   }
   
   .day-grid-content {
@@ -89,10 +79,9 @@ const tableStyles = `
     grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
   }
   
+  /* Header cells - only add right borders between cells */
   .grid-header {
     background-color: rgb(248 250 252);
-    border-bottom: 1px solid hsl(var(--border));
-    border-right: 1px solid hsl(var(--border));
     height: 50px;
     padding: 0.5rem;
     font-weight: 600;
@@ -102,6 +91,7 @@ const tableStyles = `
     display: flex;
     align-items: center;
     justify-content: center;
+    border-right: 1px solid hsl(var(--border));
   }
   
   .grid-header:first-child {
@@ -114,10 +104,9 @@ const tableStyles = `
     border-right: none;
   }
   
+  /* Data cells - only add borders between cells and rows */
   .grid-cell-name {
-    border-bottom: 1px solid hsl(var(--border));
-    border-right: 1px solid hsl(var(--border));
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0.5rem 16px;
     text-align: left;
     font-size: 0.875rem;
     display: flex;
@@ -125,12 +114,11 @@ const tableStyles = `
     justify-content: flex-start;
     font-weight: 500;
     min-height: 60px;
-    padding-left: 16px;
+    border-right: 1px solid hsl(var(--border));
+    border-bottom: 1px solid hsl(var(--border));
   }
   
   .grid-cell-data {
-    border-bottom: 1px solid hsl(var(--border));
-    border-right: 1px solid hsl(var(--border));
     padding: 0.5rem;
     text-align: center;
     font-size: 0.875rem;
@@ -138,20 +126,53 @@ const tableStyles = `
     align-items: center;
     justify-content: center;
     min-height: 60px;
+    border-right: 1px solid hsl(var(--border));
+    border-bottom: 1px solid hsl(var(--border));
   }
   
-  /* Dynamic border removal - works with any number of columns/rows */
-  
-  /* Remove right border on rightmost cells (last column) */
-  .grid-cell-name:last-child,
-  .grid-cell-data:last-child {
+  /* Remove right border from last column */
+  .trade-grid-header .grid-header:nth-child(5),
+  .trade-grid-content .grid-cell-name:nth-child(5n),
+  .trade-grid-content .grid-cell-data:nth-child(5n) {
     border-right: none;
   }
   
-  /* Remove bottom border on bottom row cells - generous selector to cover all grid sizes */
-  /* This targets the last 20 cells, which covers our largest grid (11 columns) with room to spare */
-  .grid-content .grid-cell-name:nth-last-child(-n+20),
-  .grid-content .grid-cell-data:nth-last-child(-n+20) {
+  .loss-grid-header .grid-header:nth-child(8),
+  .loss-grid-content .grid-cell-name:nth-child(8n),
+  .loss-grid-content .grid-cell-data:nth-child(8n) {
+    border-right: none;
+  }
+  
+  .confirmation-grid-header .grid-header:nth-child(11),
+  .confirmation-grid-content .grid-cell-name:nth-child(11n),
+  .confirmation-grid-content .grid-cell-data:nth-child(11n) {
+    border-right: none;
+  }
+  
+  .day-grid-header .grid-header:nth-child(5),
+  .day-grid-content .grid-cell-name:nth-child(5n),
+  .day-grid-content .grid-cell-data:nth-child(5n) {
+    border-right: none;
+  }
+  
+  /* Remove bottom border from last row - dynamically calculated */
+  .trade-grid-content .grid-cell-name:nth-last-child(-n+5),
+  .trade-grid-content .grid-cell-data:nth-last-child(-n+5) {
+    border-bottom: none;
+  }
+  
+  .loss-grid-content .grid-cell-name:nth-last-child(-n+8),
+  .loss-grid-content .grid-cell-data:nth-last-child(-n+8) {
+    border-bottom: none;
+  }
+  
+  .confirmation-grid-content .grid-cell-name:nth-last-child(-n+11),
+  .confirmation-grid-content .grid-cell-data:nth-last-child(-n+11) {
+    border-bottom: none;
+  }
+  
+  .day-grid-content .grid-cell-name:nth-last-child(-n+5),
+  .day-grid-content .grid-cell-data:nth-last-child(-n+5) {
     border-bottom: none;
   }
   
