@@ -394,7 +394,7 @@ const lossReasonColumns: ColumnDef<z.infer<typeof lossReasonSchema>>[] = [
     accessorKey: "totalCount",
     header: () => <div className="text-center">Total</div>,
     cell: ({ row }) => (
-      <div className="text-center font-medium">
+      <div className="text-center font-semibold">
         {row.original.totalCount}
       </div>
     ),
@@ -470,7 +470,7 @@ const winningConfirmationColumns: ColumnDef<z.infer<typeof winningConfirmationSc
     accessorKey: "totalCount",
     header: () => <div className="text-center">Total</div>,
     cell: ({ row }) => (
-      <div className="text-center font-medium">
+      <div className="text-center font-semibold">
         {row.original.totalCount}
       </div>
     ),
@@ -557,7 +557,7 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
     accessorKey: "winCount",
     header: () => <div className="text-center w-20">Wins</div>,
     cell: ({ row }) => (
-      <div className="text-center text-green-600 font-medium w-20">
+      <div className="text-center font-medium w-20">
         {row.original.winCount}
       </div>
     ),
@@ -566,7 +566,7 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
     accessorKey: "lossCount",
     header: () => <div className="text-center w-20">Losses</div>,
     cell: ({ row }) => (
-      <div className="text-center text-red-600 font-medium w-20">
+      <div className="text-center font-medium w-20">
         {row.original.lossCount}
       </div>
     ),
@@ -577,7 +577,7 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
     cell: ({ row }) => {
       const percentage = row.original.winPercentage;
       return (
-        <div className={`text-center font-medium w-20 ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+        <div className="text-center font-medium w-20">
           {percentage}%
         </div>
       );
@@ -641,7 +641,7 @@ const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] =
     accessorKey: "winCount",
     header: () => <div className="text-center w-20">Wins</div>,
     cell: ({ row }) => (
-      <div className="text-center text-green-600 font-medium w-20">
+      <div className="text-center font-medium w-20">
         {row.original.winCount}
       </div>
     ),
@@ -650,7 +650,7 @@ const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] =
     accessorKey: "lossCount",
     header: () => <div className="text-center w-20">Losses</div>,
     cell: ({ row }) => (
-      <div className="text-center text-red-600 font-medium w-20">
+      <div className="text-center font-medium w-20">
         {row.original.lossCount}
       </div>
     ),
@@ -661,7 +661,7 @@ const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] =
     cell: ({ row }) => {
       const percentage = row.original.winPercentage;
       return (
-        <div className={`text-center font-medium w-20 ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+        <div className="text-center font-medium w-20">
           {percentage}%
         </div>
       );
@@ -716,7 +716,7 @@ const dayAnalysisColumns: ColumnDef<z.infer<typeof dayAnalysisSchema>>[] = [
     accessorKey: "totalTrades",
     header: () => <div className="text-center w-20">Total Trades</div>,
     cell: ({ row }) => (
-      <div className="text-center font-medium w-20">
+      <div className="text-center font-semibold w-20">
         {row.original.totalTrades}
       </div>
     ),
@@ -725,7 +725,7 @@ const dayAnalysisColumns: ColumnDef<z.infer<typeof dayAnalysisSchema>>[] = [
     accessorKey: "winCount",
     header: () => <div className="text-center w-20">Wins</div>,
     cell: ({ row }) => (
-      <div className="text-center text-green-600 font-medium w-20">
+      <div className="text-center font-medium w-20">
         {row.original.winCount}
       </div>
     ),
@@ -734,7 +734,7 @@ const dayAnalysisColumns: ColumnDef<z.infer<typeof dayAnalysisSchema>>[] = [
     accessorKey: "lossCount",
     header: () => <div className="text-center w-20">Losses</div>,
     cell: ({ row }) => (
-      <div className="text-center text-red-600 font-medium w-20">
+      <div className="text-center font-medium w-20">
         {row.original.lossCount}
       </div>
     ),
@@ -745,7 +745,7 @@ const dayAnalysisColumns: ColumnDef<z.infer<typeof dayAnalysisSchema>>[] = [
     cell: ({ row }) => {
       const percentage = row.original.winPercentage;
       return (
-        <div className={`text-center font-medium w-20 ${percentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+        <div className="text-center font-medium w-20">
           {percentage}%
         </div>
       );
@@ -1078,7 +1078,7 @@ export function DataTable({
                 lossReasonsData.map((row, index) => (
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.lossReason}</div>
-                    <div className="grid-cell-data font-medium">{row.totalCount}</div>
+                    <div className="grid-cell-data font-semibold">{row.totalCount}</div>
                     <div className="grid-cell-data">{row.conf1}</div>
                     <div className="grid-cell-data">{row.conf2}</div>
                     <div className="grid-cell-data">{row.conf3}</div>
@@ -1126,10 +1126,10 @@ export function DataTable({
                 filteredConfirmationData.map((row, index) => (
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.confirmation}</div>
-                    <div className="grid-cell-data font-medium">{row.totalCount}</div>
-                    <div className="grid-cell-data text-green-600 font-medium">{row.winCount}</div>
-                    <div className="grid-cell-data text-red-600 font-medium">{row.lossCount}</div>
-                    <div className={`grid-cell-data font-medium ${row.winPercentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+                    <div className="grid-cell-data font-semibold">{row.totalCount}</div>
+                    <div className="grid-cell-data font-medium">{row.winCount}</div>
+                    <div className="grid-cell-data font-medium">{row.lossCount}</div>
+                    <div className="grid-cell-data font-medium">
                       {row.winPercentage}%
                     </div>
                     <div className="grid-cell-data">
@@ -1333,15 +1333,15 @@ export function DataTable({
                       <div className="grid-cell-name">{row.name}</div>
                       <div className="grid-cell-data">
                         <div className="text-sm">
-                          <div>{row.total}</div>
+                          <div className="font-semibold">{row.total}</div>
                           <div className="text-muted-foreground text-[12px] mt-0.5">
                             ({row.percentage}%)
                           </div>
                         </div>
                       </div>
-                      <div className="grid-cell-data text-green-600 font-medium">{row.wins}</div>
-                      <div className="grid-cell-data text-red-600 font-medium">{row.losses}</div>
-                      <div className={`grid-cell-data font-medium ${row.winRate >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+                      <div className="grid-cell-data font-medium">{row.wins}</div>
+                      <div className="grid-cell-data font-medium">{row.losses}</div>
+                      <div className="grid-cell-data font-medium">
                         {row.winRate}%
                       </div>
                     </React.Fragment>
@@ -1380,10 +1380,10 @@ export function DataTable({
                 dayAnalysisData.map((row, index) => (
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.dayOfWeek}</div>
-                    <div className="grid-cell-data font-medium">{row.totalTrades}</div>
-                    <div className="grid-cell-data text-green-600 font-medium">{row.winCount}</div>
-                    <div className="grid-cell-data text-red-600 font-medium">{row.lossCount}</div>
-                    <div className={`grid-cell-data font-medium ${row.winPercentage >= 50 ? 'text-green-600' : 'text-red-600'}`}>
+                    <div className="grid-cell-data font-semibold">{row.totalTrades}</div>
+                    <div className="grid-cell-data font-medium">{row.winCount}</div>
+                    <div className="grid-cell-data font-medium">{row.lossCount}</div>
+                    <div className="grid-cell-data font-medium">
                       {row.winPercentage}%
                     </div>
                   </React.Fragment>
