@@ -48,24 +48,24 @@ const tableStyles = `
   
   .loss-grid-header {
     display: grid;
-    grid-template-columns: 1fr repeat(8, minmax(80px, 120px));
+    grid-template-columns: 1fr repeat(9, minmax(80px, 120px));
     border-bottom: 1px solid hsl(var(--border));
   }
   
   .loss-grid-content {
     display: grid;
-    grid-template-columns: 1fr repeat(8, minmax(80px, 120px));
+    grid-template-columns: 1fr repeat(9, minmax(80px, 120px));
   }
   
   .confirmation-grid-header {
     display: grid;
-    grid-template-columns: 1fr repeat(10, minmax(80px, 120px));
+    grid-template-columns: 1fr repeat(11, minmax(80px, 120px));
     border-bottom: 1px solid hsl(var(--border));
   }
   
   .confirmation-grid-content {
     display: grid;
-    grid-template-columns: 1fr repeat(10, minmax(80px, 120px));
+    grid-template-columns: 1fr repeat(11, minmax(80px, 120px));
   }
   
   .day-grid-header {
@@ -137,15 +137,15 @@ const tableStyles = `
     border-right: none;
   }
   
-  .loss-grid-header .grid-header:nth-child(9),
-  .loss-grid-content .grid-cell-name:nth-child(9n),
-  .loss-grid-content .grid-cell-data:nth-child(9n) {
+  .loss-grid-header .grid-header:nth-child(10),
+  .loss-grid-content .grid-cell-name:nth-child(10n),
+  .loss-grid-content .grid-cell-data:nth-child(10n) {
     border-right: none;
   }
   
-  .confirmation-grid-header .grid-header:nth-child(11),
-  .confirmation-grid-content .grid-cell-name:nth-child(11n),
-  .confirmation-grid-content .grid-cell-data:nth-child(11n) {
+  .confirmation-grid-header .grid-header:nth-child(12),
+  .confirmation-grid-content .grid-cell-name:nth-child(12n),
+  .confirmation-grid-content .grid-cell-data:nth-child(12n) {
     border-right: none;
   }
   
@@ -161,13 +161,13 @@ const tableStyles = `
     border-bottom: none;
   }
   
-  .loss-grid-content .grid-cell-name:nth-last-child(-n+9),
-  .loss-grid-content .grid-cell-data:nth-last-child(-n+9) {
+  .loss-grid-content .grid-cell-name:nth-last-child(-n+10),
+  .loss-grid-content .grid-cell-data:nth-last-child(-n+10) {
     border-bottom: none;
   }
   
-  .confirmation-grid-content .grid-cell-name:nth-last-child(-n+11),
-  .confirmation-grid-content .grid-cell-data:nth-last-child(-n+11) {
+  .confirmation-grid-content .grid-cell-name:nth-last-child(-n+12),
+  .confirmation-grid-content .grid-cell-data:nth-last-child(-n+12) {
     border-bottom: none;
   }
   
@@ -201,7 +201,7 @@ import {
 import { PlusCircle, Target, Tag, BarChart3, Activity, SignalHigh } from "lucide-react"
 
 // Types for range analysis
-type RangeKey = 'conf1' | 'conf2' | 'conf3' | 'conf4' | 'conf5' | 'conf6';
+type RangeKey = 'conf1' | 'conf2' | 'conf3' | 'conf4' | 'conf5' | 'conf6' | 'conf7';
 
 // Utility functions for range calculations
 const parseRangeData = (rangeValue: string): { wins: number; losses: number; total: number } => {
@@ -327,6 +327,7 @@ export const lossReasonSchema = z.object({
   conf4: z.number(),
   conf5: z.number(),
   conf6: z.number(),
+  conf7: z.number(),
 })
 
 export const winningConfirmationSchema = z.object({
@@ -338,6 +339,7 @@ export const winningConfirmationSchema = z.object({
   conf4: z.number(),
   conf5: z.number(),
   conf6: z.number(),
+  conf7: z.number(),
 })
 
 export const confirmationAnalysisSchema = z.object({
@@ -352,6 +354,7 @@ export const confirmationAnalysisSchema = z.object({
   conf4: z.string(),
   conf5: z.string(),
   conf6: z.string(),
+  conf7: z.string(),
 })
 
 export const tradesAnalysisSchema = z.object({
@@ -366,6 +369,7 @@ export const tradesAnalysisSchema = z.object({
   conf4: z.string(),
   conf5: z.string(),
   conf6: z.string(),
+  conf7: z.string(),
 })
 
 export const dayAnalysisSchema = z.object({
@@ -461,6 +465,15 @@ const lossReasonColumns: ColumnDef<z.infer<typeof lossReasonSchema>>[] = [
       </div>
     ),
   },
+  {
+    accessorKey: "conf7",
+    header: () => <div className="text-center">7 Conf</div>,
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.original.conf7}
+      </div>
+    ),
+  },
 ]
 
 const winningConfirmationColumns: ColumnDef<z.infer<typeof winningConfirmationSchema>>[] = [
@@ -534,6 +547,15 @@ const winningConfirmationColumns: ColumnDef<z.infer<typeof winningConfirmationSc
     cell: ({ row }) => (
       <div className="text-center">
         {row.original.conf6}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "conf7",
+    header: () => <div className="text-center">7 Conf</div>,
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.original.conf7}
       </div>
     ),
   },
@@ -621,6 +643,11 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
     header: () => <div className="text-center w-20">6 Conf</div>,
     cell: createRangeCell('conf6'),
   },
+  {
+    accessorKey: "conf7",
+    header: () => <div className="text-center w-20">7 Conf</div>,
+    cell: createRangeCell('conf7'),
+  },
 ]
 
 const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] = [
@@ -704,6 +731,11 @@ const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] =
     accessorKey: "conf6",
     header: () => <div className="text-center w-20">6 Conf</div>,
     cell: createRangeCell('conf6'),
+  },
+  {
+    accessorKey: "conf7",
+    header: () => <div className="text-center w-20">7 Conf</div>,
+    cell: createRangeCell('conf7'),
   },
 ]
 
@@ -1078,6 +1110,7 @@ export function DataTable({
             <div className="grid-header">4 Conf</div>
             <div className="grid-header">5 Conf</div>
             <div className="grid-header">6 Conf</div>
+            <div className="grid-header">7 Conf</div>
           </div>
           
           {/* Scrollable Content */}
@@ -1095,6 +1128,7 @@ export function DataTable({
                     <div className="grid-cell-data">{row.conf4}</div>
                     <div className="grid-cell-data">{row.conf5}</div>
                     <div className="grid-cell-data">{row.conf6}</div>
+                    <div className="grid-cell-data">{row.conf7}</div>
                   </React.Fragment>
                 ))
               ) : (
@@ -1127,6 +1161,7 @@ export function DataTable({
             <div className="grid-header">4 Conf</div>
             <div className="grid-header">5 Conf</div>
             <div className="grid-header">6 Conf</div>
+            <div className="grid-header">7 Conf</div>
           </div>
           
           {/* Scrollable Content */}
@@ -1262,6 +1297,26 @@ export function DataTable({
                         })()}
                       </div>
                     </div>
+                    <div className="grid-cell-data">
+                      <div className="text-center text-sm">
+                        {(() => {
+                          const { wins, losses, total } = parseRangeData(row.conf7);
+                          const percentage = calculateRangeWinPercentage(wins, losses);
+                          return (
+                            <div>
+                              <div>
+                                {percentage}%
+                              </div>
+                              {total > 0 && (
+                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+                                  {wins}W | {losses}L
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
+                      </div>
+                    </div>
                   </React.Fragment>
                 ))
               ) : (
@@ -1311,7 +1366,7 @@ export function DataTable({
                   ];
                   
                   // Add confirmation level rows
-                  for (let i = 1; i <= 6; i++) {
+                  for (let i = 1; i <= 7; i++) {
                     const confKey = `conf${i}` as keyof typeof allTradesRow;
                     const confData = parseRangeData(String(allTradesRow[confKey]));
                     const percentage = totalAllTrades > 0 ? Math.round((confData.total / totalAllTrades) * 100) : 0;

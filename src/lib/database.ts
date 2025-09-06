@@ -40,6 +40,7 @@ export type LossReasonAnalysis = {
   conf4: number;
   conf5: number;
   conf6: number;
+  conf7: number;
 };
 
 export type WinningConfirmationAnalysis = {
@@ -51,6 +52,7 @@ export type WinningConfirmationAnalysis = {
   conf4: number;
   conf5: number;
   conf6: number;
+  conf7: number;
 };
 
 export type ConfirmationAnalysis = {
@@ -65,6 +67,7 @@ export type ConfirmationAnalysis = {
   conf4: string;
   conf5: string;
   conf6: string;
+  conf7: string;
 };
 
 export type TradesAnalysis = {
@@ -79,6 +82,7 @@ export type TradesAnalysis = {
   conf4: string;
   conf5: string;
   conf6: string;
+  conf7: string;
 };
 
 export type DayAnalysis = {
@@ -294,6 +298,7 @@ export async function getLossReasonsWithConfirmations(): Promise<LossReasonAnaly
             conf4: 0,
             conf5: 0,
             conf6: 0,
+            conf7: 0,
           };
         }
 
@@ -307,6 +312,7 @@ export async function getLossReasonsWithConfirmations(): Promise<LossReasonAnaly
           case 4: groupedData[individualReason].conf4++; break;
           case 5: groupedData[individualReason].conf5++; break;
           case 6: groupedData[individualReason].conf6++; break;
+          case 7: groupedData[individualReason].conf7++; break;
         }
       });
     });
@@ -376,6 +382,7 @@ export async function getWinningConfirmationsWithCounts(): Promise<WinningConfir
             conf4: 0,
             conf5: 0,
             conf6: 0,
+            conf7: 0,
           };
         }
 
@@ -389,6 +396,7 @@ export async function getWinningConfirmationsWithCounts(): Promise<WinningConfir
           case 4: groupedData[individualConfirmation].conf4++; break;
           case 5: groupedData[individualConfirmation].conf5++; break;
           case 6: groupedData[individualConfirmation].conf6++; break;
+          case 7: groupedData[individualConfirmation].conf7++; break;
         }
       });
     });
@@ -475,6 +483,8 @@ export async function getConfirmationAnalysisWithCounts(): Promise<ConfirmationA
             conf5Losses: 0,
             conf6Wins: 0,
             conf6Losses: 0,
+            conf7Wins: 0,
+            conf7Losses: 0,
           };
         }
 
@@ -512,6 +522,10 @@ export async function getConfirmationAnalysisWithCounts(): Promise<ConfirmationA
             if (isWin) groupedData[individualConfirmation].conf6Wins++;
             else groupedData[individualConfirmation].conf6Losses++;
             break;
+          case 7:
+            if (isWin) groupedData[individualConfirmation].conf7Wins++;
+            else groupedData[individualConfirmation].conf7Losses++;
+            break;
         }
       });
     });
@@ -529,6 +543,7 @@ export async function getConfirmationAnalysisWithCounts(): Promise<ConfirmationA
       conf4: `${item.conf4Wins}|${item.conf4Losses}`,
       conf5: `${item.conf5Wins}|${item.conf5Losses}`,
       conf6: `${item.conf6Wins}|${item.conf6Losses}`,
+      conf7: `${item.conf7Wins}|${item.conf7Losses}`,
     }));
 
     // Sort by win percentage (highest first), then by total count
@@ -587,6 +602,8 @@ export async function getTradesAnalysis(): Promise<TradesAnalysis[]> {
       conf5Losses: 0,
       conf6Wins: 0,
       conf6Losses: 0,
+      conf7Wins: 0,
+      conf7Losses: 0,
     };
 
     // Process each trade
@@ -628,6 +645,10 @@ export async function getTradesAnalysis(): Promise<TradesAnalysis[]> {
           if (isWin) analysis.conf6Wins++;
           else analysis.conf6Losses++;
           break;
+        case 7:
+          if (isWin) analysis.conf7Wins++;
+          else analysis.conf7Losses++;
+          break;
       }
     });
 
@@ -648,6 +669,7 @@ export async function getTradesAnalysis(): Promise<TradesAnalysis[]> {
       conf4: `${analysis.conf4Wins}|${analysis.conf4Losses}`,
       conf5: `${analysis.conf5Wins}|${analysis.conf5Losses}`,
       conf6: `${analysis.conf6Wins}|${analysis.conf6Losses}`,
+      conf7: `${analysis.conf7Wins}|${analysis.conf7Losses}`,
     }];
   } catch (error) {
     console.error('Error getting trades analysis:', error);
@@ -663,6 +685,7 @@ export async function getTradesAnalysis(): Promise<TradesAnalysis[]> {
       conf4: '0|0',
       conf5: '0|0',
       conf6: '0|0',
+      conf7: '0|0',
     }];
   }
 }
