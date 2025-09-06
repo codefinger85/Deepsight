@@ -71,6 +71,13 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
     return date >= startDate
   })
 
+  // Scale trades count for better visibility in performance chart
+  const maxTrades = Math.max(...filteredData.map(item => item.tradesCount))
+  const scaledData = filteredData.map(item => ({
+    ...item,
+    scaledTradesCount: maxTrades > 0 ? (item.tradesCount / maxTrades) * 35 : 0
+  }))
+
   return (
     <Tabs value={chartTab} onValueChange={setChartTab} className="@container/card">
       <Card>
@@ -88,7 +95,7 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
               </CardDescription>
             </div>
             <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white">
-              <TabsTrigger value="performance">Performance</TabsTrigger>
+              <TabsTrigger value="performance">Winrate</TabsTrigger>
               <TabsTrigger value="counts">Counts</TabsTrigger>
             </TabsList>
           </div>
@@ -142,7 +149,7 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
             }}
             className="aspect-auto h-[250px] w-full"
           >
-            <AreaChart data={filteredData}>
+            <AreaChart data={scaledData}>
               <defs>
                 <linearGradient id="fillWinRate" x1="0" y1="0" x2="0" y2="1">
                   <stop
@@ -165,7 +172,7 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
                   <stop
                     offset="95%"
                     stopColor="var(--color-tradesCount)"
-                    stopOpacity={0.05}
+                    stopOpacity={0.15}
                   />
                 </linearGradient>
               </defs>
@@ -185,7 +192,7 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
                 }}
               />
               <YAxis
-                domain={[0, 100]}
+                domain={[0, 115]}
                 hide={true}
               />
               <ChartTooltip
@@ -228,7 +235,7 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
                 }}
               />
               <Area
-                dataKey="tradesCount"
+                dataKey="scaledTradesCount"
                 type="natural"
                 fill="url(#fillTrades)"
                 stroke="var(--color-tradesCount)"
@@ -320,13 +327,17 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'var(--color-wins)'}} />
-                          <span className="text-sm text-muted-foreground">Wins:</span>
-                          <span className="text-sm font-medium">{data.wins}</span>
+                          <div className="flex items-center gap-1">
+                            <span className="text-sm text-muted-foreground">Wins:</span>
+                            <span className="text-sm font-medium">{data.wins}</span>
+                          </div>
                         </div>
                         <div className="flex items-center gap-2">
                           <div className="w-3 h-3 rounded-full" style={{backgroundColor: 'var(--color-losses)'}} />
-                          <span className="text-sm text-muted-foreground">Losses:</span>
-                          <span className="text-sm font-medium">{data.losses}</span>
+                          <div className="flex items-center gap-1">
+                            <span className="text-sm text-muted-foreground">Losses:</span>
+                            <span className="text-sm font-medium">{data.losses}</span>
+                          </div>
                         </div>
                       </div>
                     </div>
