@@ -230,13 +230,11 @@ const createRangeCell = <T extends Record<RangeKey, string>>(rangeKey: RangeKey)
     return (
       <div className="text-center text-sm w-20">
         <div>
-          <span className="text-green-600">{wins}</span>
-          <span className="text-gray-400">|</span>
-          <span className="text-red-600">{losses}</span>
+          {percentage}%
         </div>
         {total > 0 && (
-          <div className="text-muted-foreground text-[12px] mt-0.5">
-            ({percentage}%)
+          <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+            {wins}W | {losses}L
           </div>
         )}
       </div>
@@ -402,9 +400,9 @@ const lossReasonColumns: ColumnDef<z.infer<typeof lossReasonSchema>>[] = [
   },
   {
     accessorKey: "lossPercentage",
-    header: () => <div className="text-center">Loss %</div>,
+    header: () => <div className="text-center">Lossrate</div>,
     cell: ({ row }) => (
-      <div className="text-center">
+      <div className="text-center font-semibold">
         {row.original.lossPercentage}%
       </div>
     ),
@@ -583,11 +581,11 @@ const confirmationAnalysisColumns: ColumnDef<z.infer<typeof confirmationAnalysis
   },
   {
     accessorKey: "winPercentage",
-    header: () => <div className="text-center w-20">Win %</div>,
+    header: () => <div className="text-center w-20">Winrate</div>,
     cell: ({ row }) => {
       const percentage = row.original.winPercentage;
       return (
-        <div className="text-center font-medium w-20">
+        <div className="text-center font-semibold w-20">
           {percentage}%
         </div>
       );
@@ -667,11 +665,11 @@ const tradesAnalysisColumns: ColumnDef<z.infer<typeof tradesAnalysisSchema>>[] =
   },
   {
     accessorKey: "winPercentage",
-    header: () => <div className="text-center w-20">Win %</div>,
+    header: () => <div className="text-center w-20">Winrate</div>,
     cell: ({ row }) => {
       const percentage = row.original.winPercentage;
       return (
-        <div className="text-center font-medium w-20">
+        <div className="text-center font-semibold w-20">
           {percentage}%
         </div>
       );
@@ -751,11 +749,11 @@ const dayAnalysisColumns: ColumnDef<z.infer<typeof dayAnalysisSchema>>[] = [
   },
   {
     accessorKey: "winPercentage",
-    header: () => <div className="text-center w-20">Win %</div>,
+    header: () => <div className="text-center w-20">Winrate</div>,
     cell: ({ row }) => {
       const percentage = row.original.winPercentage;
       return (
-        <div className="text-center font-medium w-20">
+        <div className="text-center font-semibold w-20">
           {percentage}%
         </div>
       );
@@ -1073,7 +1071,7 @@ export function DataTable({
           <div className="loss-grid-header">
             <div className="grid-header">Loss Reason</div>
             <div className="grid-header">Total</div>
-            <div className="grid-header">Loss %</div>
+            <div className="grid-header">Lossrate</div>
             <div className="grid-header">1 Conf</div>
             <div className="grid-header">2 Conf</div>
             <div className="grid-header">3 Conf</div>
@@ -1090,7 +1088,7 @@ export function DataTable({
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.lossReason}</div>
                     <div className="grid-cell-data font-semibold">{row.totalCount}</div>
-                    <div className="grid-cell-data">{row.lossPercentage}%</div>
+                    <div className="grid-cell-data font-semibold">{row.lossPercentage}%</div>
                     <div className="grid-cell-data">{row.conf1}</div>
                     <div className="grid-cell-data">{row.conf2}</div>
                     <div className="grid-cell-data">{row.conf3}</div>
@@ -1122,7 +1120,7 @@ export function DataTable({
             <div className="grid-header">Total</div>
             <div className="grid-header">Wins</div>
             <div className="grid-header">Losses</div>
-            <div className="grid-header">Win %</div>
+            <div className="grid-header">Winrate</div>
             <div className="grid-header">1 Conf</div>
             <div className="grid-header">2 Conf</div>
             <div className="grid-header">3 Conf</div>
@@ -1141,7 +1139,7 @@ export function DataTable({
                     <div className="grid-cell-data font-semibold">{row.totalCount}</div>
                     <div className="grid-cell-data font-medium">{row.winCount}</div>
                     <div className="grid-cell-data font-medium">{row.lossCount}</div>
-                    <div className="grid-cell-data font-medium">
+                    <div className="grid-cell-data font-semibold">
                       {row.winPercentage}%
                     </div>
                     <div className="grid-cell-data">
@@ -1152,13 +1150,11 @@ export function DataTable({
                           return (
                             <div>
                               <div>
-                                <span className="text-green-600">{wins}</span>
-                                <span className="text-gray-400">|</span>
-                                <span className="text-red-600">{losses}</span>
+                                {percentage}%
                               </div>
                               {total > 0 && (
-                                <div className="text-muted-foreground text-[12px] mt-0.5">
-                                  ({percentage}%)
+                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+                                  {wins}W | {losses}L
                                 </div>
                               )}
                             </div>
@@ -1174,13 +1170,11 @@ export function DataTable({
                           return (
                             <div>
                               <div>
-                                <span className="text-green-600">{wins}</span>
-                                <span className="text-gray-400">|</span>
-                                <span className="text-red-600">{losses}</span>
+                                {percentage}%
                               </div>
                               {total > 0 && (
-                                <div className="text-muted-foreground text-[12px] mt-0.5">
-                                  ({percentage}%)
+                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+                                  {wins}W | {losses}L
                                 </div>
                               )}
                             </div>
@@ -1196,13 +1190,11 @@ export function DataTable({
                           return (
                             <div>
                               <div>
-                                <span className="text-green-600">{wins}</span>
-                                <span className="text-gray-400">|</span>
-                                <span className="text-red-600">{losses}</span>
+                                {percentage}%
                               </div>
                               {total > 0 && (
-                                <div className="text-muted-foreground text-[12px] mt-0.5">
-                                  ({percentage}%)
+                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+                                  {wins}W | {losses}L
                                 </div>
                               )}
                             </div>
@@ -1218,13 +1210,11 @@ export function DataTable({
                           return (
                             <div>
                               <div>
-                                <span className="text-green-600">{wins}</span>
-                                <span className="text-gray-400">|</span>
-                                <span className="text-red-600">{losses}</span>
+                                {percentage}%
                               </div>
                               {total > 0 && (
-                                <div className="text-muted-foreground text-[12px] mt-0.5">
-                                  ({percentage}%)
+                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+                                  {wins}W | {losses}L
                                 </div>
                               )}
                             </div>
@@ -1240,13 +1230,11 @@ export function DataTable({
                           return (
                             <div>
                               <div>
-                                <span className="text-green-600">{wins}</span>
-                                <span className="text-gray-400">|</span>
-                                <span className="text-red-600">{losses}</span>
+                                {percentage}%
                               </div>
                               {total > 0 && (
-                                <div className="text-muted-foreground text-[12px] mt-0.5">
-                                  ({percentage}%)
+                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+                                  {wins}W | {losses}L
                                 </div>
                               )}
                             </div>
@@ -1262,13 +1250,11 @@ export function DataTable({
                           return (
                             <div>
                               <div>
-                                <span className="text-green-600">{wins}</span>
-                                <span className="text-gray-400">|</span>
-                                <span className="text-red-600">{losses}</span>
+                                {percentage}%
                               </div>
                               {total > 0 && (
-                                <div className="text-muted-foreground text-[12px] mt-0.5">
-                                  ({percentage}%)
+                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+                                  {wins}W | {losses}L
                                 </div>
                               )}
                             </div>
@@ -1301,7 +1287,7 @@ export function DataTable({
             <div className="grid-header">Total</div>
             <div className="grid-header">Wins</div>
             <div className="grid-header">Losses</div>
-            <div className="grid-header">Win %</div>
+            <div className="grid-header">Winrate</div>
           </div>
           
           {/* Scrollable Content */}
@@ -1353,7 +1339,7 @@ export function DataTable({
                       </div>
                       <div className="grid-cell-data font-medium">{row.wins}</div>
                       <div className="grid-cell-data font-medium">{row.losses}</div>
-                      <div className="grid-cell-data font-medium">
+                      <div className="grid-cell-data font-semibold">
                         {row.winRate}%
                       </div>
                     </React.Fragment>
@@ -1382,7 +1368,7 @@ export function DataTable({
             <div className="grid-header">Total Trades</div>
             <div className="grid-header">Wins</div>
             <div className="grid-header">Losses</div>
-            <div className="grid-header">Win %</div>
+            <div className="grid-header">Winrate</div>
           </div>
           
           {/* Scrollable Content */}
@@ -1395,7 +1381,7 @@ export function DataTable({
                     <div className="grid-cell-data font-semibold">{row.totalTrades}</div>
                     <div className="grid-cell-data font-medium">{row.winCount}</div>
                     <div className="grid-cell-data font-medium">{row.lossCount}</div>
-                    <div className="grid-cell-data font-medium">
+                    <div className="grid-cell-data font-semibold">
                       {row.winPercentage}%
                     </div>
                   </React.Fragment>
