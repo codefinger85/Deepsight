@@ -759,13 +759,14 @@ export type ChartData = {
   wins: number;
   losses: number;
   winRate: number;
+  tradesCount: number;
 };
 
 export async function getChartData(): Promise<ChartData[]> {
   try {
     const { data, error } = await supabase
       .from('sessions')
-      .select('date, winCount, lossCount, winRate')
+      .select('date, winCount, lossCount, winRate, tradesCount')
       .order('date', { ascending: true });
 
     if (error) throw error;
@@ -774,7 +775,8 @@ export async function getChartData(): Promise<ChartData[]> {
       date: session.date,
       wins: session.winCount,
       losses: session.lossCount,
-      winRate: Math.round(parseFloat(session.winRate) || 0)
+      winRate: Math.round(parseFloat(session.winRate) || 0),
+      tradesCount: session.tradesCount
     })) || [];
   } catch (error) {
     console.error('Error getting chart data:', error);
