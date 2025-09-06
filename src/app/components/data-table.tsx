@@ -48,13 +48,13 @@ const tableStyles = `
   
   .loss-grid-header {
     display: grid;
-    grid-template-columns: 1fr repeat(7, minmax(80px, 120px));
+    grid-template-columns: 1fr repeat(8, minmax(80px, 120px));
     border-bottom: 1px solid hsl(var(--border));
   }
   
   .loss-grid-content {
     display: grid;
-    grid-template-columns: 1fr repeat(7, minmax(80px, 120px));
+    grid-template-columns: 1fr repeat(8, minmax(80px, 120px));
   }
   
   .confirmation-grid-header {
@@ -137,9 +137,9 @@ const tableStyles = `
     border-right: none;
   }
   
-  .loss-grid-header .grid-header:nth-child(8),
-  .loss-grid-content .grid-cell-name:nth-child(8n),
-  .loss-grid-content .grid-cell-data:nth-child(8n) {
+  .loss-grid-header .grid-header:nth-child(9),
+  .loss-grid-content .grid-cell-name:nth-child(9n),
+  .loss-grid-content .grid-cell-data:nth-child(9n) {
     border-right: none;
   }
   
@@ -161,8 +161,8 @@ const tableStyles = `
     border-bottom: none;
   }
   
-  .loss-grid-content .grid-cell-name:nth-last-child(-n+8),
-  .loss-grid-content .grid-cell-data:nth-last-child(-n+8) {
+  .loss-grid-content .grid-cell-name:nth-last-child(-n+9),
+  .loss-grid-content .grid-cell-data:nth-last-child(-n+9) {
     border-bottom: none;
   }
   
@@ -322,6 +322,7 @@ import {
 export const lossReasonSchema = z.object({
   lossReason: z.string(),
   totalCount: z.number(),
+  lossPercentage: z.number(),
   conf1: z.number(),
   conf2: z.number(),
   conf3: z.number(),
@@ -396,6 +397,15 @@ const lossReasonColumns: ColumnDef<z.infer<typeof lossReasonSchema>>[] = [
     cell: ({ row }) => (
       <div className="text-center font-semibold">
         {row.original.totalCount}
+      </div>
+    ),
+  },
+  {
+    accessorKey: "lossPercentage",
+    header: () => <div className="text-center">Loss %</div>,
+    cell: ({ row }) => (
+      <div className="text-center">
+        {row.original.lossPercentage}%
       </div>
     ),
   },
@@ -1063,6 +1073,7 @@ export function DataTable({
           <div className="loss-grid-header">
             <div className="grid-header">Loss Reason</div>
             <div className="grid-header">Total</div>
+            <div className="grid-header">Loss %</div>
             <div className="grid-header">1 Conf</div>
             <div className="grid-header">2 Conf</div>
             <div className="grid-header">3 Conf</div>
@@ -1079,6 +1090,7 @@ export function DataTable({
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.lossReason}</div>
                     <div className="grid-cell-data font-semibold">{row.totalCount}</div>
+                    <div className="grid-cell-data">{row.lossPercentage}%</div>
                     <div className="grid-cell-data">{row.conf1}</div>
                     <div className="grid-cell-data">{row.conf2}</div>
                     <div className="grid-cell-data">{row.conf3}</div>
@@ -1315,7 +1327,7 @@ export function DataTable({
                   // Add confirmation level rows
                   for (let i = 1; i <= 6; i++) {
                     const confKey = `conf${i}` as keyof typeof allTradesRow;
-                    const confData = parseRangeData(allTradesRow[confKey]);
+                    const confData = parseRangeData(String(allTradesRow[confKey]));
                     const percentage = totalAllTrades > 0 ? Math.round((confData.total / totalAllTrades) * 100) : 0;
                     
                     rows.push({

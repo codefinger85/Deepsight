@@ -33,6 +33,7 @@ export type Trade = {
 export type LossReasonAnalysis = {
   lossReason: string;
   totalCount: number;
+  lossPercentage: number;
   conf1: number;
   conf2: number;
   conf3: number;
@@ -286,6 +287,7 @@ export async function getLossReasonsWithConfirmations(): Promise<LossReasonAnaly
           groupedData[individualReason] = {
             lossReason: individualReason,
             totalCount: 0,
+            lossPercentage: 0,
             conf1: 0,
             conf2: 0,
             conf3: 0,
@@ -309,8 +311,17 @@ export async function getLossReasonsWithConfirmations(): Promise<LossReasonAnaly
       });
     });
 
+    // Calculate total loss reason occurrences
+    const totalLossReasonOccurrences = Object.values(groupedData).reduce((sum, item) => sum + item.totalCount, 0);
+    
+    // Calculate percentage for each loss reason
+    const results = Object.values(groupedData).map(item => ({
+      ...item,
+      lossPercentage: totalLossReasonOccurrences > 0 ? Math.round((item.totalCount / totalLossReasonOccurrences) * 100) : 0
+    }));
+
     // Convert to array and sort by total count (most frequent first)
-    return Object.values(groupedData).sort((a, b) => b.totalCount - a.totalCount);
+    return results.sort((a, b) => b.totalCount - a.totalCount);
   } catch (error) {
     console.error('Error getting loss reasons with confirmations:', error);
     return [];
