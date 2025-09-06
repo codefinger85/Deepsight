@@ -20,13 +20,14 @@ import {
   getLossReasonsWithConfirmations,
   getConfirmationAnalysisWithCounts,
   getTradesAnalysis,
-  getDayAnalysis
+  getDayAnalysis,
+  getChartData
 } from "@/lib/database"
 
 
 export default async function Page() {
   // Fetch trading data from Supabase
-  const [totalEarnings, overallWinRate, totalSessions, totalTrades, totalWinningTrades, totalLosingTrades, sessionsAbove60, sessionsBelow60, lossReasonsData, confirmationAnalysisData, tradesAnalysisData, dayAnalysisData] = await Promise.all([
+  const [totalEarnings, overallWinRate, totalSessions, totalTrades, totalWinningTrades, totalLosingTrades, sessionsAbove60, sessionsBelow60, lossReasonsData, confirmationAnalysisData, tradesAnalysisData, dayAnalysisData, chartData] = await Promise.all([
     getTotalEarnings(),
     getOverallWinRate(),
     getTotalSessions(),
@@ -39,6 +40,7 @@ export default async function Page() {
     getConfirmationAnalysisWithCounts(),
     getTradesAnalysis(),
     getDayAnalysis(),
+    getChartData(),
   ]);
 
   return (
@@ -58,7 +60,7 @@ export default async function Page() {
               sessionsBelow60={sessionsBelow60}
             />
             <div className="px-4 lg:px-6">
-              <ChartAreaInteractive />
+              <ChartAreaInteractive chartData={chartData} />
             </div>
             <DataTable 
               lossReasonsData={lossReasonsData}

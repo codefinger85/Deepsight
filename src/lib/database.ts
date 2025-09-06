@@ -753,3 +753,31 @@ export async function getDayAnalysis(): Promise<DayAnalysis[]> {
     ];
   }
 }
+
+export type ChartData = {
+  date: string;
+  wins: number;
+  losses: number;
+  winRate: number;
+};
+
+export async function getChartData(): Promise<ChartData[]> {
+  try {
+    const { data, error } = await supabase
+      .from('sessions')
+      .select('date, winCount, lossCount, winRate')
+      .order('date', { ascending: true });
+
+    if (error) throw error;
+
+    return data?.map(session => ({
+      date: session.date,
+      wins: session.winCount,
+      losses: session.lossCount,
+      winRate: Math.round(parseFloat(session.winRate) || 0)
+    })) || [];
+  } catch (error) {
+    console.error('Error getting chart data:', error);
+    return [];
+  }
+}
