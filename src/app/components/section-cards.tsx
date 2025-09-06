@@ -1,9 +1,6 @@
-import { IconTrendingDown, IconTrendingUp } from "@tabler/icons-react"
-
 import { Badge } from "@/components/ui/badge"
 import {
   Card,
-  CardAction,
   CardDescription,
   CardFooter,
   CardHeader,
@@ -36,15 +33,14 @@ export function SectionCards({
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Earnings</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            ${(totalEarnings || 0).toFixed(2)}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
+          <div className="flex items-end justify-start gap-3">
+            <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
+              ${(totalEarnings || 0).toFixed(2)}
+            </CardTitle>
+            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
               +12.5%
             </Badge>
-          </CardAction>
+          </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
@@ -58,15 +54,14 @@ export function SectionCards({
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Overall Win Rate</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {(overallWinRate || 0)}%
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingDown />
+          <div className="flex items-end justify-start gap-3">
+            <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
+              {(overallWinRate || 0)}%
+            </CardTitle>
+            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
               -20%
             </Badge>
-          </CardAction>
+          </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
@@ -80,15 +75,14 @@ export function SectionCards({
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Sessions</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {(totalSessions || 0).toLocaleString()}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
+          <div className="flex items-end justify-start gap-3">
+            <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
+              {(totalSessions || 0).toLocaleString()}
+            </CardTitle>
+            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
               +12.5%
             </Badge>
-          </CardAction>
+          </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
@@ -100,15 +94,14 @@ export function SectionCards({
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Trades</CardDescription>
-          <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            {(totalTrades || 0).toLocaleString()}
-          </CardTitle>
-          <CardAction>
-            <Badge variant="outline">
-              <IconTrendingUp />
+          <div className="flex items-end justify-start gap-3">
+            <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
+              {(totalTrades || 0).toLocaleString()}
+            </CardTitle>
+            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
               +4.5%
             </Badge>
-          </CardAction>
+          </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">

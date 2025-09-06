@@ -945,7 +945,7 @@ export function DataTable({
             <SelectItem value="days">Days</SelectItem>
           </SelectContent>
         </Select>
-        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
+        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white">
           <TabsTrigger value="trades">Trades</TabsTrigger>
           <TabsTrigger value="confirmations">Confirmations</TabsTrigger>
           <TabsTrigger value="loss-reasons">Loss reasons</TabsTrigger>
