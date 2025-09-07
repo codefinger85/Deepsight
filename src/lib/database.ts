@@ -93,13 +93,37 @@ export type DayAnalysis = {
   winPercentage: number;
 };
 
+// Helper function to get date filter
+function getDateFilter(dateRange?: string) {
+  if (!dateRange || dateRange === 'all') return null;
+  
+  const referenceDate = new Date();
+  let daysToSubtract = 90;
+  if (dateRange === '30d') {
+    daysToSubtract = 30;
+  } else if (dateRange === '7d') {
+    daysToSubtract = 7;
+  }
+  
+  const startDate = new Date(referenceDate);
+  startDate.setDate(startDate.getDate() - daysToSubtract);
+  return startDate.toISOString().split('T')[0];
+}
+
 // Read-only functions for dashboard metrics
-export async function getTotalEarnings(): Promise<number> {
+export async function getTotalEarnings(dateRange?: string): Promise<number> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('sessions')
       .select('earningsResult')
       .not('earningsResult', 'is', null);
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -114,11 +138,18 @@ export async function getTotalEarnings(): Promise<number> {
   }
 }
 
-export async function getOverallWinRate(): Promise<number> {
+export async function getOverallWinRate(dateRange?: string): Promise<number> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
-      .select('result');
+      .select('result, date');
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -134,11 +165,18 @@ export async function getOverallWinRate(): Promise<number> {
   }
 }
 
-export async function getTotalSessions(): Promise<number> {
+export async function getTotalSessions(dateRange?: string): Promise<number> {
   try {
-    const { count, error } = await supabase
+    let query = supabase
       .from('sessions')
       .select('*', { count: 'exact', head: true });
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { count, error } = await query;
 
     if (error) throw error;
 
@@ -149,11 +187,18 @@ export async function getTotalSessions(): Promise<number> {
   }
 }
 
-export async function getTotalTrades(): Promise<number> {
+export async function getTotalTrades(dateRange?: string): Promise<number> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('sessions')
-      .select('tradesCount');
+      .select('tradesCount, date');
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -185,12 +230,19 @@ export async function getAllSessions(): Promise<Session[]> {
   }
 }
 
-export async function getTotalWinningTrades(): Promise<number> {
+export async function getTotalWinningTrades(dateRange?: string): Promise<number> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
-      .select('result')
+      .select('result, date')
       .eq('result', 'win');
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -201,12 +253,19 @@ export async function getTotalWinningTrades(): Promise<number> {
   }
 }
 
-export async function getTotalLosingTrades(): Promise<number> {
+export async function getTotalLosingTrades(dateRange?: string): Promise<number> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
-      .select('result')
+      .select('result, date')
       .eq('result', 'loss');
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -217,12 +276,19 @@ export async function getTotalLosingTrades(): Promise<number> {
   }
 }
 
-export async function getSessionsAbove60Percent(): Promise<number> {
+export async function getSessionsAbove60Percent(dateRange?: string): Promise<number> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('sessions')
-      .select('winRate')
+      .select('winRate, date')
       .gte('winRate', 60);
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -233,12 +299,19 @@ export async function getSessionsAbove60Percent(): Promise<number> {
   }
 }
 
-export async function getSessionsBelow60Percent(): Promise<number> {
+export async function getSessionsBelow60Percent(dateRange?: string): Promise<number> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('sessions')
-      .select('winRate')
+      .select('winRate, date')
       .lt('winRate', 60);
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 

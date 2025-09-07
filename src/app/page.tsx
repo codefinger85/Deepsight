@@ -50,14 +50,16 @@ export default async function Page() {
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
             <SectionCards 
-              totalEarnings={totalEarnings}
-              overallWinRate={overallWinRate}
-              totalSessions={totalSessions}
-              totalTrades={totalTrades}
-              totalWinningTrades={totalWinningTrades}
-              totalLosingTrades={totalLosingTrades}
-              sessionsAbove60={sessionsAbove60}
-              sessionsBelow60={sessionsBelow60}
+              initialData={{
+                totalEarnings,
+                overallWinRate,
+                totalSessions,
+                totalTrades,
+                totalWinningTrades,
+                totalLosingTrades,
+                sessionsAbove60,
+                sessionsBelow60,
+              }}
             />
             <div className="px-4 lg:px-6">
               <ChartAreaInteractive chartData={chartData} />
