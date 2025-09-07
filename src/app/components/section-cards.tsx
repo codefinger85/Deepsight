@@ -10,9 +10,10 @@ import {
   CardTitle,
 } from "@/components/ui/card"
 import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
+  Tabs,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs"
 import {
   getTotalEarnings,
   getOverallWinRate,
@@ -79,22 +80,17 @@ export function SectionCards({ initialData }: SectionCardsProps) {
     fetchData()
   }, [dateRange])
   return (
-    <div className="space-y-4">
-      <div className="flex items-center justify-between px-4 lg:px-6">
-        <h2 className="text-lg font-semibold">Dashboard Metrics</h2>
-        <ToggleGroup
-          type="single"
-          value={dateRange}
-          onValueChange={setDateRange}
-          variant="outline"
-          size="sm"
-        >
-          <ToggleGroupItem value="7d" className="text-xs px-2">7d</ToggleGroupItem>
-          <ToggleGroupItem value="30d" className="text-xs px-2">30d</ToggleGroupItem>
-          <ToggleGroupItem value="90d" className="text-xs px-2">90d</ToggleGroupItem>
-          <ToggleGroupItem value="all" className="text-xs px-2">All</ToggleGroupItem>
-        </ToggleGroup>
-      </div>
+    <Tabs value={dateRange} onValueChange={setDateRange}>
+      <div className="space-y-4">
+        <div className="flex items-center justify-between px-4 lg:px-6">
+          <h2 className="text-lg font-semibold">Dashboard Metrics</h2>
+          <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white">
+            <TabsTrigger value="7d">7d</TabsTrigger>
+            <TabsTrigger value="30d">30d</TabsTrigger>
+            <TabsTrigger value="90d">90d</TabsTrigger>
+            <TabsTrigger value="all">All</TabsTrigger>
+          </TabsList>
+        </div>
       <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
         <Card className="@container/card">
           <CardHeader>
@@ -178,5 +174,6 @@ export function SectionCards({ initialData }: SectionCardsProps) {
       </Card>
       </div>
     </div>
+    </Tabs>
   )
 }
