@@ -61,10 +61,16 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
     const date = new Date(item.date)
     const referenceDate = new Date() // Use current date as reference
     let daysToSubtract = 90
-    if (timeRange === "30d") {
-      daysToSubtract = 30
-    } else if (timeRange === "7d") {
+    if (timeRange === "7d") {
       daysToSubtract = 7
+    } else if (timeRange === "14d") {
+      daysToSubtract = 14
+    } else if (timeRange === "21d") {
+      daysToSubtract = 21
+    } else if (timeRange === "30d") {
+      daysToSubtract = 30
+    } else if (timeRange === "90d") {
+      daysToSubtract = 90
     }
     const startDate = new Date(referenceDate)
     startDate.setDate(startDate.getDate() - daysToSubtract)
@@ -94,7 +100,7 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
                 </span>
               </CardDescription>
             </div>
-            <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white">
+            <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
               <TabsTrigger value="performance">Winrate</TabsTrigger>
               <TabsTrigger value="counts">Counts</TabsTrigger>
             </TabsList>
@@ -107,9 +113,11 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
             variant="outline"
             className="hidden *:data-[slot=toggle-group-item]:!px-4 @[767px]/card:flex"
           >
-            <ToggleGroupItem value="90d">Last 3 months</ToggleGroupItem>
-            <ToggleGroupItem value="30d">Last 30 days</ToggleGroupItem>
-            <ToggleGroupItem value="7d">Last 7 days</ToggleGroupItem>
+            <ToggleGroupItem value="7d">7 days</ToggleGroupItem>
+            <ToggleGroupItem value="14d">14 days</ToggleGroupItem>
+            <ToggleGroupItem value="21d">21 days</ToggleGroupItem>
+            <ToggleGroupItem value="30d">30 days</ToggleGroupItem>
+            <ToggleGroupItem value="90d">3 months</ToggleGroupItem>
           </ToggleGroup>
           <Select value={timeRange} onValueChange={setTimeRange}>
             <SelectTrigger
@@ -120,14 +128,20 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
               <SelectValue placeholder="Last 3 months" />
             </SelectTrigger>
             <SelectContent className="rounded-xl">
-              <SelectItem value="90d" className="rounded-lg">
-                Last 3 months
+              <SelectItem value="7d" className="rounded-lg">
+                Last 7 days
+              </SelectItem>
+              <SelectItem value="14d" className="rounded-lg">
+                Last 14 days
+              </SelectItem>
+              <SelectItem value="21d" className="rounded-lg">
+                Last 21 days
               </SelectItem>
               <SelectItem value="30d" className="rounded-lg">
                 Last 30 days
               </SelectItem>
-              <SelectItem value="7d" className="rounded-lg">
-                Last 7 days
+              <SelectItem value="90d" className="rounded-lg">
+                Last 3 months
               </SelectItem>
             </SelectContent>
           </Select>

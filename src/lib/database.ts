@@ -99,10 +99,16 @@ function getDateFilter(dateRange?: string) {
   
   const referenceDate = new Date();
   let daysToSubtract = 90;
-  if (dateRange === '30d') {
-    daysToSubtract = 30;
-  } else if (dateRange === '7d') {
+  if (dateRange === '7d') {
     daysToSubtract = 7;
+  } else if (dateRange === '14d') {
+    daysToSubtract = 14;
+  } else if (dateRange === '21d') {
+    daysToSubtract = 21;
+  } else if (dateRange === '30d') {
+    daysToSubtract = 30;
+  } else if (dateRange === '90d') {
+    daysToSubtract = 90;
   }
   
   const startDate = new Date(referenceDate);

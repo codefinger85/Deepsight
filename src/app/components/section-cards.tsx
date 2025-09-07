@@ -82,10 +82,11 @@ export function SectionCards({ initialData }: SectionCardsProps) {
   return (
     <Tabs value={dateRange} onValueChange={setDateRange}>
       <div className="space-y-4">
-        <div className="flex items-center justify-between px-4 lg:px-6">
-          <h2 className="text-lg font-semibold">Dashboard Metrics</h2>
-          <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white">
+        <div className="flex justify-end px-4 lg:px-6">
+          <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
             <TabsTrigger value="7d">7d</TabsTrigger>
+            <TabsTrigger value="14d">14d</TabsTrigger>
+            <TabsTrigger value="21d">21d</TabsTrigger>
             <TabsTrigger value="30d">30d</TabsTrigger>
             <TabsTrigger value="90d">90d</TabsTrigger>
             <TabsTrigger value="all">All</TabsTrigger>
