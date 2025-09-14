@@ -65,10 +65,12 @@ export default async function Page() {
               <ChartAreaInteractive chartData={chartData} />
             </div>
             <DataTable 
-              lossReasonsData={lossReasonsData}
-              confirmationAnalysisData={confirmationAnalysisData}
-              tradesAnalysisData={tradesAnalysisData}
-              dayAnalysisData={dayAnalysisData}
+              initialData={{
+                lossReasonsData,
+                confirmationAnalysisData,
+                tradesAnalysisData,
+                dayAnalysisData,
+              }}
             />
           </div>
         </div>

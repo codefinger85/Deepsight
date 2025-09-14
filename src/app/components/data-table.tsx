@@ -1,6 +1,12 @@
 "use client"
 
 import * as React from "react"
+import {
+  getLossReasonsWithConfirmations,
+  getConfirmationAnalysisWithCounts,
+  getTradesAnalysis,
+  getDayAnalysis,
+} from "@/lib/database"
 
 // Fixed width styles
 const tableStyles = `
@@ -794,17 +800,44 @@ const dayAnalysisColumns: ColumnDef<z.infer<typeof dayAnalysisSchema>>[] = [
 ]
 
 export function DataTable({
-  lossReasonsData,
-  confirmationAnalysisData,
-  tradesAnalysisData,
-  dayAnalysisData,
+  initialData,
 }: {
-  lossReasonsData: z.infer<typeof lossReasonSchema>[]
-  confirmationAnalysisData: z.infer<typeof confirmationAnalysisSchema>[]
-  tradesAnalysisData: z.infer<typeof tradesAnalysisSchema>[]
-  dayAnalysisData: z.infer<typeof dayAnalysisSchema>[]
+  initialData: {
+    lossReasonsData: z.infer<typeof lossReasonSchema>[]
+    confirmationAnalysisData: z.infer<typeof confirmationAnalysisSchema>[]
+    tradesAnalysisData: z.infer<typeof tradesAnalysisSchema>[]
+    dayAnalysisData: z.infer<typeof dayAnalysisSchema>[]
+  }
 }) {
   const [activeTab, setActiveTab] = React.useState("trades")
+  const [dateRange, setDateRange] = React.useState("all")
+  const [data, setData] = React.useState(initialData)
+
+  React.useEffect(() => {
+    const fetchData = async () => {
+      const range = dateRange === "all" ? undefined : dateRange
+      const [
+        lossReasonsData,
+        confirmationAnalysisData,
+        tradesAnalysisData,
+        dayAnalysisData,
+      ] = await Promise.all([
+        getLossReasonsWithConfirmations(range),
+        getConfirmationAnalysisWithCounts(range),
+        getTradesAnalysis(range),
+        getDayAnalysis(range),
+      ])
+
+      setData({
+        lossReasonsData,
+        confirmationAnalysisData,
+        tradesAnalysisData,
+        dayAnalysisData,
+      })
+    }
+
+    fetchData()
+  }, [dateRange])
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -819,12 +852,12 @@ export function DataTable({
 
   // Generate confirmation type options from actual data
   const confirmationTypeOptions: FilterOption[] = React.useMemo(() => {
-    const uniqueConfirmations = Array.from(new Set(confirmationAnalysisData.map(item => item.confirmation)))
+    const uniqueConfirmations = Array.from(new Set(data.confirmationAnalysisData.map(item => item.confirmation)))
     return uniqueConfirmations.map(confirmation => ({
       name: confirmation,
       icon: <IconTrendingUp className="size-3.5 text-muted-foreground" />
     }))
-  }, [confirmationAnalysisData])
+  }, [data.confirmationAnalysisData])
 
   // Update the filter options for confirmation types
   React.useEffect(() => {
@@ -833,9 +866,9 @@ export function DataTable({
 
   // Filter confirmation analysis data based on active filters
   const filteredConfirmationData = React.useMemo(() => {
-    if (activeTab !== "confirmations" || filters.length === 0) return confirmationAnalysisData
+    if (activeTab !== "confirmations" || filters.length === 0) return data.confirmationAnalysisData
     
-    return confirmationAnalysisData.filter(item => {
+    return data.confirmationAnalysisData.filter(item => {
       return filters.every(filter => {
         // Skip filters with no values (they shouldn't filter anything)
         if (!filter.value || filter.value.length === 0) return true
@@ -912,17 +945,17 @@ export function DataTable({
         }
       })
     })
-  }, [confirmationAnalysisData, filters, activeTab])
+  }, [data.confirmationAnalysisData, filters, activeTab])
 
   // Determine which data and columns to use based on active tab
   const currentData = activeTab === "loss-reasons" 
-    ? lossReasonsData 
+    ? data.lossReasonsData 
     : activeTab === "confirmations" 
     ? filteredConfirmationData
     : activeTab === "trades"
-    ? tradesAnalysisData
+    ? data.tradesAnalysisData
     : activeTab === "days"
-    ? dayAnalysisData
+    ? data.dayAnalysisData
     : []
   
   const currentColumns = activeTab === "loss-reasons" 
@@ -985,12 +1018,52 @@ export function DataTable({
             <SelectItem value="days">Days</SelectItem>
           </SelectContent>
         </Select>
-        <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
-          <TabsTrigger value="trades">Trades</TabsTrigger>
-          <TabsTrigger value="confirmations">Confirmations</TabsTrigger>
-          <TabsTrigger value="loss-reasons">Loss reasons</TabsTrigger>
-          <TabsTrigger value="days">Days</TabsTrigger>
-        </TabsList>
+        <div className="flex items-center justify-between w-full">
+          <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
+            <TabsTrigger value="trades">Trades</TabsTrigger>
+            <TabsTrigger value="confirmations">Confirmations</TabsTrigger>
+            <TabsTrigger value="loss-reasons">Loss reasons</TabsTrigger>
+            <TabsTrigger value="days">Days</TabsTrigger>
+          </TabsList>
+          <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex items-center justify-center rounded-md p-1 text-muted-foreground">
+            <button 
+              onClick={() => setDateRange("7d")}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "7d" ? "bg-background text-foreground shadow" : ""}`}
+            >
+              7d
+            </button>
+            <button 
+              onClick={() => setDateRange("14d")}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "14d" ? "bg-background text-foreground shadow" : ""}`}
+            >
+              14d
+            </button>
+            <button 
+              onClick={() => setDateRange("21d")}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "21d" ? "bg-background text-foreground shadow" : ""}`}
+            >
+              21d
+            </button>
+            <button 
+              onClick={() => setDateRange("30d")}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "30d" ? "bg-background text-foreground shadow" : ""}`}
+            >
+              30d
+            </button>
+            <button 
+              onClick={() => setDateRange("90d")}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "90d" ? "bg-background text-foreground shadow" : ""}`}
+            >
+              90d
+            </button>
+            <button 
+              onClick={() => setDateRange("all")}
+              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "all" ? "bg-background text-foreground shadow" : ""}`}
+            >
+              All
+            </button>
+          </div>
+        </div>
         <div className="flex items-center gap-2">
           {/* Active Filters Display - Only show for Confirmations tab */}
           {activeTab === "confirmations" && filters.length > 0 && (
@@ -1116,8 +1189,8 @@ export function DataTable({
           {/* Scrollable Content */}
           <div className="max-h-[420px] overflow-y-auto scrollbar-hide">
             <div className="loss-grid-content">
-              {lossReasonsData.length > 0 ? (
-                lossReasonsData.map((row, index) => (
+              {data.lossReasonsData.length > 0 ? (
+                data.lossReasonsData.map((row, index) => (
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.lossReason}</div>
                     <div className="grid-cell-data font-semibold">{row.totalCount}</div>
@@ -1139,7 +1212,7 @@ export function DataTable({
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing {lossReasonsData.length} loss reasons (CSS Grid)
+            Showing {data.lossReasonsData.length} loss reasons (CSS Grid)
           </div>
         </div>
       </TabsContent>
@@ -1348,9 +1421,9 @@ export function DataTable({
           {/* Scrollable Content */}
           <div className="max-h-[420px] overflow-y-auto scrollbar-hide">
             <div className="trade-grid-content">
-              {tradesAnalysisData.length > 0 ? (
+              {data.tradesAnalysisData.length > 0 ? (
                 (() => {
-                  const allTradesRow = tradesAnalysisData[0];
+                  const allTradesRow = data.tradesAnalysisData[0];
                   const totalAllTrades = allTradesRow.totalCount;
                   
                   // Create rows for All Trades + each confirmation level
@@ -1429,8 +1502,8 @@ export function DataTable({
           {/* Scrollable Content */}
           <div className="max-h-[420px] overflow-y-auto scrollbar-hide">
             <div className="day-grid-content">
-              {dayAnalysisData.length > 0 ? (
-                dayAnalysisData.map((row, index) => (
+              {data.dayAnalysisData.length > 0 ? (
+                data.dayAnalysisData.map((row, index) => (
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.dayOfWeek}</div>
                     <div className="grid-cell-data font-semibold">{row.totalTrades}</div>
@@ -1449,7 +1522,7 @@ export function DataTable({
         </div>
         <div className="flex items-center justify-between px-4">
           <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing {dayAnalysisData.length} days (CSS Grid)
+            Showing {data.dayAnalysisData.length} days (CSS Grid)
           </div>
         </div>
       </TabsContent>

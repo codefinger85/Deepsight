@@ -328,13 +328,20 @@ export async function getSessionsBelow60Percent(dateRange?: string): Promise<num
   }
 }
 
-export async function getLossReasonsWithConfirmations(): Promise<LossReasonAnalysis[]> {
+export async function getLossReasonsWithConfirmations(dateRange?: string): Promise<LossReasonAnalysis[]> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
-      .select('lossReason, confirmationsCount')
+      .select('lossReason, confirmationsCount, date')
       .eq('result', 'loss')
       .not('lossReason', 'is', null);
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -413,13 +420,20 @@ export async function getLossReasonsWithConfirmations(): Promise<LossReasonAnaly
   }
 }
 
-export async function getWinningConfirmationsWithCounts(): Promise<WinningConfirmationAnalysis[]> {
+export async function getWinningConfirmationsWithCounts(dateRange?: string): Promise<WinningConfirmationAnalysis[]> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
-      .select('confirmations, confirmationsCount')
+      .select('confirmations, confirmationsCount, date')
       .eq('result', 'win')
       .not('confirmations', 'is', null);
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -488,12 +502,19 @@ export async function getWinningConfirmationsWithCounts(): Promise<WinningConfir
   }
 }
 
-export async function getConfirmationAnalysisWithCounts(): Promise<ConfirmationAnalysis[]> {
+export async function getConfirmationAnalysisWithCounts(dateRange?: string): Promise<ConfirmationAnalysis[]> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
-      .select('confirmations, confirmationsCount, result')
+      .select('confirmations, confirmationsCount, result, date')
       .not('confirmations', 'is', null);
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -656,11 +677,18 @@ export async function getSessionTrades(sessionId: string): Promise<Trade[]> {
   }
 }
 
-export async function getTradesAnalysis(): Promise<TradesAnalysis[]> {
+export async function getTradesAnalysis(dateRange?: string): Promise<TradesAnalysis[]> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
-      .select('confirmationsCount, result');
+      .select('confirmationsCount, result, date');
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
@@ -769,11 +797,18 @@ export async function getTradesAnalysis(): Promise<TradesAnalysis[]> {
   }
 }
 
-export async function getDayAnalysis(): Promise<DayAnalysis[]> {
+export async function getDayAnalysis(dateRange?: string): Promise<DayAnalysis[]> {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('trades')
       .select('date, result');
+
+    const dateFilter = getDateFilter(dateRange);
+    if (dateFilter) {
+      query = query.gte('date', dateFilter);
+    }
+
+    const { data, error } = await query;
 
     if (error) throw error;
 
