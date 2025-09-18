@@ -1025,144 +1025,144 @@ export function DataTable({
             <TabsTrigger value="loss-reasons">Loss reasons</TabsTrigger>
             <TabsTrigger value="days">Days</TabsTrigger>
           </TabsList>
-          <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex items-center justify-center rounded-md p-1 text-muted-foreground">
-            <button 
-              onClick={() => setDateRange("7d")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "7d" ? "bg-background text-foreground shadow" : ""}`}
-            >
-              7d
-            </button>
-            <button 
-              onClick={() => setDateRange("14d")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "14d" ? "bg-background text-foreground shadow" : ""}`}
-            >
-              14d
-            </button>
-            <button 
-              onClick={() => setDateRange("21d")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "21d" ? "bg-background text-foreground shadow" : ""}`}
-            >
-              21d
-            </button>
-            <button 
-              onClick={() => setDateRange("30d")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "30d" ? "bg-background text-foreground shadow" : ""}`}
-            >
-              30d
-            </button>
-            <button 
-              onClick={() => setDateRange("90d")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "90d" ? "bg-background text-foreground shadow" : ""}`}
-            >
-              90d
-            </button>
-            <button 
-              onClick={() => setDateRange("all")}
-              className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "all" ? "bg-background text-foreground shadow" : ""}`}
-            >
-              All
-            </button>
-          </div>
-        </div>
-        <div className="flex items-center gap-2">
-          {/* Active Filters Display - Only show for Confirmations tab */}
-          {activeTab === "confirmations" && filters.length > 0 && (
-            <div className="flex items-center gap-2">
-              <Filters filters={filters} setFilters={setFilters} />
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => setFilters([])}
-                className="text-muted-foreground hover:text-foreground"
-              >
-                Clear All
-              </Button>
-            </div>
-          )}
-          {/* Add Filter button - Only show for Confirmations tab */}
-          {activeTab === "confirmations" && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-2">
-                  <PlusCircle className="size-4" />
-                  <span className="hidden lg:inline">Add Filter</span>
-                  <span className="lg:hidden">Filter</span>
+          <div className="flex items-center gap-2">
+            {/* Active Filters Display - Only show for Confirmations tab */}
+            {activeTab === "confirmations" && filters.length > 0 && (
+              <div className="flex items-center gap-2">
+                <Filters filters={filters} setFilters={setFilters} />
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => setFilters([])}
+                  className="text-muted-foreground hover:text-foreground"
+                >
+                  Clear All
                 </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-56">
-                <DropdownMenuItem
-                  onClick={() => {
-                    const newFilter: Filter = {
-                      id: Math.random().toString(36).substr(2, 9),
-                      type: FilterType.CONFIRMATION_TYPE,
-                      operator: "include" as any,
-                      value: [],
-                    }
-                    setFilters(prev => [...prev, newFilter])
-                  }}
-                >
-                  <Tag className="size-4 mr-2" />
-                  Confirmation Type
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    const newFilter: Filter = {
-                      id: Math.random().toString(36).substr(2, 9),
-                      type: FilterType.WIN_PERCENTAGE,
-                      operator: "is" as any,
-                      value: [],
-                    }
-                    setFilters(prev => [...prev, newFilter])
-                  }}
-                >
-                  <Target className="size-4 mr-2" />
-                  Win Percentage
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    const newFilter: Filter = {
-                      id: Math.random().toString(36).substr(2, 9),
-                      type: FilterType.TOTAL_COUNT,
-                      operator: "is" as any,
-                      value: [],
-                    }
-                    setFilters(prev => [...prev, newFilter])
-                  }}
-                >
-                  <BarChart3 className="size-4 mr-2" />
-                  Total Count
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    const newFilter: Filter = {
-                      id: Math.random().toString(36).substr(2, 9),
-                      type: FilterType.PERFORMANCE_TIER,
-                      operator: "is" as any,
-                      value: [],
-                    }
-                    setFilters(prev => [...prev, newFilter])
-                  }}
-                >
-                  <Activity className="size-4 mr-2" />
-                  Performance Tier
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    const newFilter: Filter = {
-                      id: Math.random().toString(36).substr(2, 9),
-                      type: FilterType.VOLUME_TIER,
-                      operator: "is" as any,
-                      value: [],
-                    }
-                    setFilters(prev => [...prev, newFilter])
-                  }}
-                >
-                  <SignalHigh className="size-4 mr-2" />
-                  Volume Tier
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+              </div>
+            )}
+            {/* Add Filter button - Only show for Confirmations tab */}
+            {activeTab === "confirmations" && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <PlusCircle className="size-4" />
+                    <span className="hidden lg:inline">Add Filter</span>
+                    <span className="lg:hidden">Filter</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="start" className="w-56">
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const newFilter: Filter = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        type: FilterType.CONFIRMATION_TYPE,
+                        operator: "include" as any,
+                        value: [],
+                      }
+                      setFilters(prev => [...prev, newFilter])
+                    }}
+                  >
+                    <Tag className="size-4 mr-2" />
+                    Confirmation Type
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const newFilter: Filter = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        type: FilterType.WIN_PERCENTAGE,
+                        operator: "is" as any,
+                        value: [],
+                      }
+                      setFilters(prev => [...prev, newFilter])
+                    }}
+                  >
+                    <Target className="size-4 mr-2" />
+                    Win Percentage
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const newFilter: Filter = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        type: FilterType.TOTAL_COUNT,
+                        operator: "is" as any,
+                        value: [],
+                      }
+                      setFilters(prev => [...prev, newFilter])
+                    }}
+                  >
+                    <BarChart3 className="size-4 mr-2" />
+                    Total Count
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const newFilter: Filter = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        type: FilterType.PERFORMANCE_TIER,
+                        operator: "is" as any,
+                        value: [],
+                      }
+                      setFilters(prev => [...prev, newFilter])
+                    }}
+                  >
+                    <Activity className="size-4 mr-2" />
+                    Performance Tier
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={() => {
+                      const newFilter: Filter = {
+                        id: Math.random().toString(36).substr(2, 9),
+                        type: FilterType.VOLUME_TIER,
+                        operator: "is" as any,
+                        value: [],
+                      }
+                      setFilters(prev => [...prev, newFilter])
+                    }}
+                  >
+                    <SignalHigh className="size-4 mr-2" />
+                    Volume Tier
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground">
+              <button 
+                onClick={() => setDateRange("7d")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "7d" ? "bg-background text-foreground shadow" : ""}`}
+              >
+                7d
+              </button>
+              <button 
+                onClick={() => setDateRange("14d")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "14d" ? "bg-background text-foreground shadow" : ""}`}
+              >
+                14d
+              </button>
+              <button 
+                onClick={() => setDateRange("21d")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "21d" ? "bg-background text-foreground shadow" : ""}`}
+              >
+                21d
+              </button>
+              <button 
+                onClick={() => setDateRange("30d")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "30d" ? "bg-background text-foreground shadow" : ""}`}
+              >
+                30d
+              </button>
+              <button 
+                onClick={() => setDateRange("90d")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "90d" ? "bg-background text-foreground shadow" : ""}`}
+              >
+                90d
+              </button>
+              <button 
+                onClick={() => setDateRange("all")}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "all" ? "bg-background text-foreground shadow" : ""}`}
+              >
+                All
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 

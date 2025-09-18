@@ -98,34 +98,34 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
                 </span>
               </CardDescription>
             </div>
-            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex items-center justify-center rounded-md p-1 text-muted-foreground">
+            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground">
               <button 
                 onClick={() => setTimeRange("7d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "7d" ? "bg-background text-foreground shadow" : ""}`}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "7d" ? "bg-background text-foreground shadow" : ""}`}
               >
                 7d
               </button>
               <button 
                 onClick={() => setTimeRange("14d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "14d" ? "bg-background text-foreground shadow" : ""}`}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "14d" ? "bg-background text-foreground shadow" : ""}`}
               >
                 14d
               </button>
               <button 
                 onClick={() => setTimeRange("21d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "21d" ? "bg-background text-foreground shadow" : ""}`}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "21d" ? "bg-background text-foreground shadow" : ""}`}
               >
                 21d
               </button>
               <button 
                 onClick={() => setTimeRange("30d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "30d" ? "bg-background text-foreground shadow" : ""}`}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "30d" ? "bg-background text-foreground shadow" : ""}`}
               >
                 30d
               </button>
               <button 
                 onClick={() => setTimeRange("90d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-sm px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "90d" ? "bg-background text-foreground shadow" : ""}`}
+                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "90d" ? "bg-background text-foreground shadow" : ""}`}
               >
                 90d
               </button>
