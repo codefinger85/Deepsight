@@ -105,7 +105,11 @@ export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAre
             }}
             className="aspect-auto h-[250px] w-full"
           >
-            <AreaChart data={scaledData}>
+            <AreaChart 
+              data={scaledData}
+              animationDuration={300}
+              animationEasing="ease-in-out"
+            >
               <defs>
                 <linearGradient id="fillWinRate" x1="0" y1="0" x2="0" y2="1">
                   <stop
@@ -196,6 +200,7 @@ export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAre
                 fill="url(#fillTrades)"
                 stroke="var(--color-tradesCount)"
                 stackId="background"
+                animationDuration={300}
               />
               <Area
                 dataKey="winRate"
@@ -203,6 +208,7 @@ export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAre
                 fill="url(#fillWinRate)"
                 stroke="var(--color-winRate)"
                 stackId="main"
+                animationDuration={300}
               />
             </AreaChart>
           </ChartContainer>

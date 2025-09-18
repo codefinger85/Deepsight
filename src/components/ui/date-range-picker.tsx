@@ -56,7 +56,7 @@ export function DateRangePicker({ selectedRange, onRangeChange, onReset }: DateR
               onRangeChange({
                 start: range?.from || null,
                 end: range?.to || null,
-              })
+              });
               if (range?.to) {
                 const popoverTrigger = document.querySelector('[data-state="open"]');
                 if (popoverTrigger) {

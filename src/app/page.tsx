@@ -58,8 +58,6 @@ function PageContent() {
   // Update chart and table data when global date filter changes
   React.useEffect(() => {
     const fetchFilteredData = async () => {
-      if (globalDateFilter === "all") return // SectionCards will handle "all" case
-
       const filter = globalDateFilter === "all" ? undefined : globalDateFilter
       const [chartDataResult, lossReasonsData, confirmationAnalysisData, tradesAnalysisData, dayAnalysisData] = await Promise.all([
         getChartData(), // Chart data doesn't support filtering yet, so keep as is

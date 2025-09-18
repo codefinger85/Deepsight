@@ -49,12 +49,6 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
 
   React.useEffect(() => {
     const fetchData = async () => {
-      // Don't fetch data when in custom mode without a selected range
-      if (dateFilter === "custom") {
-        onDateFilterChange(dateFilter)
-        return
-      }
-      
       const filter = dateFilter === "all" ? undefined : dateFilter
       const [
         totalEarnings,
@@ -94,11 +88,6 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
   }, [dateFilter, onDateFilterChange])
 
   const handleTabChange = (value: string) => {
-    if (value === "custom") {
-      // Switch to custom mode - this will show the date picker
-      setDateFilter("custom")
-      return
-    }
     setDateFilter(value)
     setCustomRange({ start: null, end: null }) // Reset custom range when switching to presets
   }
@@ -116,35 +105,28 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
   }
 
   const isCustomMode = typeof dateFilter === 'object' && dateFilter !== null
-  const currentTab = isCustomMode ? "custom" : (typeof dateFilter === 'string' ? dateFilter : "all")
-  const showDatePicker = currentTab === "custom"
+  const currentTab = isCustomMode ? "all" : (typeof dateFilter === 'string' ? dateFilter : "all")
   
   return (
     <Tabs value={currentTab} onValueChange={handleTabChange}>
       <div className="space-y-4">
         <div className="flex justify-end px-4 lg:px-6">
           <div className="flex items-center gap-3">
-            <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
-              <TabsTrigger value="7d">7d</TabsTrigger>
-              <TabsTrigger value="14d">14d</TabsTrigger>
-              <TabsTrigger value="21d">21d</TabsTrigger>
-              <TabsTrigger value="30d">30d</TabsTrigger>
-              <TabsTrigger value="90d">90d</TabsTrigger>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="custom">
-                {isCustomMode && customRange.start && customRange.end 
-                  ? `${format(customRange.start, "d MMM")} - ${format(customRange.end, "d MMM")}`
-                  : "Custom"
-                }
-              </TabsTrigger>
-            </TabsList>
-            {showDatePicker && (
+            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground">
+              <TabsList className="bg-transparent border-0 p-0">
+                <TabsTrigger value="7d">7d</TabsTrigger>
+                <TabsTrigger value="14d">14d</TabsTrigger>
+                <TabsTrigger value="21d">21d</TabsTrigger>
+                <TabsTrigger value="30d">30d</TabsTrigger>
+                <TabsTrigger value="90d">90d</TabsTrigger>
+                <TabsTrigger value="all">All</TabsTrigger>
+              </TabsList>
               <DateRangePicker
                 selectedRange={customRange}
                 onRangeChange={handleCustomRangeChange}
                 onReset={handleCustomReset}
               />
-            )}
+            </div>
           </div>
         </div>
       <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
