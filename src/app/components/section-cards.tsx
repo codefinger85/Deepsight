@@ -112,8 +112,14 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
       <div className="space-y-4">
         <div className="flex justify-end px-4 lg:px-6">
           <div className="flex items-center gap-3">
+            {/* Selected date range display */}
+            {customRange.start && customRange.end && (
+              <div className="text-sm font-medium text-slate-700">
+                {format(customRange.start, "MMM d")} - {format(customRange.end, "MMM d, yyyy")}
+              </div>
+            )}
             <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground">
-              <TabsList className="bg-transparent border-0 p-0">
+              <TabsList className="bg-transparent border-0 pr-3">
                 <TabsTrigger value="7d">7d</TabsTrigger>
                 <TabsTrigger value="14d">14d</TabsTrigger>
                 <TabsTrigger value="21d">21d</TabsTrigger>

@@ -18,8 +18,8 @@ interface DateRangePickerProps {
 
 export function DateRangePicker({ selectedRange, onRangeChange, onReset }: DateRangePickerProps) {
   return (
-    <div className="flex items-center gap-3">
-      <div className="h-8 w-px bg-slate-200"></div>
+    <div className="flex items-center gap-3 pr-2">
+      <div className="h-6 w-px bg-slate-200 mr-1"></div>
       
       <button
         onClick={onReset}
@@ -65,7 +65,7 @@ export function DateRangePicker({ selectedRange, onRangeChange, onReset }: DateR
               }
             }}
             numberOfMonths={2}
-            className="rounded-md border border-gray-200"
+            className="rounded-lg border border-gray-200"
             weekStartsOn={1}
           />
         </PopoverContent>
