@@ -93,40 +93,67 @@ export type DayAnalysis = {
   winPercentage: number;
 };
 
+// Types for date filtering
+export type DateRange = {
+  start: Date | null;
+  end: Date | null;
+};
+
+export type DateFilter = string | DateRange | null;
+
 // Helper function to get date filter
-function getDateFilter(dateRange?: string) {
-  if (!dateRange || dateRange === 'all') return null;
+function getDateFilter(dateFilter?: DateFilter) {
+  if (!dateFilter) return null;
   
-  const referenceDate = new Date();
-  let daysToSubtract = 90;
-  if (dateRange === '7d') {
-    daysToSubtract = 7;
-  } else if (dateRange === '14d') {
-    daysToSubtract = 14;
-  } else if (dateRange === '21d') {
-    daysToSubtract = 21;
-  } else if (dateRange === '30d') {
-    daysToSubtract = 30;
-  } else if (dateRange === '90d') {
-    daysToSubtract = 90;
+  // Handle custom date range objects
+  if (typeof dateFilter === 'object' && dateFilter.start && dateFilter.end) {
+    return {
+      start: dateFilter.start.toISOString().split('T')[0],
+      end: dateFilter.end.toISOString().split('T')[0]
+    };
   }
   
-  const startDate = new Date(referenceDate);
-  startDate.setDate(startDate.getDate() - daysToSubtract);
-  return startDate.toISOString().split('T')[0];
+  // Handle preset string filters
+  if (typeof dateFilter === 'string') {
+    if (dateFilter === 'all') return null;
+    
+    const referenceDate = new Date();
+    let daysToSubtract = 90;
+    if (dateFilter === '7d') {
+      daysToSubtract = 7;
+    } else if (dateFilter === '14d') {
+      daysToSubtract = 14;
+    } else if (dateFilter === '21d') {
+      daysToSubtract = 21;
+    } else if (dateFilter === '30d') {
+      daysToSubtract = 30;
+    } else if (dateFilter === '90d') {
+      daysToSubtract = 90;
+    }
+    
+    const startDate = new Date(referenceDate);
+    startDate.setDate(startDate.getDate() - daysToSubtract);
+    return startDate.toISOString().split('T')[0];
+  }
+  
+  return null;
 }
 
 // Read-only functions for dashboard metrics
-export async function getTotalEarnings(dateRange?: string): Promise<number> {
+export async function getTotalEarnings(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
       .from('sessions')
       .select('earningsResult')
       .not('earningsResult', 'is', null);
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -144,15 +171,19 @@ export async function getTotalEarnings(dateRange?: string): Promise<number> {
   }
 }
 
-export async function getOverallWinRate(dateRange?: string): Promise<number> {
+export async function getOverallWinRate(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
       .from('trades')
       .select('result, date');
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -171,15 +202,19 @@ export async function getOverallWinRate(dateRange?: string): Promise<number> {
   }
 }
 
-export async function getTotalSessions(dateRange?: string): Promise<number> {
+export async function getTotalSessions(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
       .from('sessions')
       .select('*', { count: 'exact', head: true });
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { count, error } = await query;
@@ -193,15 +228,19 @@ export async function getTotalSessions(dateRange?: string): Promise<number> {
   }
 }
 
-export async function getTotalTrades(dateRange?: string): Promise<number> {
+export async function getTotalTrades(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
       .from('sessions')
       .select('tradesCount, date');
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -236,16 +275,20 @@ export async function getAllSessions(): Promise<Session[]> {
   }
 }
 
-export async function getTotalWinningTrades(dateRange?: string): Promise<number> {
+export async function getTotalWinningTrades(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
       .from('trades')
       .select('result, date')
       .eq('result', 'win');
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -259,16 +302,20 @@ export async function getTotalWinningTrades(dateRange?: string): Promise<number>
   }
 }
 
-export async function getTotalLosingTrades(dateRange?: string): Promise<number> {
+export async function getTotalLosingTrades(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
       .from('trades')
       .select('result, date')
       .eq('result', 'loss');
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -282,16 +329,20 @@ export async function getTotalLosingTrades(dateRange?: string): Promise<number> 
   }
 }
 
-export async function getSessionsAbove60Percent(dateRange?: string): Promise<number> {
+export async function getSessionsAbove60Percent(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
       .from('sessions')
       .select('winRate, date')
       .gte('winRate', 60);
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -305,16 +356,20 @@ export async function getSessionsAbove60Percent(dateRange?: string): Promise<num
   }
 }
 
-export async function getSessionsBelow60Percent(dateRange?: string): Promise<number> {
+export async function getSessionsBelow60Percent(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
       .from('sessions')
       .select('winRate, date')
       .lt('winRate', 60);
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -328,7 +383,7 @@ export async function getSessionsBelow60Percent(dateRange?: string): Promise<num
   }
 }
 
-export async function getLossReasonsWithConfirmations(dateRange?: string): Promise<LossReasonAnalysis[]> {
+export async function getLossReasonsWithConfirmations(dateFilter?: DateFilter): Promise<LossReasonAnalysis[]> {
   try {
     let query = supabase
       .from('trades')
@@ -336,9 +391,13 @@ export async function getLossReasonsWithConfirmations(dateRange?: string): Promi
       .eq('result', 'loss')
       .not('lossReason', 'is', null);
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -420,7 +479,7 @@ export async function getLossReasonsWithConfirmations(dateRange?: string): Promi
   }
 }
 
-export async function getWinningConfirmationsWithCounts(dateRange?: string): Promise<WinningConfirmationAnalysis[]> {
+export async function getWinningConfirmationsWithCounts(dateFilter?: DateFilter): Promise<WinningConfirmationAnalysis[]> {
   try {
     let query = supabase
       .from('trades')
@@ -428,9 +487,13 @@ export async function getWinningConfirmationsWithCounts(dateRange?: string): Pro
       .eq('result', 'win')
       .not('confirmations', 'is', null);
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -502,16 +565,20 @@ export async function getWinningConfirmationsWithCounts(dateRange?: string): Pro
   }
 }
 
-export async function getConfirmationAnalysisWithCounts(dateRange?: string): Promise<ConfirmationAnalysis[]> {
+export async function getConfirmationAnalysisWithCounts(dateFilter?: DateFilter): Promise<ConfirmationAnalysis[]> {
   try {
     let query = supabase
       .from('trades')
       .select('confirmations, confirmationsCount, result, date')
       .not('confirmations', 'is', null);
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -677,15 +744,19 @@ export async function getSessionTrades(sessionId: string): Promise<Trade[]> {
   }
 }
 
-export async function getTradesAnalysis(dateRange?: string): Promise<TradesAnalysis[]> {
+export async function getTradesAnalysis(dateFilter?: DateFilter): Promise<TradesAnalysis[]> {
   try {
     let query = supabase
       .from('trades')
       .select('confirmationsCount, result, date');
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;
@@ -797,15 +868,19 @@ export async function getTradesAnalysis(dateRange?: string): Promise<TradesAnaly
   }
 }
 
-export async function getDayAnalysis(dateRange?: string): Promise<DayAnalysis[]> {
+export async function getDayAnalysis(dateFilter?: DateFilter): Promise<DayAnalysis[]> {
   try {
     let query = supabase
       .from('trades')
       .select('date, result');
 
-    const dateFilter = getDateFilter(dateRange);
-    if (dateFilter) {
-      query = query.gte('date', dateFilter);
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
     }
 
     const { data, error } = await query;

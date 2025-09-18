@@ -6,35 +6,15 @@ import { ChartData } from "@/lib/database"
 
 import {
   Card,
-  CardAction,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
 import {
-  ChartConfig,
   ChartContainer,
   ChartTooltip,
-  ChartTooltipContent,
 } from "@/components/ui/chart"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
-import {
-  ToggleGroup,
-  ToggleGroupItem,
-} from "@/components/ui/toggle-group"
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/components/ui/tabs"
 
 interface ChartAreaInteractiveProps {
   chartData: ChartData[];
@@ -54,31 +34,9 @@ const chartConfig = {
 } satisfies ChartConfig
 
 export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
-  const [timeRange, setTimeRange] = React.useState("90d")
-
-  const filteredData = chartData.filter((item) => {
-    const date = new Date(item.date)
-    const referenceDate = new Date() // Use current date as reference
-    let daysToSubtract = 90
-    if (timeRange === "7d") {
-      daysToSubtract = 7
-    } else if (timeRange === "14d") {
-      daysToSubtract = 14
-    } else if (timeRange === "21d") {
-      daysToSubtract = 21
-    } else if (timeRange === "30d") {
-      daysToSubtract = 30
-    } else if (timeRange === "90d") {
-      daysToSubtract = 90
-    }
-    const startDate = new Date(referenceDate)
-    startDate.setDate(startDate.getDate() - daysToSubtract)
-    return date >= startDate
-  })
-
   // Scale trades count for better visibility in performance chart
-  const maxTrades = Math.max(...filteredData.map(item => item.tradesCount))
-  const scaledData = filteredData.map(item => ({
+  const maxTrades = Math.max(...chartData.map(item => item.tradesCount))
+  const scaledData = chartData.map(item => ({
     ...item,
     scaledTradesCount: maxTrades > 0 ? (item.tradesCount / maxTrades) * 35 : 0
   }))
@@ -86,50 +44,16 @@ export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
   return (
     <Card className="@container/card">
         <CardHeader>
-          <div className="flex justify-between items-start">
-            <div className="space-y-1.5">
-              <CardTitle>Trading Performance</CardTitle>
-              <CardDescription>
-                <span className="hidden @[540px]/card:block">
-                  Daily win rate and trade volume over time
-                </span>
-                <span className="@[540px]/card:hidden">
-                  Win rate & volume
-                </span>
-              </CardDescription>
-            </div>
-            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground">
-              <button 
-                onClick={() => setTimeRange("7d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "7d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                7d
-              </button>
-              <button 
-                onClick={() => setTimeRange("14d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "14d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                14d
-              </button>
-              <button 
-                onClick={() => setTimeRange("21d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "21d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                21d
-              </button>
-              <button 
-                onClick={() => setTimeRange("30d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "30d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                30d
-              </button>
-              <button 
-                onClick={() => setTimeRange("90d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${timeRange === "90d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                90d
-              </button>
-            </div>
+          <div className="space-y-1.5">
+            <CardTitle>Trading Performance</CardTitle>
+            <CardDescription>
+              <span className="hidden @[540px]/card:block">
+                Daily win rate and trade volume over time
+              </span>
+              <span className="@[540px]/card:hidden">
+                Win rate & volume
+              </span>
+            </CardDescription>
           </div>
       </CardHeader>
       

@@ -14,6 +14,8 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/components/ui/tabs"
+import { DateRangePicker, type DateRange } from "@/components/ui/date-range-picker"
+import { format } from "date-fns"
 import {
   getTotalEarnings,
   getOverallWinRate,
@@ -23,6 +25,7 @@ import {
   getTotalLosingTrades,
   getSessionsAbove60Percent,
   getSessionsBelow60Percent,
+  type DateFilter,
 } from "@/lib/database"
 
 interface SectionCardsProps {
@@ -36,15 +39,17 @@ interface SectionCardsProps {
     sessionsAbove60: number;
     sessionsBelow60: number;
   };
+  onDateFilterChange: (filter: DateFilter) => void;
 }
 
-export function SectionCards({ initialData }: SectionCardsProps) {
-  const [dateRange, setDateRange] = React.useState("all")
+export function SectionCards({ initialData, onDateFilterChange }: SectionCardsProps) {
+  const [dateFilter, setDateFilter] = React.useState<DateFilter>("all")
+  const [customRange, setCustomRange] = React.useState<DateRange>({ start: null, end: null })
   const [data, setData] = React.useState(initialData)
 
   React.useEffect(() => {
     const fetchData = async () => {
-      const range = dateRange === "all" ? undefined : dateRange
+      const filter = dateFilter === "all" ? undefined : dateFilter
       const [
         totalEarnings,
         overallWinRate,
@@ -55,14 +60,14 @@ export function SectionCards({ initialData }: SectionCardsProps) {
         sessionsAbove60,
         sessionsBelow60,
       ] = await Promise.all([
-        getTotalEarnings(range),
-        getOverallWinRate(range),
-        getTotalSessions(range),
-        getTotalTrades(range),
-        getTotalWinningTrades(range),
-        getTotalLosingTrades(range),
-        getSessionsAbove60Percent(range),
-        getSessionsBelow60Percent(range),
+        getTotalEarnings(filter),
+        getOverallWinRate(filter),
+        getTotalSessions(filter),
+        getTotalTrades(filter),
+        getTotalWinningTrades(filter),
+        getTotalLosingTrades(filter),
+        getSessionsAbove60Percent(filter),
+        getSessionsBelow60Percent(filter),
       ])
 
       setData({
@@ -78,19 +83,61 @@ export function SectionCards({ initialData }: SectionCardsProps) {
     }
 
     fetchData()
-  }, [dateRange])
+    // Notify parent of date filter change
+    onDateFilterChange(dateFilter)
+  }, [dateFilter, onDateFilterChange])
+
+  const handleTabChange = (value: string) => {
+    if (value === "custom") {
+      // Switch to custom mode but don't change data until range is selected
+      return
+    }
+    setDateFilter(value)
+    setCustomRange({ start: null, end: null }) // Reset custom range when switching to presets
+  }
+
+  const handleCustomRangeChange = (range: DateRange) => {
+    setCustomRange(range)
+    if (range.start && range.end) {
+      setDateFilter(range)
+    }
+  }
+
+  const handleCustomReset = () => {
+    setCustomRange({ start: null, end: null })
+    setDateFilter("all")
+  }
+
+  const isCustomMode = typeof dateFilter === 'object' && dateFilter !== null
+  const currentTab = isCustomMode ? "custom" : (typeof dateFilter === 'string' ? dateFilter : "all")
+  
   return (
-    <Tabs value={dateRange} onValueChange={setDateRange}>
+    <Tabs value={currentTab} onValueChange={handleTabChange}>
       <div className="space-y-4">
         <div className="flex justify-end px-4 lg:px-6">
-          <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
-            <TabsTrigger value="7d">7d</TabsTrigger>
-            <TabsTrigger value="14d">14d</TabsTrigger>
-            <TabsTrigger value="21d">21d</TabsTrigger>
-            <TabsTrigger value="30d">30d</TabsTrigger>
-            <TabsTrigger value="90d">90d</TabsTrigger>
-            <TabsTrigger value="all">All</TabsTrigger>
-          </TabsList>
+          <div className="flex items-center gap-3">
+            <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
+              <TabsTrigger value="7d">7d</TabsTrigger>
+              <TabsTrigger value="14d">14d</TabsTrigger>
+              <TabsTrigger value="21d">21d</TabsTrigger>
+              <TabsTrigger value="30d">30d</TabsTrigger>
+              <TabsTrigger value="90d">90d</TabsTrigger>
+              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="custom">
+                {isCustomMode && customRange.start && customRange.end 
+                  ? `${format(customRange.start, "d MMM")} - ${format(customRange.end, "d MMM")}`
+                  : "Custom"
+                }
+              </TabsTrigger>
+            </TabsList>
+            {currentTab === "custom" && (
+              <DateRangePicker
+                selectedRange={customRange}
+                onRangeChange={handleCustomRangeChange}
+                onReset={handleCustomReset}
+              />
+            )}
+          </div>
         </div>
       <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
         <Card className="@container/card">

@@ -1,12 +1,6 @@
 "use client"
 
 import * as React from "react"
-import {
-  getLossReasonsWithConfirmations,
-  getConfirmationAnalysisWithCounts,
-  getTradesAnalysis,
-  getDayAnalysis,
-} from "@/lib/database"
 
 // Fixed width styles
 const tableStyles = `
@@ -810,34 +804,12 @@ export function DataTable({
   }
 }) {
   const [activeTab, setActiveTab] = React.useState("trades")
-  const [dateRange, setDateRange] = React.useState("all")
   const [data, setData] = React.useState(initialData)
 
+  // Update data when initialData changes (from global date filter)
   React.useEffect(() => {
-    const fetchData = async () => {
-      const range = dateRange === "all" ? undefined : dateRange
-      const [
-        lossReasonsData,
-        confirmationAnalysisData,
-        tradesAnalysisData,
-        dayAnalysisData,
-      ] = await Promise.all([
-        getLossReasonsWithConfirmations(range),
-        getConfirmationAnalysisWithCounts(range),
-        getTradesAnalysis(range),
-        getDayAnalysis(range),
-      ])
-
-      setData({
-        lossReasonsData,
-        confirmationAnalysisData,
-        tradesAnalysisData,
-        dayAnalysisData,
-      })
-    }
-
-    fetchData()
-  }, [dateRange])
+    setData(initialData)
+  }, [initialData])
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
@@ -1124,44 +1096,6 @@ export function DataTable({
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
-            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground">
-              <button 
-                onClick={() => setDateRange("7d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "7d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                7d
-              </button>
-              <button 
-                onClick={() => setDateRange("14d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "14d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                14d
-              </button>
-              <button 
-                onClick={() => setDateRange("21d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "21d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                21d
-              </button>
-              <button 
-                onClick={() => setDateRange("30d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "30d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                30d
-              </button>
-              <button 
-                onClick={() => setDateRange("90d")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "90d" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                90d
-              </button>
-              <button 
-                onClick={() => setDateRange("all")}
-                className={`inline-flex items-center justify-center whitespace-nowrap rounded-md px-3 py-1 text-sm font-medium ring-offset-background transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 ${dateRange === "all" ? "bg-background text-foreground shadow" : ""}`}
-              >
-                All
-              </button>
-            </div>
           </div>
         </div>
       </div>
