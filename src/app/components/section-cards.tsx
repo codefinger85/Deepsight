@@ -49,6 +49,12 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
 
   React.useEffect(() => {
     const fetchData = async () => {
+      // Don't fetch data when in custom mode without a selected range
+      if (dateFilter === "custom") {
+        onDateFilterChange(dateFilter)
+        return
+      }
+      
       const filter = dateFilter === "all" ? undefined : dateFilter
       const [
         totalEarnings,
@@ -89,7 +95,8 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
 
   const handleTabChange = (value: string) => {
     if (value === "custom") {
-      // Switch to custom mode but don't change data until range is selected
+      // Switch to custom mode - this will show the date picker
+      setDateFilter("custom")
       return
     }
     setDateFilter(value)
@@ -110,6 +117,7 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
 
   const isCustomMode = typeof dateFilter === 'object' && dateFilter !== null
   const currentTab = isCustomMode ? "custom" : (typeof dateFilter === 'string' ? dateFilter : "all")
+  const showDatePicker = currentTab === "custom"
   
   return (
     <Tabs value={currentTab} onValueChange={handleTabChange}>
@@ -130,7 +138,7 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
                 }
               </TabsTrigger>
             </TabsList>
-            {currentTab === "custom" && (
+            {showDatePicker && (
               <DateRangePicker
                 selectedRange={customRange}
                 onRangeChange={handleCustomRangeChange}

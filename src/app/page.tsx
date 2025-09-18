@@ -106,7 +106,7 @@ function PageContent() {
               onDateFilterChange={handleDateFilterChange}
             />
             <div className="px-4 lg:px-6">
-              <ChartAreaInteractive chartData={chartData} />
+              <ChartAreaInteractive chartData={chartData} dateFilter={globalDateFilter} />
             </div>
             <DataTable 
               initialData={tableData}

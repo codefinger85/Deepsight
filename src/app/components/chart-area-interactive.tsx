@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts"
-import { ChartData } from "@/lib/database"
+import { ChartData, type DateFilter } from "@/lib/database"
 
 import {
   Card,
@@ -18,6 +18,7 @@ import {
 
 interface ChartAreaInteractiveProps {
   chartData: ChartData[];
+  dateFilter?: DateFilter;
 }
 
 export const description = "Trading performance over time"
@@ -33,10 +34,43 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartAreaInteractive({ chartData }: ChartAreaInteractiveProps) {
+export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAreaInteractiveProps) {
+  // Filter data based on dateFilter prop (restored from commit 143d8c2)
+  const filteredData = chartData.filter((item) => {
+    const date = new Date(item.date)
+    
+    // Handle custom date range objects
+    if (typeof dateFilter === 'object' && dateFilter !== null && dateFilter.start && dateFilter.end) {
+      return date >= dateFilter.start && date <= dateFilter.end
+    }
+    
+    // Handle preset string filters (original logic from commit)
+    if (typeof dateFilter === 'string' && dateFilter !== 'all' && dateFilter !== 'custom') {
+      const referenceDate = new Date() // Use current date as reference
+      let daysToSubtract = 90
+      if (dateFilter === "7d") {
+        daysToSubtract = 7
+      } else if (dateFilter === "14d") {
+        daysToSubtract = 14
+      } else if (dateFilter === "21d") {
+        daysToSubtract = 21
+      } else if (dateFilter === "30d") {
+        daysToSubtract = 30
+      } else if (dateFilter === "90d") {
+        daysToSubtract = 90
+      }
+      const startDate = new Date(referenceDate)
+      startDate.setDate(startDate.getDate() - daysToSubtract)
+      return date >= startDate
+    }
+    
+    // Show all data for "all" or undefined
+    return true
+  })
+
   // Scale trades count for better visibility in performance chart
-  const maxTrades = Math.max(...chartData.map(item => item.tradesCount))
-  const scaledData = chartData.map(item => ({
+  const maxTrades = Math.max(...filteredData.map(item => item.tradesCount))
+  const scaledData = filteredData.map(item => ({
     ...item,
     scaledTradesCount: maxTrades > 0 ? (item.tradesCount / maxTrades) * 35 : 0
   }))
