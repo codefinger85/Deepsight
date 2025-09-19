@@ -79,7 +79,7 @@ export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAre
     <Card className="@container/card">
         <CardHeader>
           <div className="space-y-1.5">
-            <CardTitle>Trading Performance</CardTitle>
+            <CardTitle className="font-medium">Trading Performance</CardTitle>
             <CardDescription>
               <span className="hidden @[540px]/card:block">
                 Daily win rate and trade volume over time

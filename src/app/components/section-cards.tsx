@@ -99,7 +99,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
           <CardHeader>
             <CardDescription>Total Earnings</CardDescription>
             <div className="flex items-end justify-start gap-3">
-              <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
+              <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
                 ${(initialData.totalEarnings || 0).toFixed(2)}
               </CardTitle>
               <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
@@ -120,7 +120,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
         <CardHeader>
           <CardDescription>Overall Win Rate</CardDescription>
           <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
+            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
               {(initialData.overallWinRate || 0)}%
             </CardTitle>
             <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
@@ -141,7 +141,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
         <CardHeader>
           <CardDescription>Total Sessions</CardDescription>
           <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
+            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
               {(initialData.totalSessions || 0).toLocaleString()}
             </CardTitle>
             <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
@@ -160,7 +160,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
         <CardHeader>
           <CardDescription>Total Trades</CardDescription>
           <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
+            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
               {(initialData.totalTrades || 0).toLocaleString()}
             </CardTitle>
             <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
