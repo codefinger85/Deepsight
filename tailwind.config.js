@@ -7,8 +7,8 @@ module.exports = {
 	theme: {
     	extend: {
     		fontFamily: {
-    			sans: ['var(--font-inter)', 'Inter', 'sans-serif'],
-    			inter: ['var(--font-inter)', 'Inter', 'sans-serif']
+    			sans: ['Delight', 'Inter', 'sans-serif'],
+    			delight: ['Delight', 'Inter', 'sans-serif']
     		},
     		fontSize: {
     			xs: [
