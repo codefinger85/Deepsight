@@ -17,6 +17,14 @@ import {
   getTradesAnalysis,
   getDayAnalysis,
   getChartData,
+  getTotalEarnings,
+  getOverallWinRate,
+  getTotalSessions,
+  getTotalTrades,
+  getTotalWinningTrades,
+  getTotalLosingTrades,
+  getSessionsAbove60Percent,
+  getSessionsBelow60Percent,
   type DateFilter,
   type ChartData
 } from "@/lib/database"
@@ -31,16 +39,49 @@ function PageContent() {
     tradesAnalysisData: [],
     dayAnalysisData: [],
   })
+  const [sectionData, setSectionData] = React.useState({
+    totalEarnings: 0,
+    overallWinRate: 0,
+    totalSessions: 0,
+    totalTrades: 0,
+    totalWinningTrades: 0,
+    totalLosingTrades: 0,
+    sessionsAbove60: 0,
+    sessionsBelow60: 0,
+  })
 
-  // Initial data fetch
+  // Update chart and table data when global date filter changes
   React.useEffect(() => {
-    const fetchInitialData = async () => {
-      const [chartDataResult, lossReasonsData, confirmationAnalysisData, tradesAnalysisData, dayAnalysisData] = await Promise.all([
-        getChartData(),
-        getLossReasonsWithConfirmations(),
-        getConfirmationAnalysisWithCounts(),
-        getTradesAnalysis(),
-        getDayAnalysis(),
+    const fetchFilteredData = async () => {
+      const filter = globalDateFilter === "all" ? undefined : globalDateFilter
+      const [
+        chartDataResult, 
+        lossReasonsData, 
+        confirmationAnalysisData, 
+        tradesAnalysisData, 
+        dayAnalysisData,
+        totalEarnings,
+        overallWinRate,
+        totalSessions,
+        totalTrades,
+        totalWinningTrades,
+        totalLosingTrades,
+        sessionsAbove60,
+        sessionsBelow60,
+      ] = await Promise.all([
+        getChartData(), // Chart data doesn't support filtering yet, so keep as is
+        getLossReasonsWithConfirmations(filter),
+        getConfirmationAnalysisWithCounts(filter),
+        getTradesAnalysis(filter),
+        getDayAnalysis(filter),
+        getTotalEarnings(filter),
+        getOverallWinRate(filter),
+        getTotalSessions(filter),
+        getTotalTrades(filter),
+        getTotalWinningTrades(filter),
+        getTotalLosingTrades(filter),
+        getSessionsAbove60Percent(filter),
+        getSessionsBelow60Percent(filter),
       ])
 
       setChartData(chartDataResult)
@@ -50,37 +91,24 @@ function PageContent() {
         tradesAnalysisData,
         dayAnalysisData,
       })
-    }
-
-    fetchInitialData()
-  }, [])
-
-  // Update chart and table data when global date filter changes
-  React.useEffect(() => {
-    const fetchFilteredData = async () => {
-      const filter = globalDateFilter === "all" ? undefined : globalDateFilter
-      const [chartDataResult, lossReasonsData, confirmationAnalysisData, tradesAnalysisData, dayAnalysisData] = await Promise.all([
-        getChartData(), // Chart data doesn't support filtering yet, so keep as is
-        getLossReasonsWithConfirmations(filter),
-        getConfirmationAnalysisWithCounts(filter),
-        getTradesAnalysis(filter),
-        getDayAnalysis(filter),
-      ])
-
-      setTableData({
-        lossReasonsData,
-        confirmationAnalysisData,
-        tradesAnalysisData,
-        dayAnalysisData,
+      setSectionData({
+        totalEarnings,
+        overallWinRate,
+        totalSessions,
+        totalTrades,
+        totalWinningTrades,
+        totalLosingTrades,
+        sessionsAbove60,
+        sessionsBelow60,
       })
     }
 
     fetchFilteredData()
   }, [globalDateFilter])
 
-  const handleDateFilterChange = (filter: DateFilter) => {
+  const handleDateFilterChange = React.useCallback((filter: DateFilter) => {
     setGlobalDateFilter(filter)
-  }
+  }, [])
 
   const initialSectionData = {
     totalEarnings: 0,
@@ -100,7 +128,8 @@ function PageContent() {
         <div className="@container/main flex flex-1 flex-col gap-2">
           <div className="flex flex-col gap-4 py-4 md:gap-6 md:py-6">
             <SectionCards 
-              initialData={initialSectionData}
+              initialData={sectionData}
+              currentFilter={globalDateFilter}
               onDateFilterChange={handleDateFilterChange}
             />
             <div className="px-4 lg:px-6">

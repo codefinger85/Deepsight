@@ -39,73 +39,32 @@ interface SectionCardsProps {
     sessionsAbove60: number;
     sessionsBelow60: number;
   };
+  currentFilter: DateFilter;
   onDateFilterChange: (filter: DateFilter) => void;
 }
 
-export function SectionCards({ initialData, onDateFilterChange }: SectionCardsProps) {
-  const [dateFilter, setDateFilter] = React.useState<DateFilter>("all")
+export function SectionCards({ initialData, currentFilter, onDateFilterChange }: SectionCardsProps) {
   const [customRange, setCustomRange] = React.useState<DateRange>({ start: null, end: null })
-  const [data, setData] = React.useState(initialData)
-
-  React.useEffect(() => {
-    const fetchData = async () => {
-      const filter = dateFilter === "all" ? undefined : dateFilter
-      const [
-        totalEarnings,
-        overallWinRate,
-        totalSessions,
-        totalTrades,
-        totalWinningTrades,
-        totalLosingTrades,
-        sessionsAbove60,
-        sessionsBelow60,
-      ] = await Promise.all([
-        getTotalEarnings(filter),
-        getOverallWinRate(filter),
-        getTotalSessions(filter),
-        getTotalTrades(filter),
-        getTotalWinningTrades(filter),
-        getTotalLosingTrades(filter),
-        getSessionsAbove60Percent(filter),
-        getSessionsBelow60Percent(filter),
-      ])
-
-      setData({
-        totalEarnings,
-        overallWinRate,
-        totalSessions,
-        totalTrades,
-        totalWinningTrades,
-        totalLosingTrades,
-        sessionsAbove60,
-        sessionsBelow60,
-      })
-    }
-
-    fetchData()
-    // Notify parent of date filter change
-    onDateFilterChange(dateFilter)
-  }, [dateFilter, onDateFilterChange])
 
   const handleTabChange = (value: string) => {
-    setDateFilter(value)
+    onDateFilterChange(value)
     setCustomRange({ start: null, end: null }) // Reset custom range when switching to presets
   }
 
   const handleCustomRangeChange = (range: DateRange) => {
     setCustomRange(range)
     if (range.start && range.end) {
-      setDateFilter(range)
+      onDateFilterChange(range)
     }
   }
 
   const handleCustomReset = () => {
     setCustomRange({ start: null, end: null })
-    setDateFilter("all")
+    onDateFilterChange("all")
   }
 
-  const isCustomMode = typeof dateFilter === 'object' && dateFilter !== null
-  const currentTab = isCustomMode ? "all" : (typeof dateFilter === 'string' ? dateFilter : "all")
+  const isCustomMode = typeof currentFilter === 'object' && currentFilter !== null
+  const currentTab = isCustomMode ? "all" : (typeof currentFilter === 'string' ? currentFilter : "all")
   
   return (
     <Tabs value={currentTab} onValueChange={handleTabChange}>
@@ -141,7 +100,7 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
             <CardDescription>Total Earnings</CardDescription>
             <div className="flex items-end justify-start gap-3">
               <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
-                ${(data.totalEarnings || 0).toFixed(2)}
+                ${(initialData.totalEarnings || 0).toFixed(2)}
               </CardTitle>
               <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
                 +12.5%
@@ -162,7 +121,7 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
           <CardDescription>Overall Win Rate</CardDescription>
           <div className="flex items-end justify-start gap-3">
             <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
-              {(data.overallWinRate || 0)}%
+              {(initialData.overallWinRate || 0)}%
             </CardTitle>
             <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
               -20%
@@ -183,7 +142,7 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
           <CardDescription>Total Sessions</CardDescription>
           <div className="flex items-end justify-start gap-3">
             <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
-              {(data.totalSessions || 0).toLocaleString()}
+              {(initialData.totalSessions || 0).toLocaleString()}
             </CardTitle>
             <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
               +12.5%
@@ -192,9 +151,9 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Sessions with more than 60% winrate: {data.sessionsAbove60.toLocaleString()}
+            Sessions with more than 60% winrate: {initialData.sessionsAbove60.toLocaleString()}
           </div>
-          <div className="text-muted-foreground">Sessions with less than 60% winrate: {data.sessionsBelow60.toLocaleString()}</div>
+          <div className="text-muted-foreground">Sessions with less than 60% winrate: {initialData.sessionsBelow60.toLocaleString()}</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
@@ -202,7 +161,7 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
           <CardDescription>Total Trades</CardDescription>
           <div className="flex items-end justify-start gap-3">
             <CardTitle className="text-xl font-semibold tabular-nums @[250px]/card:text-2xl">
-              {(data.totalTrades || 0).toLocaleString()}
+              {(initialData.totalTrades || 0).toLocaleString()}
             </CardTitle>
             <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
               +4.5%
@@ -211,9 +170,9 @@ export function SectionCards({ initialData, onDateFilterChange }: SectionCardsPr
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Total winning trades: {data.totalWinningTrades.toLocaleString()}
+            Total winning trades: {initialData.totalWinningTrades.toLocaleString()}
           </div>
-          <div className="text-muted-foreground">Total losing trades: {data.totalLosingTrades.toLocaleString()}</div>
+          <div className="text-muted-foreground">Total losing trades: {initialData.totalLosingTrades.toLocaleString()}</div>
         </CardFooter>
       </Card>
       </div>
