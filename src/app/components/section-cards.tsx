@@ -95,96 +95,31 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
             </div>
           </div>
         </div>
-      <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-5">
-        <Card className="@container/card border-border-primary">
-          <CardHeader>
-            <CardDescription>Total Earnings</CardDescription>
-            <div className="flex items-end justify-start gap-3">
-              <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
-                $ {(initialData.totalEarnings || 0).toFixed(2)}
-              </CardTitle>
-              {/* <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
-                +12.5%
-              </Badge> */}
-            </div>
-          </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
-            Data is coming stay tuned.
-          </div>
-          <div className="text-text-secondary">
-            Data is coming stay tuned.
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Overall Win Rate</CardDescription>
-          <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
-              {(initialData.overallWinRate || 0)}%
-            </CardTitle>
-            {/* <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
-              -20%
-            </Badge> */}
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
-            Data is coming stay tuned.
-          </div>
-          <div className="text-text-secondary">
-            Data is coming stay tuned.
-          </div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total Sessions</CardDescription>
-          <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
-              {(initialData.totalSessions || 0).toLocaleString()}
-            </CardTitle>
-            {/* <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
-              +12.5%
-            </Badge> */}
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
-            Sessions over 60% winrate: {initialData.sessionsAbove60.toLocaleString()}
-          </div>
-          <div className="text-text-secondary">Sessions below 60% winrate: {initialData.sessionsBelow60.toLocaleString()}</div>
-        </CardFooter>
-      </Card>
-      <Card className="@container/card">
-        <CardHeader>
-          <CardDescription>Total Trades</CardDescription>
-          <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
-              {(initialData.totalTrades || 0).toLocaleString()}
-            </CardTitle>
-            {/* <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
-              +4.5%
-            </Badge> */}
-          </div>
-        </CardHeader>
-        <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
-            Total winning trades: {initialData.totalWinningTrades.toLocaleString()}
-          </div>
-          <div className="text-text-secondary">Total losing trades: {initialData.totalLosingTrades.toLocaleString()}</div>
-        </CardFooter>
-      </Card>
-      
-      {/* Test MetricCard component */}
-      <MetricCard 
-        title="Test Card"
-        value="$ 1,234.56"
-        footerPrimary="This is a test of the MetricCard component"
-        footerSecondary="It should look identical to the other cards"
-      />
-      
+      <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+        <MetricCard 
+          title="Total Earnings"
+          value={`$ ${(initialData.totalEarnings || 0).toFixed(2)}`}
+          footerPrimary="Data is coming stay tuned."
+          footerSecondary="Data is coming stay tuned."
+        />
+        <MetricCard 
+          title="Overall Win Rate"
+          value={`${(initialData.overallWinRate || 0)}%`}
+          footerPrimary="Data is coming stay tuned."
+          footerSecondary="Data is coming stay tuned."
+        />
+        <MetricCard 
+          title="Total Sessions"
+          value={(initialData.totalSessions || 0).toLocaleString()}
+          footerPrimary={`Sessions over 60% winrate: ${initialData.sessionsAbove60.toLocaleString()}`}
+          footerSecondary={`Sessions below 60% winrate: ${initialData.sessionsBelow60.toLocaleString()}`}
+        />
+        <MetricCard 
+          title="Total Trades"
+          value={(initialData.totalTrades || 0).toLocaleString()}
+          footerPrimary={`Total winning trades: ${initialData.totalWinningTrades.toLocaleString()}`}
+          footerSecondary={`Total losing trades: ${initialData.totalLosingTrades.toLocaleString()}`}
+        />
       </div>
     </div>
     </Tabs>
