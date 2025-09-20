@@ -131,6 +131,11 @@
   border-bottom: none;
 }
 
+/* Hide inactive tab content */
+[data-state="inactive"] {
+  display: none !important;
+}
+
 /* Responsive adjustments */
 @media (max-width: 768px) {
   .trade-grid-container,
