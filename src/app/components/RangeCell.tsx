@@ -6,7 +6,7 @@ interface RangeCellProps {
 }
 
 // Utility functions for range calculations
-const parseRangeData = (rangeValue: string): { wins: number; losses: number; total: number } => {
+export const parseRangeData = (rangeValue: string): { wins: number; losses: number; total: number } => {
   try {
     const [winsStr, lossesStr] = rangeValue.split('|');
     const wins = parseInt(winsStr) || 0;
@@ -17,7 +17,7 @@ const parseRangeData = (rangeValue: string): { wins: number; losses: number; tot
   }
 };
 
-const calculateRangeWinPercentage = (wins: number, losses: number): number => {
+export const calculateRangeWinPercentage = (wins: number, losses: number): number => {
   const total = wins + losses;
   return total === 0 ? 0 : Math.round((wins / total) * 100);
 };
@@ -27,7 +27,7 @@ export function RangeCell({ rangeValue, className = "" }: RangeCellProps) {
   const percentage = calculateRangeWinPercentage(wins, losses);
 
   return (
-    <div className={`text-center text-sm w-20 ${className}`}>
+    <div className={`text-center text-sm ${className}`}>
       <div>
         {percentage}%
       </div>

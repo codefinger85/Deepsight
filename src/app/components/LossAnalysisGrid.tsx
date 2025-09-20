@@ -15,6 +15,7 @@ export function LossAnalysisGrid({ data, className = "" }: LossAnalysisGridProps
       <div className="loss-grid-header">
         <div className="grid-header">Loss Reason</div>
         <div className="grid-header">Total</div>
+        <div className="grid-header">Loss Rate</div>
         <div className="grid-header">1 Conf</div>
         <div className="grid-header">2 Conf</div>
         <div className="grid-header">3 Conf</div>
@@ -33,6 +34,7 @@ export function LossAnalysisGrid({ data, className = "" }: LossAnalysisGridProps
               <React.Fragment key={index}>
                 <div className="grid-cell-name">{row.lossReason}</div>
                 <div className="grid-cell-data font-semibold">{row.totalCount}</div>
+                <div className="grid-cell-data font-semibold">{row.lossPercentage}%</div>
                 <div className="grid-cell-data">
                   <RangeCell rangeValue={row.conf1} />
                 </div>
@@ -60,7 +62,7 @@ export function LossAnalysisGrid({ data, className = "" }: LossAnalysisGridProps
               </React.Fragment>
             ))
           ) : (
-            <div className="grid-cell-data col-span-10 text-center text-text-secondary py-8">
+            <div className="grid-cell-data col-span-11 text-center text-text-secondary py-8">
               No loss analysis data available
             </div>
           )}
