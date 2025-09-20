@@ -24,6 +24,21 @@ module.exports = {
     			sm: 'calc(var(--radius) - 4px)'
     		},
     		colors: {
+    			// New semantic color system
+    			'text-primary': 'hsl(var(--text-primary))',
+    			'text-secondary': 'hsl(var(--text-secondary))',
+    			'text-tertiary': 'hsl(var(--text-tertiary))',
+    			'text-muted': 'hsl(var(--text-muted))',
+    			'text-on-accent': 'hsl(var(--text-on-accent))',
+    			'bg-primary': 'hsl(var(--bg-primary))',
+    			'bg-secondary': 'hsl(var(--bg-secondary))',
+    			'bg-tertiary': 'hsl(var(--bg-tertiary))',
+    			'accent-main': 'hsl(var(--accent-main))',
+    			'border-primary': 'hsl(var(--border-primary))',
+    			'border-secondary': 'hsl(var(--border-secondary))',
+    			'border-muted': 'hsl(var(--border-muted))',
+    			
+    			// Original shadcn/ui colors
     			background: 'hsl(var(--background))',
     			foreground: 'hsl(var(--foreground))',
     			card: {
