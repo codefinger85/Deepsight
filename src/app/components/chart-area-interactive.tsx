@@ -34,7 +34,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig
 
-export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAreaInteractiveProps) {
+export const ChartAreaInteractive = React.memo(function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAreaInteractiveProps) {
   // Filter data based on dateFilter prop (restored from commit 143d8c2)
   const filteredData = chartData.filter((item) => {
     const date = new Date(item.date)
@@ -107,8 +107,6 @@ export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAre
           >
             <AreaChart 
               data={scaledData}
-              animationDuration={300}
-              animationEasing="ease-in-out"
             >
               <defs>
                 <linearGradient id="fillWinRate" x1="0" y1="0" x2="0" y2="1">
@@ -200,7 +198,6 @@ export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAre
                 fill="url(#fillTrades)"
                 stroke="var(--color-tradesCount)"
                 stackId="background"
-                animationDuration={300}
               />
               <Area
                 dataKey="winRate"
@@ -208,11 +205,10 @@ export function ChartAreaInteractive({ chartData, dateFilter = "90d" }: ChartAre
                 fill="url(#fillWinRate)"
                 stroke="var(--color-winRate)"
                 stackId="main"
-                animationDuration={300}
               />
             </AreaChart>
           </ChartContainer>
         </CardContent>
     </Card>
   )
-}
+})

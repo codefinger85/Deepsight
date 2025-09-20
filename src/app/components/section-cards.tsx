@@ -100,7 +100,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
             <CardDescription>Total Earnings</CardDescription>
             <div className="flex items-end justify-start gap-3">
               <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
-                ${(initialData.totalEarnings || 0).toFixed(2)}
+                $ {(initialData.totalEarnings || 0).toFixed(2)}
               </CardTitle>
               <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
                 +12.5%
