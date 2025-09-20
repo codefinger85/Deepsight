@@ -10,6 +10,30 @@
   font-display: swap;
 }
 
+/* New Semantic Color System */
+:root {
+  /* Text Colors */
+  --text-primary: 15 23% 5%;      /* slate-900 - for headings */
+  --text-secondary: 20 6% 50%;    /* slate-500 - for text */
+  --text-tertiary: 8 6% 63%;      /* slate-400 - for subtle text */
+  --text-muted: 8 6% 78%;         /* slate-300 - for disabled text or very subtle */
+  --text-on-accent: 4 9% 98%;     /* slate-50 - text on accent backgrounds */
+
+  /* Background Colors */
+  --bg-primary: 0 0% 100%;        /* white */
+  --bg-secondary: 4 9% 98%;       /* slate-50 */
+  --bg-tertiary: 12 6% 15%;       /* slate-800 */
+
+  /* Accent Colors */
+  --accent-main: 15 23% 5%;       /* slate-900 */
+
+  /* Border Colors */
+  --border-primary: 8 6% 93%;     /* slate-100 */
+  --border-secondary: 13 7% 89%;  /* slate-200 */
+  --border-muted: 4 9% 98%;       /* slate-50 */
+}
+
+/* Original shadcn/ui variables */
 :root {
   --background: 0 0% 100%;
   --foreground: 218 27% 8%;
