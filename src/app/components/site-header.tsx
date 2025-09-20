@@ -26,8 +26,15 @@ const usePWAInstall = () => {
   const [installPrompt, setInstallPrompt] = useState<any>(null);
   const [isInstalled, setIsInstalled] = useState(false);
   const [canInstall, setCanInstall] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!mounted) return;
+    
     // Check if PWA is already installed
     const checkInstalled = async () => {
       if ('getInstalledRelatedApps' in navigator) {
@@ -97,8 +104,8 @@ const usePWAInstall = () => {
   };
 
   return {
-    isInstalled,
-    canInstall,
+    isInstalled: mounted ? isInstalled : false,
+    canInstall: mounted ? canInstall : false,
     handleClick
   };
 };

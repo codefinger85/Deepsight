@@ -263,7 +263,7 @@ import { Area, AreaChart, CartesianGrid, XAxis } from "recharts"
 import { toast } from "sonner"
 import { z } from "zod"
 import { LossReasonAnalysis, WinningConfirmationAnalysis, ConfirmationAnalysis, TradesAnalysis } from "@/lib/database"
-import Filters, { Filter, FilterType, filterViewToFilterOptions, FilterOption, PerformanceTier, VolumeTier, WinPercentageRange, TotalCountRange } from "@/components/ui/filters"
+import Filters, { Filter, FilterType, filterViewToFilterOptions, FilterOption, WinPercentageRange, TotalCountRange } from "@/components/ui/filters"
 
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -851,20 +851,20 @@ export function DataTable({
           case FilterType.WIN_PERCENTAGE:
             return filter.value.some(range => {
               switch (range) {
-                case WinPercentageRange.EXCELLENT:
+                case WinPercentageRange.NINETY_PLUS:
                   return item.winPercentage >= 90
-                case WinPercentageRange.VERY_HIGH:
-                  return item.winPercentage >= 80 && item.winPercentage < 90
-                case WinPercentageRange.HIGH:
-                  return item.winPercentage >= 70 && item.winPercentage < 80
-                case WinPercentageRange.GOOD:
-                  return item.winPercentage >= 60 && item.winPercentage < 70
-                case WinPercentageRange.AVERAGE:
-                  return item.winPercentage >= 50 && item.winPercentage < 60
-                case WinPercentageRange.POOR:
-                  return item.winPercentage >= 40 && item.winPercentage < 50
-                case WinPercentageRange.VERY_POOR:
-                  return item.winPercentage < 40
+                case WinPercentageRange.EIGHTY_PLUS:
+                  return item.winPercentage >= 80
+                case WinPercentageRange.SEVENTY_PLUS:
+                  return item.winPercentage >= 70
+                case WinPercentageRange.SIXTY_PLUS:
+                  return item.winPercentage >= 60
+                case WinPercentageRange.FIFTY_PLUS:
+                  return item.winPercentage >= 50
+                case WinPercentageRange.FORTY_PLUS:
+                  return item.winPercentage >= 40
+                case WinPercentageRange.THIRTY_PLUS:
+                  return item.winPercentage >= 30
                 default:
                   return false
               }
@@ -872,42 +872,16 @@ export function DataTable({
           case FilterType.TOTAL_COUNT:
             return filter.value.some(range => {
               switch (range) {
-                case TotalCountRange.VERY_HIGH:
+                case TotalCountRange.HUNDRED_PLUS:
                   return item.totalCount >= 100
-                case TotalCountRange.HIGH:
-                  return item.totalCount >= 50 && item.totalCount < 100
-                case TotalCountRange.MEDIUM:
-                  return item.totalCount >= 20 && item.totalCount < 50
-                case TotalCountRange.LOW:
-                  return item.totalCount >= 10 && item.totalCount < 20
-                case TotalCountRange.VERY_LOW:
-                  return item.totalCount < 10
-                default:
-                  return false
-              }
-            })
-          case FilterType.PERFORMANCE_TIER:
-            return filter.value.some(tier => {
-              switch (tier) {
-                case PerformanceTier.HIGH:
-                  return item.winPercentage >= 70
-                case PerformanceTier.MEDIUM:
-                  return item.winPercentage >= 50 && item.winPercentage < 70
-                case PerformanceTier.LOW:
-                  return item.winPercentage < 50
-                default:
-                  return false
-              }
-            })
-          case FilterType.VOLUME_TIER:
-            return filter.value.some(tier => {
-              switch (tier) {
-                case VolumeTier.HIGH:
+                case TotalCountRange.FIFTY_PLUS:
                   return item.totalCount >= 50
-                case VolumeTier.MEDIUM:
-                  return item.totalCount >= 20 && item.totalCount < 50
-                case VolumeTier.LOW:
-                  return item.totalCount < 20
+                case TotalCountRange.TWENTY_PLUS:
+                  return item.totalCount >= 20
+                case TotalCountRange.TEN_PLUS:
+                  return item.totalCount >= 10
+                case TotalCountRange.FIVE_PLUS:
+                  return item.totalCount >= 5
                 default:
                   return false
               }

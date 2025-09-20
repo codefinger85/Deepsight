@@ -102,8 +102,6 @@ export enum FilterType {
   CONFIRMATION_TYPE = "Confirmation Type",
   WIN_PERCENTAGE = "Win Percentage",
   TOTAL_COUNT = "Total Count",
-  PERFORMANCE_TIER = "Performance",
-  VOLUME_TIER = "Volume",
 }
 
 export enum FilterOperator {
@@ -158,38 +156,27 @@ export enum DueDate {
 }
 
 // Trading-specific enums
-export enum PerformanceTier {
-  HIGH = "High (70%+)",
-  MEDIUM = "Medium (50-70%)",
-  LOW = "Low (<50%)",
-}
-
-export enum VolumeTier {
-  HIGH = "High Volume (50+)",
-  MEDIUM = "Medium Volume (20-50)",
-  LOW = "Low Volume (<20)",
-}
 
 export enum WinPercentageRange {
-  EXCELLENT = "90%+ (Excellent)",
-  VERY_HIGH = "80-90% (Very High)",
-  HIGH = "70-80% (High)",
-  GOOD = "60-70% (Good)",
-  AVERAGE = "50-60% (Average)",
-  POOR = "40-50% (Poor)",
-  VERY_POOR = "<40% (Very Poor)",
+  NINETY_PLUS = "90+%",
+  EIGHTY_PLUS = "80+%",
+  SEVENTY_PLUS = "70+%",
+  SIXTY_PLUS = "60+%",
+  FIFTY_PLUS = "50+%",
+  FORTY_PLUS = "40+%",
+  THIRTY_PLUS = "30+%",
 }
 
 export enum TotalCountRange {
-  VERY_HIGH = "100+ trades",
-  HIGH = "50-100 trades",
-  MEDIUM = "20-50 trades",
-  LOW = "10-20 trades",
-  VERY_LOW = "<10 trades",
+  HUNDRED_PLUS = "100+ trades",
+  FIFTY_PLUS = "50+ trades",
+  TWENTY_PLUS = "20+ trades",
+  TEN_PLUS = "10+ trades",
+  FIVE_PLUS = "5+ trades",
 }
 
 export type FilterOption = {
-  name: FilterType | Status | Assignee | Labels | Priority | DueDate | PerformanceTier | VolumeTier | WinPercentageRange | TotalCountRange | string;
+  name: FilterType | Status | Assignee | Labels | Priority | DueDate | WinPercentageRange | TotalCountRange | string;
   icon: React.ReactNode | undefined;
   label?: string;
 };
@@ -204,7 +191,7 @@ export type Filter = {
 const FilterIcon = ({
   type,
 }: {
-  type: FilterType | Status | Assignee | Labels | Priority | PerformanceTier | VolumeTier | WinPercentageRange | TotalCountRange | string;
+  type: FilterType | Status | Assignee | Labels | Priority | WinPercentageRange | TotalCountRange | string;
 }) => {
   switch (type) {
     case Assignee.ANDREW_LUO:
@@ -236,10 +223,6 @@ const FilterIcon = ({
       return <Target className="size-3.5" />;
     case FilterType.TOTAL_COUNT:
       return <BarChart3 className="size-3.5" />;
-    case FilterType.PERFORMANCE_TIER:
-      return <Activity className="size-3.5" />;
-    case FilterType.VOLUME_TIER:
-      return <SignalHigh className="size-3.5" />;
     case Status.BACKLOG:
       return <CircleDashed className="size-3.5 text-muted-foreground" />;
     case Status.TODO:
@@ -268,40 +251,26 @@ const FilterIcon = ({
       return <div className="bg-amber-400 rounded-full size-2.5" />;
     case Labels.RELEASE:
       return <div className="bg-green-400 rounded-full size-2.5" />;
-    // Performance tier icons
-    case PerformanceTier.HIGH:
-      return <TrendingUp className="size-3.5 text-green-600" />;
-    case PerformanceTier.MEDIUM:
-      return <Activity className="size-3.5 text-yellow-600" />;
-    case PerformanceTier.LOW:
-      return <TrendingDown className="size-3.5 text-red-600" />;
-    // Volume tier icons
-    case VolumeTier.HIGH:
-      return <SignalHigh className="size-3.5 text-blue-600" />;
-    case VolumeTier.MEDIUM:
-      return <SignalMedium className="size-3.5 text-blue-500" />;
-    case VolumeTier.LOW:
-      return <SignalLow className="size-3.5 text-blue-400" />;
-    // Win percentage range icons
-    case WinPercentageRange.EXCELLENT:
-    case WinPercentageRange.VERY_HIGH:
+    // Win percentage threshold icons
+    case WinPercentageRange.NINETY_PLUS:
+    case WinPercentageRange.EIGHTY_PLUS:
       return <div className="bg-green-500 rounded-full size-2.5" />;
-    case WinPercentageRange.HIGH:
-    case WinPercentageRange.GOOD:
+    case WinPercentageRange.SEVENTY_PLUS:
+    case WinPercentageRange.SIXTY_PLUS:
       return <div className="bg-green-400 rounded-full size-2.5" />;
-    case WinPercentageRange.AVERAGE:
+    case WinPercentageRange.FIFTY_PLUS:
       return <div className="bg-yellow-400 rounded-full size-2.5" />;
-    case WinPercentageRange.POOR:
-    case WinPercentageRange.VERY_POOR:
+    case WinPercentageRange.FORTY_PLUS:
+    case WinPercentageRange.THIRTY_PLUS:
       return <div className="bg-red-400 rounded-full size-2.5" />;
-    // Total count range icons
-    case TotalCountRange.VERY_HIGH:
-    case TotalCountRange.HIGH:
+    // Total count threshold icons
+    case TotalCountRange.HUNDRED_PLUS:
+    case TotalCountRange.FIFTY_PLUS:
       return <div className="bg-purple-500 rounded-full size-2.5" />;
-    case TotalCountRange.MEDIUM:
+    case TotalCountRange.TWENTY_PLUS:
       return <div className="bg-purple-400 rounded-full size-2.5" />;
-    case TotalCountRange.LOW:
-    case TotalCountRange.VERY_LOW:
+    case TotalCountRange.TEN_PLUS:
+    case TotalCountRange.FIVE_PLUS:
       return <div className="bg-purple-300 rounded-full size-2.5" />;
     // Default for confirmation names
     default:
@@ -380,19 +349,6 @@ export const dateFilterOptions: FilterOption[] = Object.values(DueDate).map(
 );
 
 // Trading-specific filter options
-export const performanceTierFilterOptions: FilterOption[] = Object.values(PerformanceTier).map(
-  (tier) => ({
-    name: tier,
-    icon: <FilterIcon type={tier} />,
-  })
-);
-
-export const volumeTierFilterOptions: FilterOption[] = Object.values(VolumeTier).map(
-  (tier) => ({
-    name: tier,
-    icon: <FilterIcon type={tier} />,
-  })
-);
 
 export const winPercentageRangeFilterOptions: FilterOption[] = Object.values(WinPercentageRange).map(
   (range) => ({
@@ -418,8 +374,6 @@ export const filterViewToFilterOptions: Record<FilterType, FilterOption[]> = {
   [FilterType.UPDATED_DATE]: dateFilterOptions,
   // Trading-specific filters
   [FilterType.CONFIRMATION_TYPE]: [], // Will be populated dynamically
-  [FilterType.PERFORMANCE_TIER]: performanceTierFilterOptions,
-  [FilterType.VOLUME_TIER]: volumeTierFilterOptions,
   [FilterType.WIN_PERCENTAGE]: winPercentageRangeFilterOptions,
   [FilterType.TOTAL_COUNT]: totalCountRangeFilterOptions,
 };
@@ -466,8 +420,6 @@ const filterOperators = ({
       } else {
         return [FilterOperator.INCLUDE, FilterOperator.DO_NOT_INCLUDE];
       }
-    case FilterType.PERFORMANCE_TIER:
-    case FilterType.VOLUME_TIER:
     case FilterType.WIN_PERCENTAGE:
     case FilterType.TOTAL_COUNT:
       if (Array.isArray(filterValues) && filterValues.length > 1) {
