@@ -27,6 +27,7 @@ import {
   getSessionsBelow60Percent,
   type DateFilter,
 } from "@/lib/database"
+import { MetricCard } from "./MetricCard"
 
 interface SectionCardsProps {
   initialData: {
@@ -94,7 +95,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
             </div>
           </div>
         </div>
-      <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
+      <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-5">
         <Card className="@container/card border-border-primary">
           <CardHeader>
             <CardDescription>Total Earnings</CardDescription>
@@ -175,6 +176,15 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
           <div className="text-text-secondary">Total losing trades: {initialData.totalLosingTrades.toLocaleString()}</div>
         </CardFooter>
       </Card>
+      
+      {/* Test MetricCard component */}
+      <MetricCard 
+        title="Test Card"
+        value="$ 1,234.56"
+        footerPrimary="This is a test of the MetricCard component"
+        footerSecondary="It should look identical to the other cards"
+      />
+      
       </div>
     </div>
     </Tabs>
