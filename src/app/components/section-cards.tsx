@@ -77,7 +77,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
                 {format(customRange.start, "MMM d")} - {format(customRange.end, "MMM d, yyyy")}
               </div>
             )}
-            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border inline-flex h-9 items-center justify-center rounded-lg p-1 text-text-tertiary">
+            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border-border-primary border inline-flex h-9 items-center justify-center rounded-lg p-1 text-text-tertiary">
               <TabsList className="bg-transparent border-0 pr-3">
                 <TabsTrigger value="7d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">7d</TabsTrigger>
                 <TabsTrigger value="14d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">14d</TabsTrigger>
@@ -95,7 +95,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
           </div>
         </div>
       <div className="grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
-        <Card className="@container/card">
+        <Card className="@container/card border-border-primary">
           <CardHeader>
             <CardDescription>Total Earnings</CardDescription>
             <div className="flex items-end justify-start gap-3">

@@ -30,7 +30,7 @@ const tableStyles = `
   .loss-grid-container,
   .confirmation-grid-container,
   .day-grid-container {
-    border: 1px solid hsl(var(--border));
+    border: 1px solid hsl(var(--border-primary));
     border-radius: 0.5rem;
     overflow: hidden;
   }
@@ -965,7 +965,7 @@ export function DataTable({
           </SelectContent>
         </Select>
         <div className="flex items-center justify-between w-full">
-          <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
+          <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border-border-primary">
             <TabsTrigger value="trades" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">Trades</TabsTrigger>
             <TabsTrigger value="confirmations" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">Confirmations</TabsTrigger>
             <TabsTrigger value="loss-reasons" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">Loss reasons</TabsTrigger>
@@ -1090,7 +1090,7 @@ export function DataTable({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-2 ml-2 border w-fit rounded-md py-0.5 bg-slate-50">
+        <div className="flex items-center justify-between px-2 ml-2 border-border-primary w-fit rounded-md py-0.5 bg-bg-secondary">
           <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
             Showing {data.lossReasonsData.length} loss reasons
           </div>
@@ -1278,7 +1278,7 @@ export function DataTable({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-2 ml-2 border w-fit rounded-md py-0.5 bg-slate-50">
+        <div className="flex items-center justify-between px-2 ml-2 border-border-primary w-fit rounded-md py-0.5 bg-bg-secondary">
           <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
             Showing {filteredConfirmationData.length} confirmations
           </div>
@@ -1359,7 +1359,7 @@ export function DataTable({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-2 ml-2 border w-fit rounded-md py-0.5 bg-slate-50">
+        <div className="flex items-center justify-between px-2 ml-2 border-border-primary w-fit rounded-md py-0.5 bg-bg-secondary">
           <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
             Showing trades analysis
           </div>
@@ -1400,7 +1400,7 @@ export function DataTable({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-2 ml-2 border w-fit rounded-md py-0.5 bg-slate-50">
+        <div className="flex items-center justify-between px-2 ml-2 border-border-primary w-fit rounded-md py-0.5 bg-bg-secondary">
           <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
             Showing {data.dayAnalysisData.length} days
           </div>
