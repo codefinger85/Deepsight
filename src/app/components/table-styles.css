@@ -1,77 +1,51 @@
-/* Fixed width table styles */
-.fixed-width-table {
-  table-layout: fixed !important;
-  width: 100% !important;
-}
-
-.fixed-width-table thead tr th:first-child,
-.fixed-width-table tbody tr td:first-child {
-  width: 192px !important;
-  max-width: 192px !important;
-  min-width: 192px !important;
-  box-sizing: border-box !important;
-}
-
-.fixed-width-table thead tr th:not(:first-child),
-.fixed-width-table tbody tr td:not(:first-child) {
-  width: 60px !important;
-  max-width: 60px !important;
-  min-width: 60px !important;
-  box-sizing: border-box !important;
-}
-
-/* Grid containers with clean borders */
-.trade-grid-container,
-.loss-grid-container,
-.confirmation-grid-container,
-.day-grid-container {
+/* Generic grid system using CSS custom properties */
+.grid-container {
   border: 1px solid hsl(var(--border-primary));
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
-.trade-grid-header {
+.grid-header-row {
   display: grid;
-  grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
+  grid-template-columns: var(--grid-columns);
   border-bottom: 1px solid hsl(var(--border));
 }
 
-.trade-grid-content {
+.grid-content-row {
   display: grid;
-  grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
+  grid-template-columns: var(--grid-columns);
 }
 
-.loss-grid-header {
-  display: grid;
-  grid-template-columns: 1fr repeat(9, minmax(80px, 120px));
-  border-bottom: 1px solid hsl(var(--border));
+/* Specific grid layouts */
+.trade-grid-container,
+.day-grid-container {
+  --grid-columns: 1fr repeat(4, minmax(80px, 120px));
 }
 
-.loss-grid-content {
-  display: grid;
-  grid-template-columns: 1fr repeat(9, minmax(80px, 120px));
+.loss-grid-container {
+  --grid-columns: 1fr repeat(9, minmax(80px, 120px));
 }
 
-.confirmation-grid-header {
-  display: grid;
-  grid-template-columns: 1fr repeat(11, minmax(80px, 120px));
-  border-bottom: 1px solid hsl(var(--border));
+.confirmation-grid-container {
+  --grid-columns: 1fr repeat(11, minmax(80px, 120px));
 }
 
-.confirmation-grid-content {
-  display: grid;
-  grid-template-columns: 1fr repeat(11, minmax(80px, 120px));
-}
-
+/* Legacy class names for backward compatibility */
+.trade-grid-header,
+.loss-grid-header,
+.confirmation-grid-header,
 .day-grid-header {
   display: grid;
-  grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
+  grid-template-columns: var(--grid-columns);
   border-bottom: 1px solid hsl(var(--border));
 }
 
+.trade-grid-content,
+.loss-grid-content,
+.confirmation-grid-content,
 .day-grid-content {
   display: grid;
-  grid-template-columns: 1fr repeat(4, minmax(80px, 120px));
+  grid-template-columns: var(--grid-columns);
 }
 
 /* Header cells - only add right borders between cells */
@@ -123,47 +97,23 @@
   color: hsl(var(--text-primary));
 }
 
-/* Row styles */
-.grid-row {
-  border-bottom: 1px solid hsl(var(--border-primary));
-}
-
-.grid-row:last-child {
-  border-bottom: none;
-}
-
 /* Hover effects */
 .grid-row:hover .grid-cell-data {
   background-color: hsl(var(--bg-secondary));
 }
 
-/* Table container styles */
-.table-container {
-  border: 1px solid hsl(var(--border-primary));
-  border-radius: 0.5rem;
-  overflow: hidden;
-  background-color: hsl(var(--bg-primary));
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
-  .trade-grid-header,
-  .trade-grid-content {
-    grid-template-columns: 1fr repeat(4, minmax(60px, 80px));
+  .trade-grid-container,
+  .day-grid-container {
+    --grid-columns: 1fr repeat(4, minmax(60px, 80px));
   }
   
-  .loss-grid-header,
-  .loss-grid-content {
-    grid-template-columns: 1fr repeat(9, minmax(60px, 80px));
+  .loss-grid-container {
+    --grid-columns: 1fr repeat(9, minmax(60px, 80px));
   }
   
-  .confirmation-grid-header,
-  .confirmation-grid-content {
-    grid-template-columns: 1fr repeat(11, minmax(60px, 80px));
-  }
-  
-  .day-grid-header,
-  .day-grid-content {
-    grid-template-columns: 1fr repeat(4, minmax(60px, 80px));
+  .confirmation-grid-container {
+    --grid-columns: 1fr repeat(11, minmax(60px, 80px));
   }
 }
