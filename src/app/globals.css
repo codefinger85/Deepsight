@@ -13,24 +13,30 @@
 /* New Semantic Color System */
 :root {
   /* Text Colors */
-  --text-primary: 15 23% 5%;      /* slate-900 - for headings */
-  --text-secondary: 20 6% 50%;    /* slate-500 - for text */
-  --text-tertiary: 8 6% 63%;      /* slate-400 - for subtle text */
-  --text-muted: 8 6% 78%;         /* slate-300 - for disabled text or very subtle */
-  --text-on-accent: 4 9% 98%;     /* slate-50 - text on accent backgrounds */
+  --text-primary: 222 47.4% 11.2%;    /* slate-900 - for headings */
+  --text-secondary: 215 16.3% 46.9%;  /* slate-500 - for text */
+  --text-tertiary: 215 20.2% 65.1%;   /* slate-400 - for subtle text */
+  --text-muted: 213 26.8% 83.9%;      /* slate-300 - for disabled text or very subtle */
+  --text-on-accent: 210 40% 98%;      /* slate-50 - text on accent backgrounds */
 
   /* Background Colors */
-  --bg-primary: 0 0% 100%;        /* white */
-  --bg-secondary: 4 9% 98%;       /* slate-50 */
-  --bg-tertiary: 12 6% 15%;       /* slate-800 */
+  --bg-primary: 0 0% 100%;             /* white */
+  --bg-secondary: 210 40% 98%;         /* slate-50 */
+  --bg-tertiary: 217 32.6% 17.5%;     /* slate-800 */
+  --bg-muted: 215 20.2% 65.1%;        /* slate-400 - for muted backgrounds */
 
   /* Accent Colors */
-  --accent-main: 15 23% 5%;       /* slate-900 */
+  --accent-primary: 222 47.4% 11.2%;  /* slate-900 */
+
+  /* Button Colors */
+  --button-primary: 217 32.6% 17.5%;  /* slate-800 */
+  --button-secondary: 0 0% 100%;      /* white */
+  --button-muted: 215 20.2% 65.1%;   /* slate-400 */
 
   /* Border Colors */
-  --border-primary: 8 6% 93%;     /* slate-100 */
-  --border-secondary: 13 7% 89%;  /* slate-200 */
-  --border-muted: 4 9% 98%;       /* slate-50 */
+  --border-primary: 210 40% 96.1%;    /* slate-100 */
+  --border-secondary: 214 31.8% 91.4%; /* slate-200 */
+  --border-muted: 210 40% 98%;         /* slate-50 */
 }
 
 /* Original shadcn/ui variables */

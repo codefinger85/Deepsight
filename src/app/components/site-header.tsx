@@ -113,7 +113,7 @@ const usePWAInstall = () => {
 export function SiteHeader() {
   const { isInstalled, canInstall, handleClick } = usePWAInstall();
   return (
-    <header className="bg-background/90 sticky top-0 z-10 flex h-[70px] shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
+    <header className="bg-background sticky top-0 z-10 flex h-[70px] shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
       <div className="flex w-full items-center gap-1 px-6">
         <div className="flex items-center gap-2">
           <Image 
@@ -129,9 +129,9 @@ export function SiteHeader() {
             size="sm"
             onClick={handleClick}
             disabled={!isInstalled && !canInstall}
-            className="h-8 bg-slate-900 text-white hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed gap-1"
+            className="h-8 bg-button-primary text-text-on-accent hover:bg-button-primary/80 disabled:bg-bg-muted disabled:cursor-not-allowed gap-1"
           >
-            <DeepsightIcon className="text-white" />
+            <DeepsightIcon className="text-text-on-accent" />
             <span>
               {isInstalled ? "Open Trading Tool" : canInstall ? "Install Trading Tool" : "Trading Tool Unavailable"}
             </span>
@@ -140,22 +140,22 @@ export function SiteHeader() {
             <DropdownMenuTrigger asChild>
               <Avatar className="h-9 w-9 cursor-pointer">
                 <AvatarImage src="/avatars/user.jpg" alt="User" />
-                <AvatarFallback className="bg-slate-100 text-slate-600">
+                <AvatarFallback className="bg-bg-secondary text-text-secondary">
                   <IconUser className="h-4 w-4" />
                 </AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem className="cursor-pointer">
+            <DropdownMenuContent align="end" className="w-56 p-2">
+              <DropdownMenuItem className="cursor-pointer text-text-secondary hover:text-text-primary">
                 <IconSettings className="mr-2 h-4 w-4" />
                 Settings
               </DropdownMenuItem>
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer text-text-secondary hover:text-text-primary">
                 <IconMoon className="mr-2 h-4 w-4" />
                 Dark Mode
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="cursor-pointer">
+              <DropdownMenuItem className="cursor-pointer text-text-secondary hover:text-text-primary">
                 <IconLogout className="mr-2 h-4 w-4" />
                 Log Out
               </DropdownMenuItem>
