@@ -99,16 +99,16 @@
 }
 
 .grid-cell-name {
-  padding: 0.75rem 0.5rem;
-  text-align: left;
-  border-right: 1px solid hsl(var(--border));
-  background-color: hsl(var(--bg-primary));
   display: flex;
   align-items: center;
   justify-content: flex-start;
   min-height: 60px;
-  font-weight: 400; /* font-normal */
-  color: hsl(var(--text-primary));
+  padding: 0.75rem 0.5rem 0.75rem 16px;
+  border-right: 1px solid hsl(var(--border));
+  background-color: hsl(var(--bg-primary));
+  font-weight: 400;
+  font-size: 14px;
+  color: hsl(var(--text-secondary));
 }
 
 .grid-cell-name:last-child {
