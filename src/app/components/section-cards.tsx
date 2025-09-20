@@ -73,18 +73,18 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
           <div className="flex items-center gap-3">
             {/* Selected date range display */}
             {customRange.start && customRange.end && (
-              <div className="text-sm font-medium text-slate-700">
+              <div className="text-sm font-medium text-text-secondary">
                 {format(customRange.start, "MMM d")} - {format(customRange.end, "MMM d, yyyy")}
               </div>
             )}
-            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border inline-flex h-9 items-center justify-center rounded-lg p-1 text-muted-foreground">
+            <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border inline-flex h-9 items-center justify-center rounded-lg p-1 text-text-tertiary">
               <TabsList className="bg-transparent border-0 pr-3">
-                <TabsTrigger value="7d">7d</TabsTrigger>
-                <TabsTrigger value="14d">14d</TabsTrigger>
-                <TabsTrigger value="21d">21d</TabsTrigger>
-                <TabsTrigger value="30d">30d</TabsTrigger>
-                <TabsTrigger value="90d">90d</TabsTrigger>
-                <TabsTrigger value="all">All</TabsTrigger>
+                <TabsTrigger value="7d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">7d</TabsTrigger>
+                <TabsTrigger value="14d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">14d</TabsTrigger>
+                <TabsTrigger value="21d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">21d</TabsTrigger>
+                <TabsTrigger value="30d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">30d</TabsTrigger>
+                <TabsTrigger value="90d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">90d</TabsTrigger>
+                <TabsTrigger value="all" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">All</TabsTrigger>
               </TabsList>
               <DateRangePicker
                 selectedRange={customRange}
@@ -99,19 +99,19 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
           <CardHeader>
             <CardDescription>Total Earnings</CardDescription>
             <div className="flex items-end justify-start gap-3">
-              <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
+              <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
                 $ {(initialData.totalEarnings || 0).toFixed(2)}
               </CardTitle>
-              <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
+              <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
                 +12.5%
               </Badge>
             </div>
           </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
+          <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
             Data is coming stay tuned.
           </div>
-          <div className="text-muted-foreground">
+          <div className="text-text-secondary">
             Data is coming stay tuned.
           </div>
         </CardFooter>
@@ -120,19 +120,19 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
         <CardHeader>
           <CardDescription>Overall Win Rate</CardDescription>
           <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
+            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
               {(initialData.overallWinRate || 0)}%
             </CardTitle>
-            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
+            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
               -20%
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
+          <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
             Data is coming stay tuned.
           </div>
-          <div className="text-muted-foreground">
+          <div className="text-text-secondary">
             Data is coming stay tuned.
           </div>
         </CardFooter>
@@ -141,38 +141,38 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
         <CardHeader>
           <CardDescription>Total Sessions</CardDescription>
           <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
+            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
               {(initialData.totalSessions || 0).toLocaleString()}
             </CardTitle>
-            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
+            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
               +12.5%
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
-            Sessions with more than 60% winrate: {initialData.sessionsAbove60.toLocaleString()}
+          <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
+            Sessions over 60% winrate: {initialData.sessionsAbove60.toLocaleString()}
           </div>
-          <div className="text-muted-foreground">Sessions with less than 60% winrate: {initialData.sessionsBelow60.toLocaleString()}</div>
+          <div className="text-text-secondary">Sessions below 60% winrate: {initialData.sessionsBelow60.toLocaleString()}</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
           <CardDescription>Total Trades</CardDescription>
           <div className="flex items-end justify-start gap-3">
-            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl">
+            <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
               {(initialData.totalTrades || 0).toLocaleString()}
             </CardTitle>
-            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-semibold text-slate-600">
+            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
               +4.5%
             </Badge>
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
-          <div className="line-clamp-1 flex gap-2 font-medium">
+          <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
             Total winning trades: {initialData.totalWinningTrades.toLocaleString()}
           </div>
-          <div className="text-muted-foreground">Total losing trades: {initialData.totalLosingTrades.toLocaleString()}</div>
+          <div className="text-text-secondary">Total losing trades: {initialData.totalLosingTrades.toLocaleString()}</div>
         </CardFooter>
       </Card>
       </div>
