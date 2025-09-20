@@ -20,14 +20,23 @@
 .trade-grid-container,
 .day-grid-container {
   --grid-columns: 1fr repeat(4, minmax(80px, 120px));
+  border: 1px solid hsl(var(--border-primary));
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 .loss-grid-container {
   --grid-columns: 1fr repeat(9, minmax(80px, 120px));
+  border: 1px solid hsl(var(--border-primary));
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 .confirmation-grid-container {
   --grid-columns: 1fr repeat(11, minmax(80px, 120px));
+  border: 1px solid hsl(var(--border-primary));
+  border-radius: 0.5rem;
+  overflow: hidden;
 }
 
 /* Legacy class names for backward compatibility */
@@ -90,16 +99,37 @@
 }
 
 .grid-cell-name {
-  font-weight: 400; /* font-normal */
+  padding: 0.75rem 0.5rem;
   text-align: left;
+  border-right: 1px solid hsl(var(--border));
+  background-color: hsl(var(--bg-primary));
+  display: flex;
+  align-items: center;
   justify-content: flex-start;
+  min-height: 60px;
+  font-weight: 400; /* font-normal */
   padding-left: 16px;
   color: hsl(var(--text-primary));
 }
 
-/* Hover effects */
-.grid-row:hover .grid-cell-data {
-  background-color: hsl(var(--bg-secondary));
+.grid-cell-name:last-child {
+  border-right: none;
+}
+
+/* Row styling for visual separation */
+.grid-cell-data,
+.grid-cell-name {
+  border-bottom: 1px solid hsl(var(--border-primary));
+}
+
+/* Remove bottom border from last row */
+.grid-content-row:last-child .grid-cell-data,
+.grid-content-row:last-child .grid-cell-name,
+.trade-grid-content > :last-child,
+.loss-grid-content > :last-child,
+.confirmation-grid-content > :last-child,
+.day-grid-content > :last-child {
+  border-bottom: none;
 }
 
 /* Responsive adjustments */
