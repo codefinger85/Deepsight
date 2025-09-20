@@ -102,9 +102,9 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
               <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
                 $ {(initialData.totalEarnings || 0).toFixed(2)}
               </CardTitle>
-              <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
+              {/* <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
                 +12.5%
-              </Badge>
+              </Badge> */}
             </div>
           </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -123,9 +123,9 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
             <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
               {(initialData.overallWinRate || 0)}%
             </CardTitle>
-            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
+            {/* <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
               -20%
-            </Badge>
+            </Badge> */}
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -144,9 +144,9 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
             <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
               {(initialData.totalSessions || 0).toLocaleString()}
             </CardTitle>
-            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
+            {/* <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
               +12.5%
-            </Badge>
+            </Badge> */}
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
@@ -163,9 +163,9 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
             <CardTitle className="text-xl font-medium tabular-nums @[250px]/card:text-2xl text-text-primary">
               {(initialData.totalTrades || 0).toLocaleString()}
             </CardTitle>
-            <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
+            {/* <Badge variant="outline" className="mb-1 px-1.5 py-0.5 font-medium text-text-secondary">
               +4.5%
-            </Badge>
+            </Badge> */}
           </div>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">

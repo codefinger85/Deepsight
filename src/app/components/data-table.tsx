@@ -966,10 +966,10 @@ export function DataTable({
         </Select>
         <div className="flex items-center justify-between w-full">
           <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border">
-            <TabsTrigger value="trades">Trades</TabsTrigger>
-            <TabsTrigger value="confirmations">Confirmations</TabsTrigger>
-            <TabsTrigger value="loss-reasons">Loss reasons</TabsTrigger>
-            <TabsTrigger value="days">Days</TabsTrigger>
+            <TabsTrigger value="trades" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">Trades</TabsTrigger>
+            <TabsTrigger value="confirmations" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">Confirmations</TabsTrigger>
+            <TabsTrigger value="loss-reasons" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">Loss reasons</TabsTrigger>
+            <TabsTrigger value="days" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-primary">Days</TabsTrigger>
           </TabsList>
           <div className="flex items-center gap-2">
             {/* Active Filters Display - Only show for Confirmations tab */}
