@@ -41,6 +41,7 @@ export type LossReasonAnalysis = {
   conf5: number;
   conf6: number;
   conf7: number;
+  conf8: number;
 };
 
 export type WinningConfirmationAnalysis = {
@@ -444,6 +445,7 @@ export async function getLossReasonsWithConfirmations(dateFilter?: DateFilter): 
             conf5: 0,
             conf6: 0,
             conf7: 0,
+            conf8: 0,
           };
         }
 
@@ -458,6 +460,7 @@ export async function getLossReasonsWithConfirmations(dateFilter?: DateFilter): 
           case 5: groupedData[individualReason].conf5++; break;
           case 6: groupedData[individualReason].conf6++; break;
           case 7: groupedData[individualReason].conf7++; break;
+          case 8: groupedData[individualReason].conf8++; break;
         }
       });
     });
@@ -465,7 +468,7 @@ export async function getLossReasonsWithConfirmations(dateFilter?: DateFilter): 
     // Calculate total loss reason occurrences
     const totalLossReasonOccurrences = Object.values(groupedData).reduce((sum, item) => sum + item.totalCount, 0);
     
-    // Calculate percentage for each loss reason
+    // Calculate percentage for each loss reason (keep confirmation counts as numbers)
     const results = Object.values(groupedData).map(item => ({
       ...item,
       lossPercentage: totalLossReasonOccurrences > 0 ? Math.round((item.totalCount / totalLossReasonOccurrences) * 100) : 0

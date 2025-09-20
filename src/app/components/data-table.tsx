@@ -4,18 +4,17 @@ import * as React from "react"
 import "./table-styles.css"
 
 // Import extracted components
-import { TableTabs } from "./TableTabs"
 import { parseRangeData, calculateRangeWinPercentage } from "./RangeCell"
+import { IconTrendingUp } from "@tabler/icons-react"
 import { ConfirmationGrid } from "./ConfirmationGrid"
 import { LossAnalysisGrid } from "./LossAnalysisGrid"
 import { TradesGrid } from "./TradesGrid"
 import { DayAnalysisGrid } from "./DayAnalysisGrid"
-import { PlusCircle, Target, Tag, BarChart3, Activity, SignalHigh } from "lucide-react"
+import { PlusCircle, Target, Tag, BarChart3 } from "lucide-react"
 
 
 
 import { z } from "zod"
-import { LossReasonAnalysis, WinningConfirmationAnalysis, ConfirmationAnalysis, TradesAnalysis } from "@/lib/database"
 import Filters, { Filter, FilterType, filterViewToFilterOptions, FilterOption, WinPercentageRange, TotalCountRange } from "@/components/ui/filters"
 
 import { Button } from "@/components/ui/button"
@@ -25,6 +24,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import { Label } from "@/components/ui/label"
 import {
   Select,
   SelectContent,
@@ -50,6 +50,7 @@ export const lossReasonSchema = z.object({
   conf5: z.number(),
   conf6: z.number(),
   conf7: z.number(),
+  conf8: z.number(),
 })
 
 export const winningConfirmationSchema = z.object({
@@ -128,7 +129,7 @@ export function DataTable({
     const uniqueConfirmations = Array.from(new Set(data.confirmationAnalysisData.map(item => item.confirmation)))
     return uniqueConfirmations.map(confirmation => ({
       name: confirmation,
-      icon: <IconTrendingUp className="size-3.5 text-muted-foreground" />
+      icon: <IconTrendingUp className="size-3.5 text-text-secondary" />
     }))
   }, [data.confirmationAnalysisData])
 
@@ -209,7 +210,6 @@ export function DataTable({
         <Select defaultValue="trades">
           <SelectTrigger
             className="flex w-fit @4xl/main:hidden"
-            size="sm"
             id="view-selector"
           >
             <SelectValue placeholder="Select a view" />
@@ -237,7 +237,7 @@ export function DataTable({
                   variant="ghost"
                   size="sm"
                   onClick={() => setFilters([])}
-                  className="text-muted-foreground hover:text-foreground"
+                  className="text-text-secondary hover:text-text-primary"
                 >
                   Clear All
                 </Button>
@@ -335,7 +335,7 @@ export function DataTable({
       >
         <TradesGrid data={data.tradesAnalysisData} />
         <div className="flex items-center justify-between px-2 ml-2 border border-border-primary w-fit rounded-md py-1 bg-bg-secondary">
-          <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
+          <div className="text-text-secondary text-xs font-regular hidden flex-1 text-sm lg:flex">
             Showing trades analysis
           </div>
         </div>
@@ -358,7 +358,7 @@ export function DataTable({
           return <DayAnalysisGrid data={processedDayData} />;
         })()}
        <div className="flex items-center justify-between px-2 ml-2 border border-border-primary w-fit rounded-md py-1 bg-bg-secondary">
-          <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
+          <div className="text-text-secondary text-xs font-regular hidden flex-1 text-sm lg:flex">
             Showing {data.dayAnalysisData.length} days
           </div>
         </div>

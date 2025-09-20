@@ -1,5 +1,4 @@
 import * as React from "react"
-import { RangeCell } from "./RangeCell"
 import { LossReasonAnalysis } from "@/lib/database"
 import "./table-styles.css"
 
@@ -23,7 +22,6 @@ export function LossAnalysisGrid({ data, className = "" }: LossAnalysisGridProps
         <div className="grid-header">5 Conf</div>
         <div className="grid-header">6 Conf</div>
         <div className="grid-header">7 Conf</div>
-        <div className="grid-header">8 Conf</div>
       </div>
       
       {/* Scrollable Content */}
@@ -35,30 +33,13 @@ export function LossAnalysisGrid({ data, className = "" }: LossAnalysisGridProps
                 <div className="grid-cell-name">{row.lossReason}</div>
                 <div className="grid-cell-data font-semibold">{row.totalCount}</div>
                 <div className="grid-cell-data font-semibold">{row.lossPercentage}%</div>
-                <div className="grid-cell-data">
-                  <RangeCell rangeValue={row.conf1} />
-                </div>
-                <div className="grid-cell-data">
-                  <RangeCell rangeValue={row.conf2} />
-                </div>
-                <div className="grid-cell-data">
-                  <RangeCell rangeValue={row.conf3} />
-                </div>
-                <div className="grid-cell-data">
-                  <RangeCell rangeValue={row.conf4} />
-                </div>
-                <div className="grid-cell-data">
-                  <RangeCell rangeValue={row.conf5} />
-                </div>
-                <div className="grid-cell-data">
-                  <RangeCell rangeValue={row.conf6} />
-                </div>
-                <div className="grid-cell-data">
-                  <RangeCell rangeValue={row.conf7} />
-                </div>
-                <div className="grid-cell-data">
-                  <RangeCell rangeValue={row.conf8} />
-                </div>
+                <div className="grid-cell-data">{row.conf1}</div>
+                <div className="grid-cell-data">{row.conf2}</div>
+                <div className="grid-cell-data">{row.conf3}</div>
+                <div className="grid-cell-data">{row.conf4}</div>
+                <div className="grid-cell-data">{row.conf5}</div>
+                <div className="grid-cell-data">{row.conf6}</div>
+                <div className="grid-cell-data">{row.conf7}</div>
               </React.Fragment>
             ))
           ) : (

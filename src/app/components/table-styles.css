@@ -43,13 +43,13 @@
 
 .loss-grid-header {
   display: grid;
-  grid-template-columns: 1fr repeat(10, minmax(80px, 120px));
+  grid-template-columns: 1fr repeat(9, minmax(80px, 120px));
   border-bottom: 1px solid hsl(var(--border));
 }
 
 .loss-grid-content {
   display: grid;
-  grid-template-columns: 1fr repeat(10, minmax(80px, 120px));
+  grid-template-columns: 1fr repeat(9, minmax(80px, 120px));
 }
 
 .confirmation-grid-header {
@@ -154,7 +154,7 @@
   
   .loss-grid-header,
   .loss-grid-content {
-    grid-template-columns: 1fr repeat(10, minmax(60px, 80px));
+    grid-template-columns: 1fr repeat(9, minmax(60px, 80px));
   }
   
   .confirmation-grid-header,
