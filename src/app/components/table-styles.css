@@ -19,21 +19,21 @@
 /* Specific grid layouts */
 .trade-grid-container,
 .day-grid-container {
-  --grid-columns: 1fr repeat(4, minmax(80px, 120px));
+  --grid-columns: 1fr repeat(4, minmax(80px, 115px));
   border: 1px solid hsl(var(--border-primary));
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
 .loss-grid-container {
-  --grid-columns: 1fr repeat(9, minmax(80px, 120px));
+  --grid-columns: 1fr repeat(9, minmax(80px, 115px));
   border: 1px solid hsl(var(--border-primary));
   border-radius: 0.5rem;
   overflow: hidden;
 }
 
 .confirmation-grid-container {
-  --grid-columns: 1fr repeat(11, minmax(80px, 120px));
+  --grid-columns: 1fr repeat(11, minmax(80px, 115px));
   border: 1px solid hsl(var(--border-primary));
   border-radius: 0.5rem;
   overflow: hidden;
@@ -91,7 +91,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 60px;
+  height: 60px;
+  font-size: 14px;
 }
 
 .grid-cell-data:last-child {
@@ -131,8 +132,8 @@
   border-bottom: none;
 }
 
-/* Hide inactive tab content */
-[data-state="inactive"] {
+/* Hide inactive tab content (tables only) */
+[role="tabpanel"][data-state="inactive"] {
   display: none !important;
 }
 
