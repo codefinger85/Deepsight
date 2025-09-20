@@ -1023,7 +1023,7 @@ export function DataTable({
                     }}
                   >
                     <Target className="size-4 mr-2" />
-                    Win Percentage
+                    Winrate
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={() => {
@@ -1037,35 +1037,7 @@ export function DataTable({
                     }}
                   >
                     <BarChart3 className="size-4 mr-2" />
-                    Total Count
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const newFilter: Filter = {
-                        id: Math.random().toString(36).substr(2, 9),
-                        type: FilterType.PERFORMANCE_TIER,
-                        operator: "is" as any,
-                        value: [],
-                      }
-                      setFilters(prev => [...prev, newFilter])
-                    }}
-                  >
-                    <Activity className="size-4 mr-2" />
-                    Performance Tier
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const newFilter: Filter = {
-                        id: Math.random().toString(36).substr(2, 9),
-                        type: FilterType.VOLUME_TIER,
-                        operator: "is" as any,
-                        value: [],
-                      }
-                      setFilters(prev => [...prev, newFilter])
-                    }}
-                  >
-                    <SignalHigh className="size-4 mr-2" />
-                    Volume Tier
+                    Trade count
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -1118,9 +1090,9 @@ export function DataTable({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-4">
-          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing {data.lossReasonsData.length} loss reasons (CSS Grid)
+        <div className="flex items-center justify-between px-2 ml-2 border w-fit rounded-md py-0.5 bg-slate-50">
+          <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
+            Showing {data.lossReasonsData.length} loss reasons
           </div>
         </div>
       </TabsContent>
@@ -1153,8 +1125,8 @@ export function DataTable({
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.confirmation}</div>
                     <div className="grid-cell-data font-semibold">{row.totalCount}</div>
-                    <div className="grid-cell-data font-medium">{row.winCount}</div>
-                    <div className="grid-cell-data font-medium">{row.lossCount}</div>
+                    <div className="grid-cell-data font-regular">{row.winCount}</div>
+                    <div className="grid-cell-data font-regular">{row.lossCount}</div>
                     <div className="grid-cell-data font-semibold">
                       {row.winPercentage}%
                     </div>
@@ -1169,7 +1141,7 @@ export function DataTable({
                                 {percentage}%
                               </div>
                               {total > 0 && (
-                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+                                <div className="text-muted-foreground text-[10px] mt-0.5 border-t pt-0.5 font-medium">
                                   {wins}W | {losses}L
                                 </div>
                               )}
@@ -1306,9 +1278,9 @@ export function DataTable({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-4">
-          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing {filteredConfirmationData.length} confirmations (CSS Grid)
+        <div className="flex items-center justify-between px-2 ml-2 border w-fit rounded-md py-0.5 bg-slate-50">
+          <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
+            Showing {filteredConfirmationData.length} confirmations
           </div>
         </div>
       </TabsContent>
@@ -1373,8 +1345,8 @@ export function DataTable({
                           </div>
                         </div>
                       </div>
-                      <div className="grid-cell-data font-medium">{row.wins}</div>
-                      <div className="grid-cell-data font-medium">{row.losses}</div>
+                      <div className="grid-cell-data font-regular">{row.wins}</div>
+                      <div className="grid-cell-data font-regular">{row.losses}</div>
                       <div className="grid-cell-data font-semibold">
                         {row.winRate}%
                       </div>
@@ -1387,9 +1359,9 @@ export function DataTable({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-4">
-          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing trades analysis (CSS Grid)
+        <div className="flex items-center justify-between px-2 ml-2 border w-fit rounded-md py-0.5 bg-slate-50">
+          <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
+            Showing trades analysis
           </div>
         </div>
       </TabsContent>
@@ -1415,8 +1387,8 @@ export function DataTable({
                   <React.Fragment key={index}>
                     <div className="grid-cell-name">{row.dayOfWeek}</div>
                     <div className="grid-cell-data font-semibold">{row.totalTrades}</div>
-                    <div className="grid-cell-data font-medium">{row.winCount}</div>
-                    <div className="grid-cell-data font-medium">{row.lossCount}</div>
+                    <div className="grid-cell-data font-regular">{row.winCount}</div>
+                    <div className="grid-cell-data font-regular">{row.lossCount}</div>
                     <div className="grid-cell-data font-semibold">
                       {row.winPercentage}%
                     </div>
@@ -1428,9 +1400,9 @@ export function DataTable({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-4">
-          <div className="text-muted-foreground hidden flex-1 text-sm lg:flex">
-            Showing {data.dayAnalysisData.length} days (CSS Grid)
+        <div className="flex items-center justify-between px-2 ml-2 border w-fit rounded-md py-0.5 bg-slate-50">
+          <div className="text-muted-foreground text-xs font-regular text-slate-500 hidden flex-1 text-sm lg:flex">
+            Showing {data.dayAnalysisData.length} days
           </div>
         </div>
       </TabsContent>

@@ -100,8 +100,8 @@ export enum FilterType {
   UPDATED_DATE = "Updated date",
   // Trading-specific filter types
   CONFIRMATION_TYPE = "Confirmation Type",
-  WIN_PERCENTAGE = "Win Percentage",
-  TOTAL_COUNT = "Total Count",
+  WIN_PERCENTAGE = "Winrate",
+  TOTAL_COUNT = "Trade count",
 }
 
 export enum FilterOperator {
