@@ -21,7 +21,7 @@ export function TradesGrid({ data, className = "" }: TradesGridProps) {
       </div>
       
       {/* Scrollable Content */}
-      <div className="max-h-[420px] overflow-y-auto scrollbar-hide">
+      <div className="max-h-[425px] overflow-y-auto scrollbar-hide">
         <div className="trade-grid-content">
           {data.length > 0 ? (() => {
             const allTradesRow = data[0];

@@ -28,7 +28,7 @@ export function ConfirmationGrid({ data, className = "" }: ConfirmationGridProps
       </div>
       
       {/* Scrollable Content */}
-      <div className="max-h-[420px] overflow-y-auto scrollbar-hide">
+      <div className="max-h-[425px] overflow-y-auto scrollbar-hide">
         <div className="confirmation-grid-content">
           {data.length > 0 ? (
             data.map((row, index) => (
