@@ -5,6 +5,7 @@ import {
 } from "@/components/ui/tabs"
 import { DateRangePicker, type DateRange } from "@/components/ui/date-range-picker"
 import { format } from "date-fns"
+import { CustomBadge } from "./CustomBadge"
 
 interface DateFilterTabsProps {
   currentTab: string
@@ -26,9 +27,10 @@ export function DateFilterTabs({
       <div className="flex items-center gap-3">
         {/* Selected date range display */}
         {customRange.start && customRange.end && (
-          <div className="text-xs font-regualr text-text-secondary border border-border-primary w-fit rounded-md py-1 px-2 bg-bg-secondary">
-            {format(customRange.start, "MMM d")} - {format(customRange.end, "MMM d, yyyy")}
-          </div>
+          <CustomBadge 
+            text={`${format(customRange.start, "MMM d")} - ${format(customRange.end, "MMM d, yyyy")}`}
+            className="ml-0" 
+          />
         )}
         <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border-border-primary border inline-flex h-9 items-center justify-center rounded-lg p-1 text-text-tertiary">
           <TabsList className="bg-transparent border-0 pr-3">
