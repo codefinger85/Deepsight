@@ -1,6 +1,7 @@
 "use client"
 
 import { IconCirclePlusFilled, IconSettings, IconMoon, IconLogout, IconUser } from "@tabler/icons-react"
+import { ChartColumnBig } from "lucide-react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
@@ -131,9 +132,9 @@ export function SiteHeader() {
             disabled={!isInstalled && !canInstall}
             className="bg-button-secondary border border-border-primary rounded-lg text-text-secondary font-normal hover:bg-button-muted disabled:bg-bg-muted disabled:cursor-not-allowed gap-2 shadow-sm"
           >
-            <DeepsightIcon className="text-primary" />
+            <ChartColumnBig className="text-text-secondary" strokeWidth={1.5} />
             <span>
-              {isInstalled ? "Launch Trading App" : canInstall ? "Install Trading App" : "Trading App Unavailable"}
+              {isInstalled ? "Launch App" : canInstall ? "Install App" : "App Unavailable"}
             </span>
           </Button>
           <DropdownMenu>
