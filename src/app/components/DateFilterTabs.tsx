@@ -34,17 +34,18 @@ export function DateFilterTabs({
         )}
         <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border-border-primary border inline-flex h-9 items-center justify-center rounded-lg p-1 text-text-tertiary">
           <TabsList className="bg-transparent border-0 pr-3">
-            <TabsTrigger value="7d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">7d</TabsTrigger>
-            <TabsTrigger value="14d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">14d</TabsTrigger>
-            <TabsTrigger value="21d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">21d</TabsTrigger>
-            <TabsTrigger value="30d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">30d</TabsTrigger>
-            <TabsTrigger value="90d" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">90d</TabsTrigger>
-            <TabsTrigger value="all" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">All</TabsTrigger>
+            <TabsTrigger value="7d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">7d</TabsTrigger>
+            <TabsTrigger value="14d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">14d</TabsTrigger>
+            <TabsTrigger value="21d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">21d</TabsTrigger>
+            <TabsTrigger value="30d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">30d</TabsTrigger>
+            <TabsTrigger value="90d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">90d</TabsTrigger>
+            <TabsTrigger value="all" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">All</TabsTrigger>
           </TabsList>
           <DateRangePicker
             selectedRange={customRange}
             onRangeChange={onCustomRangeChange}
             onReset={onCustomReset}
+            isActive={!!(customRange.start && customRange.end)}
           />
         </div>
       </div>

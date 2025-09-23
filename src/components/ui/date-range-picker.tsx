@@ -14,9 +14,10 @@ interface DateRangePickerProps {
   selectedRange: DateRange
   onRangeChange: (range: DateRange) => void
   onReset: () => void
+  isActive?: boolean
 }
 
-export function DateRangePicker({ selectedRange, onRangeChange, onReset }: DateRangePickerProps) {
+export function DateRangePicker({ selectedRange, onRangeChange, onReset, isActive = false }: DateRangePickerProps) {
   return (
     <div className="flex items-center gap-3 pr-2">
       <div className="h-6 w-px bg-slate-200 mr-1"></div>
@@ -25,7 +26,7 @@ export function DateRangePicker({ selectedRange, onRangeChange, onReset }: DateR
         onClick={onReset}
         className="toolbar-action-reset w-3.5 h-3.5 text-slate-400 hover:text-slate-700"
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
           <path d="M3 3v5h5"/>
         </svg>
@@ -33,8 +34,10 @@ export function DateRangePicker({ selectedRange, onRangeChange, onReset }: DateR
       
       <Popover>
         <PopoverTrigger asChild>
-          <button className="w-4 h-4 text-slate-400 hover:text-slate-600 transition-colors duration-200 ease-in-out">
-            <CalendarIcon className="w-4 h-4" />
+          <button className={`w-4 h-4 transition-colors duration-200 ease-in-out ${
+            isActive ? 'text-text-secondary hover:text-text-secondary' : 'text-text-tertiary hover:text-text-secondary'
+          }`}>
+            <CalendarIcon className="w-4 h-4" strokeWidth={1.5} />
           </button>
         </PopoverTrigger>
         <PopoverContent 

@@ -55,7 +55,7 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
   }
 
   const isCustomMode = typeof currentFilter === 'object' && currentFilter !== null
-  const currentTab = isCustomMode ? "all" : (typeof currentFilter === 'string' ? currentFilter : "all")
+  const currentTab = isCustomMode ? "" : (typeof currentFilter === 'string' ? currentFilter : "all")
   
   return (
     <Tabs value={currentTab} onValueChange={handleTabChange}>

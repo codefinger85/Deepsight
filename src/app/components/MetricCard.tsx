@@ -37,10 +37,10 @@ export function MetricCard({
         </div>
       </CardHeader>
       <CardFooter className="flex-col items-start gap-1.5 text-sm">
-        <div className="line-clamp-1 flex gap-2 font-regular text-text-primary">
+        <div className="line-clamp-1 flex gap-2 font-normal text-text-secondary">
           {footerPrimary || "Data is coming stay tuned."}
         </div>
-        <div className="text-text-secondary">
+        <div className="text-text-tertiary">
           {footerSecondary || "Data is coming stay tuned."}
         </div>
       </CardFooter>
