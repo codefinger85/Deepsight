@@ -4,39 +4,23 @@ import * as React from "react"
 import "./table-styles.css"
 
 // Import extracted components
-import { parseRangeData, calculateRangeWinPercentage } from "./RangeCell"
 import { IconTrendingUp } from "@tabler/icons-react"
 import { ConfirmationGrid } from "./ConfirmationGrid"
 import { LossAnalysisGrid } from "./LossAnalysisGrid"
 import { TradesGrid } from "./TradesGrid"
 import { DayAnalysisGrid } from "./DayAnalysisGrid"
-import { PlusCircle, Target, Tag, BarChart3 } from "lucide-react"
+import { TableTabsNavigation } from "./TableTabsNavigation"
+import { TableFilters } from "./TableFilters"
+import { CustomBadge } from "./CustomBadge"
 
 
 
 import { z } from "zod"
-import Filters, { Filter, FilterType, filterViewToFilterOptions, FilterOption, WinPercentageRange, TotalCountRange } from "@/components/ui/filters"
+import { Filter, FilterType, filterViewToFilterOptions, FilterOption, WinPercentageRange, TotalCountRange } from "@/components/ui/filters"
 
-import { Button } from "@/components/ui/button"
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Label } from "@/components/ui/label"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import {
   Tabs,
   TabsContent,
-  TabsList,
-  TabsTrigger,
 } from "@/components/ui/tabs"
 
 export const lossReasonSchema = z.object({
@@ -203,147 +187,47 @@ export function DataTable({
         onValueChange={setActiveTab}
         className="w-full flex-col justify-start gap-6"
       >
-      <div className="flex items-center justify-between px-4 lg:px-6 mb-6">
-        <Label htmlFor="view-selector" className="sr-only">
-          View
-        </Label>
-        <Select defaultValue="trades">
-          <SelectTrigger
-            className="flex w-fit @4xl/main:hidden"
-            id="view-selector"
-          >
-            <SelectValue placeholder="Select a view" />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="trades">Trades</SelectItem>
-            <SelectItem value="confirmations">Confirmations</SelectItem>
-            <SelectItem value="loss-reasons">Loss reasons</SelectItem>
-            <SelectItem value="days">Days</SelectItem>
-          </SelectContent>
-        </Select>
+      <div className="flex items-center justify-between px-4 mb-6">
         <div className="flex items-center justify-between w-full">
-          <TabsList className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-white border border-border-primary">
-            <TabsTrigger value="trades" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">Trades</TabsTrigger>
-            <TabsTrigger value="confirmations" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">Confirmations</TabsTrigger>
-            <TabsTrigger value="loss-reasons" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">Loss reasons</TabsTrigger>
-            <TabsTrigger value="days" className="font-normal data-[state=active]:font-medium text-text-secondary data-[state=active]:text-text-secondary">Days</TabsTrigger>
-          </TabsList>
-          <div className="flex items-center gap-2">
-            {/* Active Filters Display - Only show for Confirmations tab */}
-            {activeTab === "confirmations" && filters.length > 0 && (
-              <div className="flex items-center gap-2">
-                <Filters filters={filters} setFilters={setFilters} />
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => setFilters([])}
-                  className="text-text-secondary hover:text-text-primary"
-                >
-                  Clear All
-                </Button>
-              </div>
-            )}
-            {/* Add Filter button - Only show for Confirmations tab */}
-            {activeTab === "confirmations" && (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" size="sm" className="gap-2">
-                    <PlusCircle className="size-4" />
-                    <span className="hidden lg:inline">Add Filter</span>
-                    <span className="lg:hidden">Filter</span>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="start" className="w-56">
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const newFilter: Filter = {
-                        id: Math.random().toString(36).substr(2, 9),
-                        type: FilterType.CONFIRMATION_TYPE,
-                        operator: "include" as any,
-                        value: [],
-                      }
-                      setFilters(prev => [...prev, newFilter])
-                    }}
-                  >
-                    <Tag className="size-4 mr-2" />
-                    Confirmation Type
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const newFilter: Filter = {
-                        id: Math.random().toString(36).substr(2, 9),
-                        type: FilterType.WIN_PERCENTAGE,
-                        operator: "is" as any,
-                        value: [],
-                      }
-                      setFilters(prev => [...prev, newFilter])
-                    }}
-                  >
-                    <Target className="size-4 mr-2" />
-                    Winrate
-                  </DropdownMenuItem>
-                  <DropdownMenuItem
-                    onClick={() => {
-                      const newFilter: Filter = {
-                        id: Math.random().toString(36).substr(2, 9),
-                        type: FilterType.TOTAL_COUNT,
-                        operator: "is" as any,
-                        value: [],
-                      }
-                      setFilters(prev => [...prev, newFilter])
-                    }}
-                  >
-                    <BarChart3 className="size-4 mr-2" />
-                    Trade count
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            )}
-          </div>
+          <TableTabsNavigation />
+          <TableFilters 
+            activeTab={activeTab}
+            filters={filters}
+            setFilters={setFilters}
+            confirmationTypeOptions={confirmationTypeOptions}
+          />
         </div>
       </div>
 
 
       <TabsContent
         value="loss-reasons"
-        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+        className="relative flex flex-col gap-4 overflow-auto px-4"
       >
         <LossAnalysisGrid data={data.lossReasonsData} />
-        <div className="flex items-center justify-between px-2 ml-2 border border-border-primary w-fit rounded-md py-1 bg-bg-secondary">
-          <div className="text-text-secondary text-xs font-regular hidden flex-1 text-sm lg:flex">
-            Showing {data.lossReasonsData.length} loss reasons
-          </div>
-        </div>
+        <CustomBadge text={`Showing ${data.lossReasonsData.length} loss reasons`} />
       </TabsContent>
 
       <TabsContent
         value="confirmations"
-        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+        className="relative flex flex-col gap-4 overflow-auto px-4"
       >
         <ConfirmationGrid data={filteredConfirmationData} />
-        <div className="flex items-center justify-between px-2 ml-2 border border-border-primary w-fit rounded-md py-1 bg-bg-secondary">
-          <div className="text-text-secondary text-xs font-regular hidden flex-1 text-sm lg:flex">
-            Showing {filteredConfirmationData.length} confirmations
-          </div>
-        </div>
+        <CustomBadge text={`Showing ${filteredConfirmationData.length} confirmations`} />
       </TabsContent>
       
       
       <TabsContent
         value="trades"
-        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+        className="relative flex flex-col gap-4 overflow-auto px-4"
       >
         <TradesGrid data={data.tradesAnalysisData} />
-        <div className="flex items-center justify-between px-2 ml-2 border border-border-primary w-fit rounded-md py-1 bg-bg-secondary">
-          <div className="text-text-secondary text-xs font-regular hidden flex-1 text-sm lg:flex">
-            Showing trades analysis
-          </div>
-        </div>
+        <CustomBadge text="Showing trades analysis" />
       </TabsContent>
 
       <TabsContent
         value="days"
-        className="relative flex flex-col gap-4 overflow-auto px-4 lg:px-6"
+        className="relative flex flex-col gap-4 overflow-auto px-4"
       >
         {(() => {
           // Transform day analysis data to match DayAnalysisGrid component structure
@@ -357,11 +241,7 @@ export function DataTable({
           
           return <DayAnalysisGrid data={processedDayData} />;
         })()}
-       <div className="flex items-center justify-between px-2 ml-2 border border-border-primary w-fit rounded-md py-1 bg-bg-secondary">
-          <div className="text-text-secondary text-xs font-regular hidden flex-1 text-sm lg:flex">
-            Showing {data.dayAnalysisData.length} days
-          </div>
-        </div>
+       <CustomBadge text={`Showing ${data.dayAnalysisData.length} days`} />
       </TabsContent>
     </Tabs>
   )
