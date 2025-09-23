@@ -34,10 +34,10 @@ export function ConfirmationGrid({ data, className = "" }: ConfirmationGridProps
             data.map((row, index) => (
               <React.Fragment key={index}>
                 <div className="grid-cell-name">{row.confirmation}</div>
-                <div className="grid-cell-data font-semibold">{row.totalCount}</div>
+                <div className="grid-cell-data font-medium">{row.totalCount}</div>
                 <div className="grid-cell-data font-regular">{row.winCount}</div>
                 <div className="grid-cell-data font-regular">{row.lossCount}</div>
-                <div className="grid-cell-data font-semibold">
+                <div className="grid-cell-data font-medium">
                   {row.winPercentage}%
                 </div>
                 <div className="grid-cell-data">

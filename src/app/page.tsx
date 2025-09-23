@@ -25,6 +25,7 @@ import {
   getTotalLosingTrades,
   getSessionsAbove60Percent,
   getSessionsBelow60Percent,
+  getSessionStats,
   type DateFilter,
   type ChartData
 } from "@/lib/database"
@@ -48,6 +49,14 @@ function PageContent() {
     totalLosingTrades: 0,
     sessionsAbove60: 0,
     sessionsBelow60: 0,
+    // New session stats
+    bestSessionEarnings: 0,
+    worstSessionEarnings: 0,
+    averageSessionEarnings: 0,
+    bestSessionWinRate: 0,
+    worstSessionWinRate: 0,
+    profitableSessions: 0,
+    lossSessions: 0,
   })
 
   // Update chart and table data when global date filter changes
@@ -68,6 +77,7 @@ function PageContent() {
         totalLosingTrades,
         sessionsAbove60,
         sessionsBelow60,
+        sessionStats,
       ] = await Promise.all([
         getChartData(), // Chart data doesn't support filtering yet, so keep as is
         getLossReasonsWithConfirmations(filter),
@@ -82,6 +92,7 @@ function PageContent() {
         getTotalLosingTrades(filter),
         getSessionsAbove60Percent(filter),
         getSessionsBelow60Percent(filter),
+        getSessionStats(filter),
       ])
 
       setChartData(chartDataResult)
@@ -100,6 +111,7 @@ function PageContent() {
         totalLosingTrades,
         sessionsAbove60,
         sessionsBelow60,
+        ...sessionStats,
       })
     }
 
@@ -119,6 +131,13 @@ function PageContent() {
     totalLosingTrades: 0,
     sessionsAbove60: 0,
     sessionsBelow60: 0,
+    bestSessionEarnings: 0,
+    worstSessionEarnings: 0,
+    averageSessionEarnings: 0,
+    bestSessionWinRate: 0,
+    worstSessionWinRate: 0,
+    profitableSessions: 0,
+    lossSessions: 0,
   }
 
   return (

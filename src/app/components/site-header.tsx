@@ -129,16 +129,16 @@ export function SiteHeader() {
             size="sm"
             onClick={handleClick}
             disabled={!isInstalled && !canInstall}
-            className="h-8 bg-button-primary text-text-on-accent hover:bg-button-primary/80 disabled:bg-bg-muted disabled:cursor-not-allowed gap-1"
+            className="bg-button-secondary border border-border-primary rounded-lg text-text-secondary font-normal hover:bg-button-muted disabled:bg-bg-muted disabled:cursor-not-allowed gap-2 shadow-sm"
           >
-            <DeepsightIcon className="text-text-on-accent" />
+            <DeepsightIcon className="text-primary" />
             <span>
-              {isInstalled ? "Open Trading Tool" : canInstall ? "Install Trading Tool" : "Trading Tool Unavailable"}
+              {isInstalled ? "Launch Trading App" : canInstall ? "Install Trading App" : "Trading App Unavailable"}
             </span>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Avatar className="h-9 w-9 cursor-pointer">
+              <Avatar className="h-9 w-9 cursor-pointer border">
                 <AvatarImage src="/avatars/user.jpg" alt="User" />
                 <AvatarFallback className="bg-bg-secondary text-text-secondary">
                   <IconUser className="h-4 w-4" />

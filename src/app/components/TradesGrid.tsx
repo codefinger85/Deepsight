@@ -60,7 +60,7 @@ export function TradesGrid({ data, className = "" }: TradesGridProps) {
                 <div className="grid-cell-name">{row.name}</div>
                 <div className="grid-cell-data">
                   <div className="text-sm">
-                    <div className="font-semibold">{row.total}</div>
+                    <div className="font-medium">{row.total}</div>
                     <div className="text-text-secondary text-[12px] mt-0.5">
                       ({row.percentage}%)
                     </div>
@@ -68,7 +68,7 @@ export function TradesGrid({ data, className = "" }: TradesGridProps) {
                 </div>
                 <div className="grid-cell-data font-regular">{row.wins}</div>
                 <div className="grid-cell-data font-regular">{row.losses}</div>
-                <div className="grid-cell-data font-semibold">
+                <div className="grid-cell-data font-medium">
                   {row.winRate}%
                 </div>
               </React.Fragment>

@@ -32,7 +32,7 @@ export function RangeCell({ rangeValue, className = "" }: RangeCellProps) {
         {percentage}%
       </div>
       {total > 0 && (
-        <div className="text-text-secondary text-[10px] mt-0.5 border-t pt-0.5 font-semibold">
+        <div className="text-text-secondary text-[10px] mt-0.5 border-t pt-0.5 font-medium">
           {wins}W | {losses}L
         </div>
       )}

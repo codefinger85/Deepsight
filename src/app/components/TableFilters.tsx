@@ -37,8 +37,8 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
       {activeTab === "confirmations" && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2">
-              <PlusCircle className="size-4" />
+            <Button variant="outline" size="sm" className="gap-2 font-normal shadow-sm rounded-lg">
+              <PlusCircle className="size-4" strokeWidth="1.5" />
               <span>Add Filter</span>
             </Button>
           </DropdownMenuTrigger>

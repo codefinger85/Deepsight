@@ -29,6 +29,13 @@ interface SectionCardsProps {
     totalLosingTrades: number;
     sessionsAbove60: number;
     sessionsBelow60: number;
+    bestSessionEarnings: number;
+    worstSessionEarnings: number;
+    averageSessionEarnings: number;
+    bestSessionWinRate: number;
+    worstSessionWinRate: number;
+    profitableSessions: number;
+    lossSessions: number;
   };
   currentFilter: DateFilter;
   onDateFilterChange: (filter: DateFilter) => void;
@@ -71,20 +78,20 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
         <MetricCard 
           title="Total Earnings"
           value={`$ ${(initialData.totalEarnings || 0).toFixed(2)}`}
-          footerPrimary="Data is coming stay tuned."
-          footerSecondary="Data is coming stay tuned."
+          footerPrimary={`Best session: $${(initialData.bestSessionEarnings || 0).toFixed(2)}`}
+          footerSecondary={`Average per session: $${(initialData.averageSessionEarnings || 0).toFixed(2)}`}
         />
         <MetricCard 
           title="Overall Win Rate"
           value={`${(initialData.overallWinRate || 0)}%`}
-          footerPrimary="Data is coming stay tuned."
-          footerSecondary="Data is coming stay tuned."
+          footerPrimary={`Best session: ${(initialData.bestSessionWinRate || 0)}%`}
+          footerSecondary={`Worst session: ${(initialData.worstSessionWinRate || 0)}%`}
         />
         <MetricCard 
           title="Total Sessions"
           value={(initialData.totalSessions || 0).toLocaleString()}
-          footerPrimary={`Sessions over 60% winrate: ${initialData.sessionsAbove60.toLocaleString()}`}
-          footerSecondary={`Sessions below 60% winrate: ${initialData.sessionsBelow60.toLocaleString()}`}
+          footerPrimary={`Sessions 50% winrate and above: ${(initialData.profitableSessions || 0).toLocaleString()}`}
+          footerSecondary={`Sessions below 50% winrate: ${(initialData.lossSessions || 0).toLocaleString()}`}
         />
         <MetricCard 
           title="Total Trades"

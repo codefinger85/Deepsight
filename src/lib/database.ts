@@ -747,6 +747,85 @@ export async function getSessionTrades(sessionId: string): Promise<Trade[]> {
   }
 }
 
+// Get session statistics for metric cards
+export async function getSessionStats(dateFilter?: DateFilter): Promise<{
+  bestSessionEarnings: number;
+  worstSessionEarnings: number;
+  averageSessionEarnings: number;
+  bestSessionWinRate: number;
+  worstSessionWinRate: number;
+  profitableSessions: number;
+  lossSessions: number;
+}> {
+  try {
+    let query = supabase
+      .from('sessions')
+      .select('*');
+
+    // Apply date filter logic like other functions
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
+    }
+
+    const { data: sessions, error } = await query;
+
+    if (error) throw error;
+    
+    if (!sessions || sessions.length === 0) {
+      return {
+        bestSessionEarnings: 0,
+        worstSessionEarnings: 0,
+        averageSessionEarnings: 0,
+        bestSessionWinRate: 0,
+        worstSessionWinRate: 0,
+        profitableSessions: 0,
+        lossSessions: 0,
+      };
+    }
+
+    // Calculate earnings stats
+    const earnings = sessions.map(s => s.earningsResult || 0);
+    const bestSessionEarnings = Math.max(...earnings);
+    const worstSessionEarnings = Math.min(...earnings);
+    const averageSessionEarnings = earnings.reduce((sum, e) => sum + e, 0) / earnings.length;
+
+    // Calculate win rate stats
+    const winRates = sessions.map(s => s.winRate || 0);
+    const bestSessionWinRate = Math.max(...winRates);
+    const worstSessionWinRate = Math.min(...winRates);
+
+    // Calculate profitable vs loss sessions (50% threshold)
+    const profitableSessions = sessions.filter(s => (s.winRate || 0) >= 50).length;
+    const lossSessions = sessions.filter(s => (s.winRate || 0) < 50).length;
+
+    return {
+      bestSessionEarnings,
+      worstSessionEarnings,
+      averageSessionEarnings,
+      bestSessionWinRate,
+      worstSessionWinRate,
+      profitableSessions,
+      lossSessions,
+    };
+  } catch (error) {
+    console.error('Error getting session stats:', error);
+    return {
+      bestSessionEarnings: 0,
+      worstSessionEarnings: 0,
+      averageSessionEarnings: 0,
+      bestSessionWinRate: 0,
+      worstSessionWinRate: 0,
+      profitableSessions: 0,
+      lossSessions: 0,
+    };
+  }
+}
+
 export async function getTradesAnalysis(dateFilter?: DateFilter): Promise<TradesAnalysis[]> {
   try {
     let query = supabase

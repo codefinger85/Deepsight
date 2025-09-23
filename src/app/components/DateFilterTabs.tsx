@@ -32,7 +32,7 @@ export function DateFilterTabs({
             className="ml-0" 
           />
         )}
-        <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border-border-primary border inline-flex h-9 items-center justify-center rounded-lg p-1 text-text-tertiary">
+        <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border-border-primary border inline-flex h-9 items-center justify-center rounded-lg py-1 text-text-tertiary">
           <TabsList className="bg-transparent border-0 pr-3">
             <TabsTrigger value="7d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">7d</TabsTrigger>
             <TabsTrigger value="14d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">14d</TabsTrigger>
