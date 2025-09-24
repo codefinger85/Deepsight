@@ -109,8 +109,8 @@ function getDateFilter(dateFilter?: DateFilter) {
   // Handle custom date range objects
   if (typeof dateFilter === 'object' && dateFilter.start && dateFilter.end) {
     return {
-      start: dateFilter.start.toISOString().split('T')[0],
-      end: dateFilter.end.toISOString().split('T')[0]
+      start: dateFilter.start.toLocaleDateString('en-CA'), // YYYY-MM-DD format
+      end: dateFilter.end.toLocaleDateString('en-CA')
     };
   }
   
@@ -118,7 +118,12 @@ function getDateFilter(dateFilter?: DateFilter) {
   if (typeof dateFilter === 'string') {
     if (dateFilter === 'all') return null;
     
-    const referenceDate = new Date();
+    // Get today's date in local timezone as YYYY-MM-DD string
+    const today = new Date();
+    const todayString = today.getFullYear() + '-' + 
+                       String(today.getMonth() + 1).padStart(2, '0') + '-' + 
+                       String(today.getDate()).padStart(2, '0');
+    
     let daysToSubtract = 90;
     if (dateFilter === '7d') {
       daysToSubtract = 7;
@@ -132,9 +137,13 @@ function getDateFilter(dateFilter?: DateFilter) {
       daysToSubtract = 90;
     }
     
-    const startDate = new Date(referenceDate);
-    startDate.setDate(startDate.getDate() - daysToSubtract);
-    return startDate.toISOString().split('T')[0];
+    // Calculate start date by subtracting days from today
+    const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - daysToSubtract);
+    const startDateString = startDate.getFullYear() + '-' + 
+                           String(startDate.getMonth() + 1).padStart(2, '0') + '-' + 
+                           String(startDate.getDate()).padStart(2, '0');
+    
+    return startDateString;
   }
   
   return null;
@@ -559,6 +568,8 @@ export async function getConfirmationAnalysisWithCounts(dateFilter?: DateFilter)
       conf5Losses: number;
       conf6Wins: number;
       conf6Losses: number;
+      conf7Wins: number;
+      conf7Losses: number;
     }> = {};
 
     data?.forEach(trade => {
