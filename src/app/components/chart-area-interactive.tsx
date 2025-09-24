@@ -82,10 +82,10 @@ export const ChartAreaInteractive = React.memo(function ChartAreaInteractive({ c
             <CardTitle className="font-medium">Trading Performance</CardTitle>
             <CardDescription>
               <span className="hidden @[540px]/card:block">
-                Daily win rate and trade volume over time
+                Daily winrate and trades volume over time
               </span>
               <span className="@[540px]/card:hidden">
-                Win rate & volume
+                Winrate & volume
               </span>
             </CardDescription>
           </div>
@@ -160,9 +160,9 @@ export const ChartAreaInteractive = React.memo(function ChartAreaInteractive({ c
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;
                     return (
-                      <div className="rounded-lg border bg-background p-3 shadow-sm">
-                        <div className="flex justify-between items-center mb-2">
-                          <span className="text-sm font-medium text-muted-foreground">
+                      <div className="rounded-lg border bg-background shadow-sm w-[160px]">
+                        <div className="flex justify-between items-center mb-1 border-b px-3 py-2 bg-bg-secondary rounded-tr-lg rounded-tl-lg">
+                          <span className="text-sm font-medium text-text-secondary">
                             {new Date(label).toLocaleDateString("en-US", {
                               month: "short",
                               day: "numeric",
@@ -172,18 +172,18 @@ export const ChartAreaInteractive = React.memo(function ChartAreaInteractive({ c
                             {data.winRate}%
                           </span>
                         </div>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground">Total Trades:</span>
-                            <span className="text-sm font-medium">{data.wins + data.losses}</span>
+                        <div className="p-3">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-sm text-text-secondary">Total Trades:</span>
+                            <span className="text-sm font-normal text-text-secondary">{data.wins + data.losses}</span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground">Wins:</span>
-                            <span className="text-sm font-medium">{data.wins}</span>
+                          <div className="flex items-center justify-between gap-2 mt-1">
+                            <span className="text-sm text-text-secondary">Losses:</span>
+                            <span className="text-sm font-normal text-text-secondary">{data.losses}</span>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <span className="text-sm text-muted-foreground">Losses:</span>
-                            <span className="text-sm font-medium">{data.losses}</span>
+                          <div className="flex flex-row items-center justify-between border-t pt-2 mt-2">
+                            <span className="text-sm text-text-secondary">Wins:</span>
+                            <span className="text-sm font-medium text-text-secondary">{data.wins}</span>
                           </div>
                         </div>
                       </div>
