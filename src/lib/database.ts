@@ -76,6 +76,7 @@ export type TradesAnalysis = {
   totalCount: number;
   winCount: number;
   lossCount: number;
+  drawCount: number;
   winPercentage: number;
   conf1: string;
   conf2: string;
@@ -814,64 +815,83 @@ export async function getTradesAnalysis(dateFilter?: DateFilter): Promise<Trades
       totalTrades: 0,
       totalWins: 0,
       totalLosses: 0,
+      totalDraws: 0,
       conf1Wins: 0,
       conf1Losses: 0,
+      conf1Draws: 0,
       conf2Wins: 0,
       conf2Losses: 0,
+      conf2Draws: 0,
       conf3Wins: 0,
       conf3Losses: 0,
+      conf3Draws: 0,
       conf4Wins: 0,
       conf4Losses: 0,
+      conf4Draws: 0,
       conf5Wins: 0,
       conf5Losses: 0,
+      conf5Draws: 0,
       conf6Wins: 0,
       conf6Losses: 0,
+      conf6Draws: 0,
       conf7Wins: 0,
       conf7Losses: 0,
+      conf7Draws: 0,
     };
 
     // Process each trade
     data?.forEach(trade => {
       const { confirmationsCount, result } = trade;
       const isWin = result === 'win';
+      const isLoss = result === 'loss';
+      const isDraw = !isWin && !isLoss;
 
       analysis.totalTrades++;
       
       if (isWin) {
         analysis.totalWins++;
-      } else {
+      } else if (isLoss) {
         analysis.totalLosses++;
+      } else {
+        analysis.totalDraws++;
       }
 
       // Count by confirmation level
       switch (confirmationsCount) {
         case 1:
           if (isWin) analysis.conf1Wins++;
-          else analysis.conf1Losses++;
+          else if (isLoss) analysis.conf1Losses++;
+          else analysis.conf1Draws++;
           break;
         case 2:
           if (isWin) analysis.conf2Wins++;
-          else analysis.conf2Losses++;
+          else if (isLoss) analysis.conf2Losses++;
+          else analysis.conf2Draws++;
           break;
         case 3:
           if (isWin) analysis.conf3Wins++;
-          else analysis.conf3Losses++;
+          else if (isLoss) analysis.conf3Losses++;
+          else analysis.conf3Draws++;
           break;
         case 4:
           if (isWin) analysis.conf4Wins++;
-          else analysis.conf4Losses++;
+          else if (isLoss) analysis.conf4Losses++;
+          else analysis.conf4Draws++;
           break;
         case 5:
           if (isWin) analysis.conf5Wins++;
-          else analysis.conf5Losses++;
+          else if (isLoss) analysis.conf5Losses++;
+          else analysis.conf5Draws++;
           break;
         case 6:
           if (isWin) analysis.conf6Wins++;
-          else analysis.conf6Losses++;
+          else if (isLoss) analysis.conf6Losses++;
+          else analysis.conf6Draws++;
           break;
         case 7:
           if (isWin) analysis.conf7Wins++;
-          else analysis.conf7Losses++;
+          else if (isLoss) analysis.conf7Losses++;
+          else analysis.conf7Draws++;
           break;
       }
     });
@@ -886,14 +906,15 @@ export async function getTradesAnalysis(dateFilter?: DateFilter): Promise<Trades
       totalCount: analysis.totalTrades,
       winCount: analysis.totalWins,
       lossCount: analysis.totalLosses,
+      drawCount: analysis.totalDraws,
       winPercentage,
-      conf1: `${analysis.conf1Wins}|${analysis.conf1Losses}`,
-      conf2: `${analysis.conf2Wins}|${analysis.conf2Losses}`,
-      conf3: `${analysis.conf3Wins}|${analysis.conf3Losses}`,
-      conf4: `${analysis.conf4Wins}|${analysis.conf4Losses}`,
-      conf5: `${analysis.conf5Wins}|${analysis.conf5Losses}`,
-      conf6: `${analysis.conf6Wins}|${analysis.conf6Losses}`,
-      conf7: `${analysis.conf7Wins}|${analysis.conf7Losses}`,
+      conf1: `${analysis.conf1Wins}|${analysis.conf1Losses}|${analysis.conf1Draws}`,
+      conf2: `${analysis.conf2Wins}|${analysis.conf2Losses}|${analysis.conf2Draws}`,
+      conf3: `${analysis.conf3Wins}|${analysis.conf3Losses}|${analysis.conf3Draws}`,
+      conf4: `${analysis.conf4Wins}|${analysis.conf4Losses}|${analysis.conf4Draws}`,
+      conf5: `${analysis.conf5Wins}|${analysis.conf5Losses}|${analysis.conf5Draws}`,
+      conf6: `${analysis.conf6Wins}|${analysis.conf6Losses}|${analysis.conf6Draws}`,
+      conf7: `${analysis.conf7Wins}|${analysis.conf7Losses}|${analysis.conf7Draws}`,
     }];
   } catch (error) {
     console.error('Error getting trades analysis:', error);
@@ -902,14 +923,15 @@ export async function getTradesAnalysis(dateFilter?: DateFilter): Promise<Trades
       totalCount: 0,
       winCount: 0,
       lossCount: 0,
+      drawCount: 0,
       winPercentage: 0,
-      conf1: '0|0',
-      conf2: '0|0',
-      conf3: '0|0',
-      conf4: '0|0',
-      conf5: '0|0',
-      conf6: '0|0',
-      conf7: '0|0',
+      conf1: '0|0|0',
+      conf2: '0|0|0',
+      conf3: '0|0|0',
+      conf4: '0|0|0',
+      conf5: '0|0|0',
+      conf6: '0|0|0',
+      conf7: '0|0|0',
     }];
   }
 }

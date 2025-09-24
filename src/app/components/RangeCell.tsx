@@ -6,14 +6,15 @@ interface RangeCellProps {
 }
 
 // Utility functions for range calculations
-export const parseRangeData = (rangeValue: string): { wins: number; losses: number; total: number } => {
+export const parseRangeData = (rangeValue: string): { wins: number; losses: number; draws: number; total: number } => {
   try {
-    const [winsStr, lossesStr] = rangeValue.split('|');
+    const [winsStr, lossesStr, drawsStr] = rangeValue.split('|');
     const wins = parseInt(winsStr) || 0;
     const losses = parseInt(lossesStr) || 0;
-    return { wins, losses, total: wins + losses };
+    const draws = parseInt(drawsStr) || 0;
+    return { wins, losses, draws, total: wins + losses + draws };
   } catch {
-    return { wins: 0, losses: 0, total: 0 };
+    return { wins: 0, losses: 0, draws: 0, total: 0 };
   }
 };
 

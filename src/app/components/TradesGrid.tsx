@@ -17,6 +17,7 @@ export function TradesGrid({ data, className = "" }: TradesGridProps) {
         <div className="grid-header">Total</div>
         <div className="grid-header">Wins</div>
         <div className="grid-header">Losses</div>
+        <div className="grid-header">Draws</div>
         <div className="grid-header">Winrate</div>
       </div>
       
@@ -35,6 +36,7 @@ export function TradesGrid({ data, className = "" }: TradesGridProps) {
                 percentage: 100,
                 wins: allTradesRow.winCount,
                 losses: allTradesRow.lossCount,
+                draws: allTradesRow.drawCount,
                 winRate: allTradesRow.winPercentage
               }
             ];
@@ -51,6 +53,7 @@ export function TradesGrid({ data, className = "" }: TradesGridProps) {
                 percentage,
                 wins: confData.wins,
                 losses: confData.losses,
+                draws: confData.draws,
                 winRate: calculateRangeWinPercentage(confData.wins, confData.losses)
               });
             }
@@ -68,6 +71,7 @@ export function TradesGrid({ data, className = "" }: TradesGridProps) {
                 </div>
                 <div className="grid-cell-data font-regular">{row.wins}</div>
                 <div className="grid-cell-data font-regular">{row.losses}</div>
+                <div className="grid-cell-data font-regular">{row.draws}</div>
                 <div className="grid-cell-data font-medium">
                   {row.winRate}%
                 </div>
