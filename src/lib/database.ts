@@ -237,43 +237,6 @@ export async function getAllTradeStats(dateFilter?: DateFilter): Promise<{
   }
 }
 
-// DEPRECATED: Use getAllTradeStats() instead for better performance
-// This function is kept temporarily for backwards compatibility
-/*
-export async function getOverallWinRate(dateFilter?: DateFilter): Promise<number> {
-  try {
-    let query = supabase
-      .from('trades')
-      .select('result, date');
-
-    const filter = getDateFilter(dateFilter);
-    if (filter) {
-      if (typeof filter === 'string') {
-        query = query.gte('date', filter);
-      } else {
-        query = query.gte('date', filter.start).lte('date', filter.end);
-      }
-    }
-
-    const { data, error } = await query;
-
-    if (error) throw error;
-
-    if (!data || data.length === 0) return 0;
-
-    const totalWins = data.filter(trade => trade.result === 'win').length;
-    const totalLosses = data.filter(trade => trade.result === 'loss').length;
-    
-    // Use neutral win rate: wins / (wins + losses), excluding draws
-    return (totalWins + totalLosses) > 0 
-      ? Math.round((totalWins / (totalWins + totalLosses)) * 100) 
-      : 0;
-  } catch (error) {
-    console.error('Error getting overall win rate:', error);
-    return 0;
-  }
-}
-*/
 
 export async function getTotalSessions(dateFilter?: DateFilter): Promise<number> {
   try {
@@ -301,39 +264,6 @@ export async function getTotalSessions(dateFilter?: DateFilter): Promise<number>
   }
 }
 
-// DEPRECATED: Use getAllTradeStats() instead for better performance
-// This function is kept temporarily for backwards compatibility
-/*
-export async function getTotalTrades(dateFilter?: DateFilter): Promise<number> {
-  try {
-    let query = supabase
-      .from('sessions')
-      .select('tradesCount, date');
-
-    const filter = getDateFilter(dateFilter);
-    if (filter) {
-      if (typeof filter === 'string') {
-        query = query.gte('date', filter);
-      } else {
-        query = query.gte('date', filter.start).lte('date', filter.end);
-      }
-    }
-
-    const { data, error } = await query;
-
-    if (error) throw error;
-
-    const total = data?.reduce((sum, session) => {
-      return sum + (parseInt(session.tradesCount) || 0);
-    }, 0) || 0;
-
-    return total;
-  } catch (error) {
-    console.error('Error getting total trades:', error);
-    return 0;
-  }
-}
-*/
 
 // Get all sessions for more detailed analysis
 export async function getAllSessions(): Promise<Session[]> {
@@ -352,63 +282,6 @@ export async function getAllSessions(): Promise<Session[]> {
   }
 }
 
-// DEPRECATED: Use getAllTradeStats() instead for better performance
-// These functions are kept temporarily for backwards compatibility
-/*
-export async function getTotalWinningTrades(dateFilter?: DateFilter): Promise<number> {
-  try {
-    let query = supabase
-      .from('trades')
-      .select('result, date')
-      .eq('result', 'win');
-
-    const filter = getDateFilter(dateFilter);
-    if (filter) {
-      if (typeof filter === 'string') {
-        query = query.gte('date', filter);
-      } else {
-        query = query.gte('date', filter.start).lte('date', filter.end);
-      }
-    }
-
-    const { data, error } = await query;
-
-    if (error) throw error;
-
-    return data?.length || 0;
-  } catch (error) {
-    console.error('Error getting total winning trades:', error);
-    return 0;
-  }
-}
-
-export async function getTotalLosingTrades(dateFilter?: DateFilter): Promise<number> {
-  try {
-    let query = supabase
-      .from('trades')
-      .select('result, date')
-      .eq('result', 'loss');
-
-    const filter = getDateFilter(dateFilter);
-    if (filter) {
-      if (typeof filter === 'string') {
-        query = query.gte('date', filter);
-      } else {
-        query = query.gte('date', filter.start).lte('date', filter.end);
-      }
-    }
-
-    const { data, error } = await query;
-
-    if (error) throw error;
-
-    return data?.length || 0;
-  } catch (error) {
-    console.error('Error getting total losing trades:', error);
-    return 0;
-  }
-}
-*/
 
 export async function getSessionsAbove60Percent(dateFilter?: DateFilter): Promise<number> {
   try {
