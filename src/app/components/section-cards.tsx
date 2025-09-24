@@ -97,8 +97,8 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
         <MetricCard 
           title="Total Trades"
           value={(initialData.totalTrades || 0).toLocaleString()}
-          footerPrimary={`Wins: ${initialData.totalWinningTrades.toLocaleString()} | Losses: ${initialData.totalLosingTrades.toLocaleString()}`}
-          footerSecondary={`Total draw trades: ${(initialData.totalDraws || 0).toLocaleString()}`}
+          footerPrimary={`Total wins: ${initialData.totalWinningTrades.toLocaleString()}`}
+          footerSecondary={`Losses: ${initialData.totalLosingTrades.toLocaleString()}\u00A0 | \u00A0Draws: ${(initialData.totalDraws || 0).toLocaleString()}`}
         />
       </div>
     </div>

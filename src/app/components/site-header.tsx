@@ -123,7 +123,7 @@ export function SiteHeader() {
             size="sm"
             onClick={handleClick}
             disabled={!isInstalled && !canInstall}
-            className="bg-button-secondary border border-border-primary rounded-lg text-text-secondary font-normal hover:bg-button-muted disabled:bg-bg-muted disabled:cursor-not-allowed gap-1.5 shadow-sm"
+            className="bg-button-secondary border border-border-primary rounded-lg text-text-secondary font-normal hover:bg-button-muted disabled:bg-button-muted disabled:cursor-not-allowed disabled:text-text-tertiary gap-1.5 shadow-sm"
           >
             <ChartColumnBig className="text-text-secondary" strokeWidth={1.5} />
             <span>

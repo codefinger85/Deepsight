@@ -186,7 +186,7 @@ export const ChartAreaInteractive = React.memo(function ChartAreaInteractive({ c
                             <span className="text-sm font-normal text-text-secondary">{data.draws}</span>
                           </div>
                           <div className="flex flex-row items-center justify-between border-t pt-2 mt-2">
-                            <span className="text-sm text-text-secondary">Wins:</span>
+                            <span className="text-sm font-medium text-text-secondary">Wins:</span>
                             <span className="text-sm font-medium text-text-secondary">{data.wins}</span>
                           </div>
                         </div>
