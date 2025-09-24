@@ -27,6 +27,7 @@ interface SectionCardsProps {
     totalTrades: number;
     totalWinningTrades: number;
     totalLosingTrades: number;
+    totalDraws: number;
     sessionsAbove60: number;
     sessionsBelow60: number;
     bestSessionEarnings: number;
@@ -96,8 +97,8 @@ export function SectionCards({ initialData, currentFilter, onDateFilterChange }:
         <MetricCard 
           title="Total Trades"
           value={(initialData.totalTrades || 0).toLocaleString()}
-          footerPrimary={`Total winning trades: ${initialData.totalWinningTrades.toLocaleString()}`}
-          footerSecondary={`Total losing trades: ${initialData.totalLosingTrades.toLocaleString()}`}
+          footerPrimary={`Wins: ${initialData.totalWinningTrades.toLocaleString()} | Losses: ${initialData.totalLosingTrades.toLocaleString()}`}
+          footerSecondary={`Total draw trades: ${(initialData.totalDraws || 0).toLocaleString()}`}
         />
       </div>
     </div>

@@ -175,11 +175,15 @@ export const ChartAreaInteractive = React.memo(function ChartAreaInteractive({ c
                         <div className="p-3">
                           <div className="flex items-center justify-between gap-2">
                             <span className="text-sm text-text-secondary">Total Trades:</span>
-                            <span className="text-sm font-normal text-text-secondary">{data.wins + data.losses}</span>
+                            <span className="text-sm font-normal text-text-secondary">{data.tradesCount}</span>
                           </div>
                           <div className="flex items-center justify-between gap-2 mt-1">
                             <span className="text-sm text-text-secondary">Losses:</span>
                             <span className="text-sm font-normal text-text-secondary">{data.losses}</span>
+                          </div>
+                          <div className="flex items-center justify-between gap-2 mt-1">
+                            <span className="text-sm text-text-secondary">Draws:</span>
+                            <span className="text-sm font-normal text-text-secondary">{data.draws}</span>
                           </div>
                           <div className="flex flex-row items-center justify-between border-t pt-2 mt-2">
                             <span className="text-sm text-text-secondary">Wins:</span>

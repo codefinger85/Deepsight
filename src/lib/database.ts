@@ -172,6 +172,74 @@ export async function getTotalEarnings(dateFilter?: DateFilter): Promise<number>
   }
 }
 
+// Consolidated function that gets all trade statistics in one query
+export async function getAllTradeStats(dateFilter?: DateFilter): Promise<{
+  totalTrades: number;
+  totalWins: number;
+  totalLosses: number;
+  totalDraws: number;
+  overallWinRate: number;
+}> {
+  try {
+    let query = supabase
+      .from('trades')
+      .select('result, date');
+
+    const filter = getDateFilter(dateFilter);
+    if (filter) {
+      if (typeof filter === 'string') {
+        query = query.gte('date', filter);
+      } else {
+        query = query.gte('date', filter.start).lte('date', filter.end);
+      }
+    }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+
+    if (!data || data.length === 0) {
+      return {
+        totalTrades: 0,
+        totalWins: 0,
+        totalLosses: 0,
+        totalDraws: 0,
+        overallWinRate: 0,
+      };
+    }
+
+    const totalWins = data.filter(trade => trade.result === 'win').length;
+    const totalLosses = data.filter(trade => trade.result === 'loss').length;
+    const totalDraws = Math.max(0, data.length - totalWins - totalLosses);
+    const totalTrades = data.length;
+
+    // Use neutral win rate: wins / (wins + losses), excluding draws
+    const overallWinRate = (totalWins + totalLosses) > 0 
+      ? Math.round((totalWins / (totalWins + totalLosses)) * 100) 
+      : 0;
+
+    return {
+      totalTrades,
+      totalWins,
+      totalLosses,
+      totalDraws,
+      overallWinRate,
+    };
+  } catch (error) {
+    console.error('Error getting all trade stats:', error);
+    return {
+      totalTrades: 0,
+      totalWins: 0,
+      totalLosses: 0,
+      totalDraws: 0,
+      overallWinRate: 0,
+    };
+  }
+}
+
+// DEPRECATED: Use getAllTradeStats() instead for better performance
+// This function is kept temporarily for backwards compatibility
+/*
 export async function getOverallWinRate(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
@@ -193,15 +261,19 @@ export async function getOverallWinRate(dateFilter?: DateFilter): Promise<number
 
     if (!data || data.length === 0) return 0;
 
-    const totalTrades = data.length;
-    const wins = data.filter(trade => trade.result === 'win').length;
+    const totalWins = data.filter(trade => trade.result === 'win').length;
+    const totalLosses = data.filter(trade => trade.result === 'loss').length;
     
-    return Math.round((wins / totalTrades) * 100);
+    // Use neutral win rate: wins / (wins + losses), excluding draws
+    return (totalWins + totalLosses) > 0 
+      ? Math.round((totalWins / (totalWins + totalLosses)) * 100) 
+      : 0;
   } catch (error) {
     console.error('Error getting overall win rate:', error);
     return 0;
   }
 }
+*/
 
 export async function getTotalSessions(dateFilter?: DateFilter): Promise<number> {
   try {
@@ -229,6 +301,9 @@ export async function getTotalSessions(dateFilter?: DateFilter): Promise<number>
   }
 }
 
+// DEPRECATED: Use getAllTradeStats() instead for better performance
+// This function is kept temporarily for backwards compatibility
+/*
 export async function getTotalTrades(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
@@ -258,6 +333,7 @@ export async function getTotalTrades(dateFilter?: DateFilter): Promise<number> {
     return 0;
   }
 }
+*/
 
 // Get all sessions for more detailed analysis
 export async function getAllSessions(): Promise<Session[]> {
@@ -276,6 +352,9 @@ export async function getAllSessions(): Promise<Session[]> {
   }
 }
 
+// DEPRECATED: Use getAllTradeStats() instead for better performance
+// These functions are kept temporarily for backwards compatibility
+/*
 export async function getTotalWinningTrades(dateFilter?: DateFilter): Promise<number> {
   try {
     let query = supabase
@@ -329,6 +408,7 @@ export async function getTotalLosingTrades(dateFilter?: DateFilter): Promise<num
     return 0;
   }
 }
+*/
 
 export async function getSessionsAbove60Percent(dateFilter?: DateFilter): Promise<number> {
   try {
@@ -912,9 +992,9 @@ export async function getTradesAnalysis(dateFilter?: DateFilter): Promise<Trades
       }
     });
 
-    // Calculate win percentage
-    const winPercentage = analysis.totalTrades > 0 
-      ? Math.round((analysis.totalWins / analysis.totalTrades) * 100) 
+    // Calculate win percentage using neutral formula: wins / (wins + losses)
+    const winPercentage = (analysis.totalWins + analysis.totalLosses) > 0 
+      ? Math.round((analysis.totalWins / (analysis.totalWins + analysis.totalLosses)) * 100) 
       : 0;
 
     return [{
@@ -1002,8 +1082,8 @@ export async function getDayAnalysis(dateFilter?: DateFilter): Promise<DayAnalys
       totalTrades: stats.totalTrades,
       winCount: stats.winCount,
       lossCount: stats.lossCount,
-      winPercentage: stats.totalTrades > 0 
-        ? Math.round((stats.winCount / stats.totalTrades) * 100) 
+      winPercentage: (stats.winCount + stats.lossCount) > 0 
+        ? Math.round((stats.winCount / (stats.winCount + stats.lossCount)) * 100) 
         : 0,
     }));
 
@@ -1029,6 +1109,7 @@ export type ChartData = {
   date: string;
   wins: number;
   losses: number;
+  draws: number;
   winRate: number;
   tradesCount: number;
 };
@@ -1046,6 +1127,7 @@ export async function getChartData(): Promise<ChartData[]> {
       date: session.date,
       wins: session.winCount,
       losses: session.lossCount,
+      draws: Math.max(0, session.tradesCount - session.winCount - session.lossCount),
       winRate: Math.round(parseFloat(session.winRate) || 0),
       tradesCount: session.tradesCount
     })) || [];

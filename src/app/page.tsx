@@ -18,11 +18,8 @@ import {
   getDayAnalysis,
   getChartData,
   getTotalEarnings,
-  getOverallWinRate,
+  getAllTradeStats,
   getTotalSessions,
-  getTotalTrades,
-  getTotalWinningTrades,
-  getTotalLosingTrades,
   getSessionsAbove60Percent,
   getSessionsBelow60Percent,
   getSessionStats,
@@ -47,6 +44,7 @@ function PageContent() {
     totalTrades: 0,
     totalWinningTrades: 0,
     totalLosingTrades: 0,
+    totalDraws: 0,
     sessionsAbove60: 0,
     sessionsBelow60: 0,
     // New session stats
@@ -70,11 +68,8 @@ function PageContent() {
         tradesAnalysisData, 
         dayAnalysisData,
         totalEarnings,
-        overallWinRate,
+        tradeStats,
         totalSessions,
-        totalTrades,
-        totalWinningTrades,
-        totalLosingTrades,
         sessionsAbove60,
         sessionsBelow60,
         sessionStats,
@@ -85,11 +80,8 @@ function PageContent() {
         getTradesAnalysis(filter),
         getDayAnalysis(filter),
         getTotalEarnings(filter),
-        getOverallWinRate(filter),
+        getAllTradeStats(filter),
         getTotalSessions(filter),
-        getTotalTrades(filter),
-        getTotalWinningTrades(filter),
-        getTotalLosingTrades(filter),
         getSessionsAbove60Percent(filter),
         getSessionsBelow60Percent(filter),
         getSessionStats(filter),
@@ -104,11 +96,12 @@ function PageContent() {
       })
       setSectionData({
         totalEarnings,
-        overallWinRate,
+        overallWinRate: tradeStats.overallWinRate,
         totalSessions,
-        totalTrades,
-        totalWinningTrades,
-        totalLosingTrades,
+        totalTrades: tradeStats.totalTrades,
+        totalWinningTrades: tradeStats.totalWins,
+        totalLosingTrades: tradeStats.totalLosses,
+        totalDraws: tradeStats.totalDraws,
         sessionsAbove60,
         sessionsBelow60,
         ...sessionStats,
@@ -122,23 +115,6 @@ function PageContent() {
     setGlobalDateFilter(filter)
   }, [])
 
-  const initialSectionData = {
-    totalEarnings: 0,
-    overallWinRate: 0,
-    totalSessions: 0,
-    totalTrades: 0,
-    totalWinningTrades: 0,
-    totalLosingTrades: 0,
-    sessionsAbove60: 0,
-    sessionsBelow60: 0,
-    bestSessionEarnings: 0,
-    worstSessionEarnings: 0,
-    averageSessionEarnings: 0,
-    bestSessionWinRate: 0,
-    worstSessionWinRate: 0,
-    profitableSessions: 0,
-    lossSessions: 0,
-  }
 
   return (
     <div className="flex flex-1 flex-col min-h-screen max-w-[1600px] mx-auto">
