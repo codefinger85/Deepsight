@@ -201,48 +201,48 @@ const FilterIcon = ({
         </Avatar>
       );
     case Assignee.NO_ASSIGNEE:
-      return <UserCircle className="size-3.5" />;
+      return <UserCircle className="size-3.5" strokeWidth="1.5" />;
     case FilterType.STATUS:
-      return <CircleDashed className="size-3.5" />;
+      return <CircleDashed className="size-3.5" strokeWidth="1.5" />;
     case FilterType.ASSIGNEE:
-      return <UserCircle className="size-3.5" />;
+      return <UserCircle className="size-3.5" strokeWidth="1.5" />;
     case FilterType.LABELS:
-      return <Tag className="size-3.5" />;
+      return <Tag className="size-3.5" strokeWidth="1.5" />;
     case FilterType.PRIORITY:
-      return <SignalHigh className="size-3.5" />;
+      return <SignalHigh className="size-3.5" strokeWidth="1.5" />;
     case FilterType.DUE_DATE:
-      return <Calendar className="size-3.5" />;
+      return <Calendar className="size-3.5" strokeWidth="1.5" />;
     case FilterType.CREATED_DATE:
-      return <CalendarPlus className="size-3.5" />;
+      return <CalendarPlus className="size-3.5" strokeWidth="1.5" />;
     case FilterType.UPDATED_DATE:
-      return <CalendarSync className="size-3.5" />;
+      return <CalendarSync className="size-3.5" strokeWidth="1.5" />;
     // Trading-specific filter type icons
     case FilterType.CONFIRMATION_TYPE:
-      return <Tag className="size-3.5" />;
+      return <Tag className="size-3.5" strokeWidth="1.5" />;
     case FilterType.WIN_PERCENTAGE:
-      return <Target className="size-3.5" />;
+      return <Target className="size-3.5" strokeWidth="1.5" />;
     case FilterType.TOTAL_COUNT:
-      return <BarChart3 className="size-3.5" />;
+      return <BarChart3 className="size-3.5" strokeWidth="1.5" />;
     case Status.BACKLOG:
-      return <CircleDashed className="size-3.5 text-muted-foreground" />;
+      return <CircleDashed className="size-3.5 text-muted-foreground" strokeWidth="1.5" />;
     case Status.TODO:
-      return <Circle className="size-3.5 text-primary" />;
+      return <Circle className="size-3.5 text-primary" strokeWidth="1.5" />;
     case Status.IN_PROGRESS:
-      return <CircleDotDashed className="size-3.5 text-yellow-400" />;
+      return <CircleDotDashed className="size-3.5 text-yellow-400" strokeWidth="1.5" />;
     case Status.IN_REVIEW:
-      return <CircleEllipsis className="size-3.5 text-green-400" />;
+      return <CircleEllipsis className="size-3.5 text-green-400" strokeWidth="1.5" />;
     case Status.DONE:
-      return <CircleCheck className="size-3.5 text-blue-400" />;
+      return <CircleCheck className="size-3.5 text-blue-400" strokeWidth="1.5" />;
     case Status.CANCELLED:
-      return <CircleX className="size-3.5 text-muted-foreground" />;
+      return <CircleX className="size-3.5 text-muted-foreground" strokeWidth="1.5" />;
     case Priority.URGENT:
-      return <CircleAlert className="size-3.5" />;
+      return <CircleAlert className="size-3.5" strokeWidth="1.5" />;
     case Priority.HIGH:
-      return <SignalHigh className="size-3.5" />;
+      return <SignalHigh className="size-3.5" strokeWidth="1.5" />;
     case Priority.MEDIUM:
-      return <SignalMedium className="size-3.5" />;
+      return <SignalMedium className="size-3.5" strokeWidth="1.5" />;
     case Priority.LOW:
-      return <SignalLow className="size-3.5" />;
+      return <SignalLow className="size-3.5" strokeWidth="1.5" />;
     case Labels.BUG:
       return <div className="bg-red-400 rounded-full size-2.5" />;
     case Labels.FEATURE:
@@ -274,7 +274,7 @@ const FilterIcon = ({
       return <div className="bg-purple-300 rounded-full size-2.5" />;
     // Default for confirmation names
     default:
-      return <Tag className="size-3.5 text-muted-foreground" />;
+      return <Tag className="size-3.5 text-muted-foreground" strokeWidth="1.5" />;
   }
 };
 
@@ -446,7 +446,7 @@ const FilterOperatorDropdown = ({
   const operators = filterOperators({ filterType, filterValues });
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="bg-white hover:bg-button-muted px-1.5 py-1 text-muted-foreground hover:text-primary transition shrink-0">
+      <DropdownMenuTrigger className="bg-white hover:bg-button-muted px-2.5 py-1 text-muted-foreground hover:text-primary transition shrink-0">
         {operator}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-fit min-w-fit p-2">
@@ -492,32 +492,10 @@ const FilterValueCombobox = ({
       }}
     >
       <PopoverTrigger
-        className="rounded-none px-1.5 py-1 bg-white hover:bg-button-muted transition
+        className="rounded-none px-2.5 py-1 bg-white hover:bg-button-muted transition
   text-muted-foreground hover:text-primary shrink-0"
       >
         <div className="flex gap-1.5 items-center">
-          {filterType !== FilterType.PRIORITY && (
-            <div
-              className={cn(
-                "flex items-center flex-row",
-                filterType === FilterType.LABELS ? "-space-x-1" : "-space-x-1.5"
-              )}
-            >
-              <AnimatePresence mode="popLayout">
-                {filterValues?.slice(0, 3).map((value) => (
-                  <motion.div
-                    key={value}
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <FilterIcon type={value as FilterType} />
-                  </motion.div>
-                ))}
-              </AnimatePresence>
-            </div>
-          )}
           {filterValues?.length === 0
             ? "Click to select"
             : filterValues?.length === 1
@@ -624,7 +602,7 @@ const FilterValueDateCombobox = ({
       }}
     >
       <PopoverTrigger
-        className="rounded-none px-1.5 py-1 bg-white hover:bg-button-muted transition
+        className="rounded-none px-2.5 py-1 bg-white hover:bg-button-muted transition
   text-muted-foreground hover:text-primary shrink-0"
       >
         {filterValues?.length === 0 ? "Click to select" : filterValues?.[0]}
@@ -693,7 +671,7 @@ export default function Filters({
       {filters
         .map((filter) => (
           <div key={filter.id} className="flex gap-[1px] items-center text-xs border rounded-md bg-border-primary">
-            <div className="flex gap-1.5 shrink-0 rounded-l bg-white px-1.5 py-1 items-center">
+            <div className="flex gap-1.5 shrink-0 rounded-l bg-white px-2.5 py-1 items-center">
               <FilterIcon type={filter.type} />
               {filter.type}
             </div>

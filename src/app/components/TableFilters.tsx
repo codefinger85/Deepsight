@@ -1,5 +1,5 @@
 import * as React from "react"
-import { PlusCircle, Target, Tag, BarChart3 } from "lucide-react"
+import { Settings2, Target, Tag, BarChart3 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import {
   DropdownMenu,
@@ -27,9 +27,12 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
             variant="ghost"
             size="sm"
             onClick={() => setFilters([])}
-            className="text-text-secondary hover:text-text-primary"
+            className="text-text-secondary hover:text-text-primary p-2 h-fit"
           >
-            Clear All
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+              <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/>
+              <path d="M3 3v5h5"/>
+            </svg>
           </Button>
         </div>
       )}
@@ -37,9 +40,8 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
       {activeTab === "confirmations" && (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="gap-2 font-normal shadow-sm rounded-lg">
-              <PlusCircle className="size-4" strokeWidth="1.5" />
-              <span>Add Filter</span>
+            <Button variant="outline" size="sm" className="font-normal shadow-sm rounded-lg">
+              <Settings2 className="size-4" strokeWidth="1.5" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="start" className="w-56 p-2 text-text-secondary">
