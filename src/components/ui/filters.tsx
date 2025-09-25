@@ -449,11 +449,12 @@ const FilterOperatorDropdown = ({
       <DropdownMenuTrigger className="bg-muted hover:bg-muted/50 px-1.5 py-1 text-muted-foreground hover:text-primary transition shrink-0">
         {operator}
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="start" className="w-fit min-w-fit">
+      <DropdownMenuContent align="start" className="w-fit min-w-fit p-2">
         {operators.map((operator) => (
           <DropdownMenuItem
             key={operator}
             onClick={() => setOperator(operator)}
+            className="text-sm text-text-secondary hover:text-text-primary hover:bg-bg-secondary px-2 py-2 mb-1"
           >
             {operator}
           </DropdownMenuItem>
@@ -524,7 +525,7 @@ const FilterValueCombobox = ({
             : `${filterValues?.length} selected`}
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-[200px] p-0">
+      <PopoverContent className={`${filterType === FilterType.CONFIRMATION_TYPE ? 'w-[280px]' : 'w-[200px]'} p-2`}>
         <AnimateChangeInHeight>
           <Command>
             <CommandInput
@@ -542,7 +543,7 @@ const FilterValueCombobox = ({
                 {filterValues.map((value) => (
                   <CommandItem
                     key={value}
-                    className="group flex gap-2 items-center"
+                    className="group flex gap-2 items-center text-sm hover:bg-bg-secondary px-2 py-2 mb-1"
                     onSelect={() => {
                       setFilterValues(filterValues.filter((v) => v !== value));
                       setTimeout(() => {
@@ -552,18 +553,17 @@ const FilterValueCombobox = ({
                     }}
                   >
                     <Checkbox checked={true} />
-                    <FilterIcon type={value as FilterType} />
                     {value}
                   </CommandItem>
                 ))}
               </CommandGroup>
               {nonSelectedFilterValues?.length > 0 && (
                 <>
-                  <CommandSeparator />
+                  {filterValues.length > 0 && <CommandSeparator />}
                   <CommandGroup>
                     {nonSelectedFilterValues.map((filter: FilterOption) => (
                       <CommandItem
-                        className="group flex gap-2 items-center"
+                        className="group flex gap-2 items-center text-sm hover:bg-bg-secondary px-2 py-2 mb-1"
                         key={filter.name}
                         value={filter.name}
                         onSelect={(currentValue: string) => {
@@ -578,12 +578,11 @@ const FilterValueCombobox = ({
                           checked={false}
                           className="opacity-0 group-data-[selected=true]:opacity-100"
                         />
-                        {filter.icon}
-                        <span className="text-accent-foreground">
+                        <span>
                           {filter.name}
                         </span>
                         {filter.label && (
-                          <span className="text-muted-foreground text-xs ml-auto">
+                          <span className="text-muted-foreground text-sm ml-auto">
                             {filter.label}
                           </span>
                         )}
@@ -630,7 +629,7 @@ const FilterValueDateCombobox = ({
       >
         {filterValues?.length === 0 ? "Click to select" : filterValues?.[0]}
       </PopoverTrigger>
-      <PopoverContent className="w-fit p-0">
+      <PopoverContent className="w-fit p-2">
         <AnimateChangeInHeight>
           <Command>
             <CommandInput
@@ -648,7 +647,7 @@ const FilterValueDateCombobox = ({
                 {filterViewToFilterOptions[filterType].map(
                   (filter: FilterOption) => (
                     <CommandItem
-                      className="group flex gap-2 items-center"
+                      className="group flex gap-2 items-center text-xs hover:bg-bg-secondary px-2 py-2 mb-1"
                       key={filter.name}
                       value={filter.name}
                       onSelect={(currentValue: string) => {
@@ -659,7 +658,7 @@ const FilterValueDateCombobox = ({
                         setOpen(false);
                       }}
                     >
-                      <span className="text-accent-foreground">
+                      <span>
                         {filter.name}
                       </span>
                       <Check
@@ -693,7 +692,7 @@ export default function Filters({
     <div className="flex gap-2">
       {filters
         .map((filter) => (
-          <div key={filter.id} className="flex gap-[1px] items-center text-xs">
+          <div key={filter.id} className="flex gap-[1px] items-center text-xs border rounded-md">
             <div className="flex gap-1.5 shrink-0 rounded-l bg-muted px-1.5 py-1 items-center">
               <FilterIcon type={filter.type} />
               {filter.type}
