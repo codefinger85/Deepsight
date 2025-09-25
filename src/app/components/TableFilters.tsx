@@ -23,6 +23,8 @@ interface TableFiltersProps {
 }
 
 export function TableFilters({ activeTab, filters, setFilters, confirmationTypeOptions }: TableFiltersProps) {
+  const existingFilterTypes = filters.map(f => f.type);
+  
   return (
     <div className="flex items-center gap-2">
       {/* Active Filters Display - Only show for Confirmations tab */}
@@ -61,42 +63,57 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
           </Tooltip>
           <DropdownMenuContent align="end" className="w-56 p-2 text-text-secondary">
             <DropdownMenuItem
+              className={existingFilterTypes.includes(FilterType.CONFIRMATION_TYPE) 
+                ? "cursor-not-allowed opacity-50" 
+                : ""}
               onClick={() => {
-                const newFilter: Filter = {
-                  id: Math.random().toString(36).substr(2, 9),
-                  type: FilterType.CONFIRMATION_TYPE,
-                  operator: "include" as any,
-                  value: [],
+                if (!existingFilterTypes.includes(FilterType.CONFIRMATION_TYPE)) {
+                  const newFilter: Filter = {
+                    id: Math.random().toString(36).substr(2, 9),
+                    type: FilterType.CONFIRMATION_TYPE,
+                    operator: "include" as any,
+                    value: [],
+                  }
+                  setFilters(prev => [...prev, newFilter])
                 }
-                setFilters(prev => [...prev, newFilter])
               }}
             >
               <Tag className="size-4 mr-2" strokeWidth="1.5" />
               Confirmation Type
             </DropdownMenuItem>
             <DropdownMenuItem
+              className={existingFilterTypes.includes(FilterType.WIN_PERCENTAGE) 
+                ? "cursor-not-allowed opacity-50" 
+                : ""}
               onClick={() => {
-                const newFilter: Filter = {
-                  id: Math.random().toString(36).substr(2, 9),
-                  type: FilterType.WIN_PERCENTAGE,
-                  operator: "is" as any,
-                  value: [],
+                if (!existingFilterTypes.includes(FilterType.WIN_PERCENTAGE)) {
+                  const newFilter: Filter = {
+                    id: Math.random().toString(36).substr(2, 9),
+                    type: FilterType.WIN_PERCENTAGE,
+                    operator: "is" as any,
+                    value: [],
+                  }
+                  setFilters(prev => [...prev, newFilter])
                 }
-                setFilters(prev => [...prev, newFilter])
               }}
             >
               <Target className="size-4 mr-2" strokeWidth="1.5" />
               Winrate
             </DropdownMenuItem>
             <DropdownMenuItem
+              className={existingFilterTypes.includes(FilterType.TOTAL_COUNT) 
+                ? "cursor-not-allowed opacity-50" 
+                : ""}
               onClick={() => {
-                const newFilter: Filter = {
-                  id: Math.random().toString(36).substr(2, 9),
-                  type: FilterType.TOTAL_COUNT,
-                  operator: "is" as any,
-                  value: [],
+                if (!existingFilterTypes.includes(FilterType.TOTAL_COUNT)) {
+                  const newFilter: Filter = {
+                    id: Math.random().toString(36).substr(2, 9),
+                    type: FilterType.TOTAL_COUNT,
+                    operator: "is" as any,
+                    value: [],
+                  }
+                  setFilters(prev => [...prev, newFilter])
                 }
-                setFilters(prev => [...prev, newFilter])
               }}
             >
               <BarChart3 className="size-4 mr-2" strokeWidth="1.5" />
