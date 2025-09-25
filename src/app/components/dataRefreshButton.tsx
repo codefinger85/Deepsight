@@ -30,7 +30,7 @@ export function DataRefreshButton({ onRefreshData }: DataRefreshButtonProps) {
     <Button 
       variant="outline" 
       size="sm" 
-      className="p-1.5 h-fit gap-1.5"
+      className="py-1.5 px-3 gap-1.5 font-normal text-text-secondary hover:text-text-primary bg-button-tertiary shadow-sm rounded-lg"
       onClick={handleRefreshClick}
       disabled={isLoading}
     >

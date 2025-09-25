@@ -101,7 +101,7 @@ export function PWAInstallButton() {
       size="sm"
       onClick={handleClick}
       disabled={!isInstalled && !canInstall}
-      className="bg-button-secondary border border-border-primary rounded-lg text-text-secondary font-normal hover:bg-button-muted disabled:bg-button-muted disabled:cursor-not-allowed disabled:text-text-tertiary gap-1.5 shadow-sm"
+      className="bg-button-tertiary border rounded-lg text-text-secondary font-normal hover:bg-button-muted disabled:cursor-not-allowed disabled:text-text-tertiary gap-1.5 shadow-sm"
     >
       <ChartColumnBig className="text-text-secondary" strokeWidth={1.5} />
       <span>
