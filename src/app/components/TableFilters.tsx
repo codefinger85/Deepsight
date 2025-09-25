@@ -42,7 +42,7 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
               <span>Add Filter</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56">
+          <DropdownMenuContent align="start" className="w-56 p-2 text-text-secondary">
             <DropdownMenuItem
               onClick={() => {
                 const newFilter: Filter = {
@@ -54,7 +54,7 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
                 setFilters(prev => [...prev, newFilter])
               }}
             >
-              <Tag className="size-4 mr-2" />
+              <Tag className="size-4 mr-2" strokeWidth="1.5" />
               Confirmation Type
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -68,7 +68,7 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
                 setFilters(prev => [...prev, newFilter])
               }}
             >
-              <Target className="size-4 mr-2" />
+              <Target className="size-4 mr-2" strokeWidth="1.5" />
               Winrate
             </DropdownMenuItem>
             <DropdownMenuItem
@@ -82,7 +82,7 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
                 setFilters(prev => [...prev, newFilter])
               }}
             >
-              <BarChart3 className="size-4 mr-2" />
+              <BarChart3 className="size-4 mr-2" strokeWidth="1.5" />
               Trade count
             </DropdownMenuItem>
           </DropdownMenuContent>

@@ -24,7 +24,7 @@ export const calculateRangeWinPercentage = (wins: number, losses: number): numbe
 };
 
 export function RangeCell({ rangeValue, className = "" }: RangeCellProps) {
-  const { wins, losses, total } = parseRangeData(rangeValue);
+  const { wins, losses, draws, total } = parseRangeData(rangeValue);
   const percentage = calculateRangeWinPercentage(wins, losses);
 
   return (
@@ -34,7 +34,7 @@ export function RangeCell({ rangeValue, className = "" }: RangeCellProps) {
       </div>
       {total > 0 && (
         <div className="text-text-secondary text-[10px] mt-0.5 border-t pt-0.5 font-medium">
-          {wins}W | {losses}L
+          {wins}W | {losses}L | {draws}D
         </div>
       )}
     </div>

@@ -12,6 +12,9 @@ import { DayAnalysisGrid } from "./DayAnalysisGrid"
 import { TableTabsNavigation } from "./TableTabsNavigation"
 import { TableFilters } from "./TableFilters"
 import { CustomBadge } from "./CustomBadge"
+import { IconWithPopover } from "@/components/ui/icon-with-popover"
+import { TooltipProvider } from "@/components/ui/tooltip"
+import { Info } from "lucide-react"
 
 
 
@@ -187,17 +190,36 @@ export function DataTable({
         onValueChange={setActiveTab}
         className="w-full flex-col justify-start gap-6"
       >
-      <div className="flex items-center justify-between px-4 mb-6">
-        <div className="flex items-center justify-between w-full">
-          <TableTabsNavigation />
-          <TableFilters 
-            activeTab={activeTab}
-            filters={filters}
-            setFilters={setFilters}
-            confirmationTypeOptions={confirmationTypeOptions}
-          />
+      <TooltipProvider>
+        <div className="flex items-center justify-between px-4 mb-6">
+          <div className="flex items-center justify-between w-full">
+            <div className="flex items-center gap-3">
+              <TableTabsNavigation />
+              <IconWithPopover 
+                icon={Info} 
+                side="bottom" 
+                align="start"
+                sideOffset={8}
+                alignOffset={-4}
+              >
+                <p className="mb-2">Winrate is calculated excluding draws using the formula:</p>
+                <div className="font-mono font-semibold text-[12px] tracking-tight border px-2 py-0.5 rounded-sm my-3 bg-bg-secondary w-fit">wins ÷ (wins + losses)</div>
+                <p>Draws are calculated using:</p> 
+                <div className="font-mono font-semibold text-[12px] tracking-tight border px-2 py-0.5 rounded-sm my-3 bg-bg-secondary w-fit">Total trades - wins - losses</div>
+                <p className="mb-2">This leaves any leftover trades to be counted as draws.</p>
+                <p>Draws are treated as neutrals, and are thus not shown in some tables.</p>
+
+              </IconWithPopover>
+            </div>
+            <TableFilters 
+              activeTab={activeTab}
+              filters={filters}
+              setFilters={setFilters}
+              confirmationTypeOptions={confirmationTypeOptions}
+            />
+          </div>
         </div>
-      </div>
+      </TooltipProvider>
 
 
       <TabsContent
