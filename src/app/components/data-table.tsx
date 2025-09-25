@@ -13,7 +13,6 @@ import { TableTabsNavigation } from "./TableTabsNavigation"
 import { TableFilters } from "./TableFilters"
 import { CustomBadge } from "./CustomBadge"
 import { IconWithPopover } from "@/components/ui/icon-with-popover"
-import { TooltipProvider } from "@/components/ui/tooltip"
 import { Info } from "lucide-react"
 
 
@@ -190,7 +189,6 @@ export function DataTable({
         onValueChange={setActiveTab}
         className="w-full flex-col justify-start gap-6"
       >
-      <TooltipProvider>
         <div className="flex items-center justify-between px-4 mb-6">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3">
@@ -219,7 +217,6 @@ export function DataTable({
             />
           </div>
         </div>
-      </TooltipProvider>
 
 
       <TabsContent

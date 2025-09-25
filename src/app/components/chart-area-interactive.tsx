@@ -155,7 +155,6 @@ export const ChartAreaInteractive = React.memo(function ChartAreaInteractive({ c
               />
               <ChartTooltip
                 cursor={false}
-                defaultIndex={10}
                 content={({ active, payload, label }) => {
                   if (active && payload && payload.length) {
                     const data = payload[0].payload;

@@ -1,7 +1,7 @@
 "use client"
 
 import { IconCirclePlusFilled, IconSettings, IconMoon, IconLogout, IconUser } from "@tabler/icons-react"
-import { ChartColumnBig } from "lucide-react"
+import { ChartColumnBig, DatabaseBackup } from "lucide-react"
 import { useState, useEffect } from "react"
 import Image from "next/image"
 
@@ -14,6 +14,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipPortal,
+} from "@/components/ui/tooltip"
 
 // PWA Install functionality
 const usePWAInstall = () => {
@@ -104,7 +110,7 @@ const usePWAInstall = () => {
   };
 };
 
-export function SiteHeader() {
+export function SiteHeader({ onRefreshData }: { onRefreshData: () => void }) {
   const { isInstalled, canInstall, handleClick } = usePWAInstall();
   return (
     <header className="bg-background sticky top-0 z-10 flex h-[70px] shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
@@ -119,6 +125,15 @@ export function SiteHeader() {
           />
         </div>
         <div className="ml-auto flex items-center gap-4 ">
+          <Button 
+            variant="outline" 
+            size="sm" 
+            className="p-1.5 h-fit gap-1.5"
+            onClick={onRefreshData}
+          >
+            <DatabaseBackup className="h-4 w-4" strokeWidth="1.5" />
+            <span>Refresh data</span>
+          </Button>
           <Button 
             size="sm"
             onClick={handleClick}
