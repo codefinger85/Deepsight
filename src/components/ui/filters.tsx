@@ -446,7 +446,7 @@ const FilterOperatorDropdown = ({
   const operators = filterOperators({ filterType, filterValues });
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="bg-muted hover:bg-muted/50 px-1.5 py-1 text-muted-foreground hover:text-primary transition shrink-0">
+      <DropdownMenuTrigger className="bg-white hover:bg-button-muted px-1.5 py-1 text-muted-foreground hover:text-primary transition shrink-0">
         {operator}
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className="w-fit min-w-fit p-2">
@@ -492,7 +492,7 @@ const FilterValueCombobox = ({
       }}
     >
       <PopoverTrigger
-        className="rounded-none px-1.5 py-1 bg-muted hover:bg-muted/50 transition
+        className="rounded-none px-1.5 py-1 bg-white hover:bg-button-muted transition
   text-muted-foreground hover:text-primary shrink-0"
       >
         <div className="flex gap-1.5 items-center">
@@ -624,7 +624,7 @@ const FilterValueDateCombobox = ({
       }}
     >
       <PopoverTrigger
-        className="rounded-none px-1.5 py-1 bg-muted hover:bg-muted/50 transition
+        className="rounded-none px-1.5 py-1 bg-white hover:bg-button-muted transition
   text-muted-foreground hover:text-primary shrink-0"
       >
         {filterValues?.length === 0 ? "Click to select" : filterValues?.[0]}
@@ -692,8 +692,8 @@ export default function Filters({
     <div className="flex gap-2">
       {filters
         .map((filter) => (
-          <div key={filter.id} className="flex gap-[1px] items-center text-xs border rounded-md">
-            <div className="flex gap-1.5 shrink-0 rounded-l bg-muted px-1.5 py-1 items-center">
+          <div key={filter.id} className="flex gap-[1px] items-center text-xs border rounded-md bg-border-primary">
+            <div className="flex gap-1.5 shrink-0 rounded-l bg-white px-1.5 py-1 items-center">
               <FilterIcon type={filter.type} />
               {filter.type}
             </div>
@@ -740,7 +740,7 @@ export default function Filters({
               onClick={() => {
                 setFilters((prev) => prev.filter((f) => f.id !== filter.id));
               }}
-              className="bg-muted rounded-l-none rounded-r-sm h-6 w-6 text-muted-foreground hover:text-primary hover:bg-muted/50 transition shrink-0"
+              className="bg-white rounded-l-none rounded-r-sm h-6 w-6 text-muted-foreground hover:text-primary hover:bg-button-muted transition shrink-0"
             >
               <X className="size-3" />
             </Button>
