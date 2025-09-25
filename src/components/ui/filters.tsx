@@ -521,7 +521,7 @@ const FilterValueCombobox = ({
                 {filterValues.map((value) => (
                   <CommandItem
                     key={value}
-                    className="group flex gap-2 items-center text-sm hover:bg-bg-secondary px-2 py-2 mb-1"
+                    className="group flex gap-2 items-center text-sm hover:bg-bg-secondary px-2 py-2 my-1"
                     onSelect={() => {
                       setFilterValues(filterValues.filter((v) => v !== value));
                       setTimeout(() => {
@@ -671,7 +671,7 @@ export default function Filters({
       {filters
         .map((filter) => (
           <div key={filter.id} className="flex gap-[1px] items-center text-xs border rounded-md bg-border-primary">
-            <div className="flex gap-1.5 shrink-0 rounded-l bg-white px-2.5 py-1 items-center">
+            <div className="flex gap-1.5 shrink-0 rounded-l-[4.5px] bg-white px-2.5 py-1 items-center">
               <FilterIcon type={filter.type} />
               {filter.type}
             </div>
@@ -718,7 +718,7 @@ export default function Filters({
               onClick={() => {
                 setFilters((prev) => prev.filter((f) => f.id !== filter.id));
               }}
-              className="bg-white rounded-l-none rounded-r-sm h-6 w-6 text-muted-foreground hover:text-primary hover:bg-button-muted transition shrink-0"
+              className="bg-white rounded-l-none rounded-r-[4.5px] h-6 w-6 text-muted-foreground hover:text-primary hover:bg-button-muted transition shrink-0"
             >
               <X className="size-3" />
             </Button>

@@ -7,6 +7,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+  TooltipPortal,
+} from "@/components/ui/tooltip"
 import Filters, { Filter, FilterType, FilterOption } from "@/components/ui/filters"
 
 interface TableFiltersProps {
@@ -39,12 +45,21 @@ export function TableFilters({ activeTab, filters, setFilters, confirmationTypeO
       {/* Add Filter button - Only show for Confirmations tab */}
       {activeTab === "confirmations" && (
         <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="outline" size="sm" className="font-normal shadow-sm rounded-lg">
-              <Settings2 className="size-4" strokeWidth="1.5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="start" className="w-56 p-2 text-text-secondary">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="p-1.5 h-fit">
+                  <Settings2 className="h-4 w-4" strokeWidth="1.5" />
+                </Button>
+              </DropdownMenuTrigger>
+            </TooltipTrigger>
+            <TooltipPortal>
+              <TooltipContent side="top">
+                Add filters
+              </TooltipContent>
+            </TooltipPortal>
+          </Tooltip>
+          <DropdownMenuContent align="end" className="w-56 p-2 text-text-secondary">
             <DropdownMenuItem
               onClick={() => {
                 const newFilter: Filter = {
