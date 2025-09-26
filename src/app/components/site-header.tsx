@@ -12,7 +12,6 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { DataRefreshButton } from "./dataRefreshButton"
-import { PWAInstallButton } from "./PWAInstallButton"
 
 export function SiteHeader({ onRefreshData }: { onRefreshData: () => void }) {
   return (
@@ -29,7 +28,6 @@ export function SiteHeader({ onRefreshData }: { onRefreshData: () => void }) {
         </div>
         <div className="ml-auto flex items-center gap-4 ">
           <DataRefreshButton onRefreshData={onRefreshData} />
-          <PWAInstallButton />
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Avatar className="h-9 w-9 cursor-pointer border">
