@@ -23,8 +23,8 @@ export function DateFilterTabs({
   onCustomReset 
 }: DateFilterTabsProps) {
   return (
-    <div className="flex justify-end px-4 lg:px-6">
-      <div className="flex items-center gap-3">
+    <div className="flex w-full justify-end px-4 lg:px-6">
+      <div className="flex items-center w-full justify-between gap-3">
         {/* Selected date range display */}
         {customRange.start && customRange.end && (
           <CustomBadge 
