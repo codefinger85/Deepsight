@@ -23,16 +23,15 @@ export function DateFilterTabs({
   onCustomReset 
 }: DateFilterTabsProps) {
   return (
-    <div className="flex w-full justify-end px-4 lg:px-6">
       <div className="flex items-center w-full justify-between gap-3">
         {/* Selected date range display */}
         {customRange.start && customRange.end && (
           <CustomBadge 
             text={`${format(customRange.start, "MMM d")} - ${format(customRange.end, "MMM d, yyyy")}`}
-            className="ml-0" 
+            margin="ml-0" 
           />
         )}
-        <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border-border-primary border inline-flex h-9 items-center justify-center rounded-lg py-1 text-text-tertiary">
+        <div className="**:data-[slot=badge]:bg-muted-foreground/30 hidden **:data-[slot=badge]:size-5 **:data-[slot=badge]:rounded-full **:data-[slot=badge]:px-1 @4xl/main:flex bg-bg-primary border-border-primary border inline-flex h-9 items-center justify-center rounded-lg py-1 text-text-tertiary ml-auto">
           <TabsList className="bg-transparent border-0 pr-3">
             <TabsTrigger value="7d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">7d</TabsTrigger>
             <TabsTrigger value="14d" className="font-normal text-text-tertiary hover:text-text-secondary data-[state=active]:font-normal data-[state=active]:text-text-secondary">14d</TabsTrigger>
@@ -49,6 +48,5 @@ export function DateFilterTabs({
           />
         </div>
       </div>
-    </div>
   )
 }

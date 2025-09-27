@@ -189,7 +189,7 @@ export function DataTable({
         onValueChange={setActiveTab}
         className="w-full flex-col justify-start gap-6"
       >
-        <div className="flex items-center justify-between px-4 mb-6">
+        <div className="flex items-center justify-between mb-6">
           <div className="flex items-center justify-between w-full">
             <div className="flex items-center gap-3">
               <TableTabsNavigation />
@@ -221,32 +221,32 @@ export function DataTable({
 
       <TabsContent
         value="loss-reasons"
-        className="relative flex flex-col gap-4 overflow-auto px-4"
+        className="relative flex flex-col gap-4 overflow-auto"
       >
         <LossAnalysisGrid data={data.lossReasonsData} />
-        <CustomBadge text={`Showing ${data.lossReasonsData.length} loss reasons`} />
+        <CustomBadge text={`Showing ${data.lossReasonsData.length} loss reasons`} margin="ml-0" />
       </TabsContent>
 
       <TabsContent
         value="confirmations"
-        className="relative flex flex-col gap-4 overflow-auto px-4"
+        className="relative flex flex-col gap-4 overflow-auto"
       >
         <ConfirmationGrid data={filteredConfirmationData} />
-        <CustomBadge text={`Showing ${filteredConfirmationData.length} confirmations`} />
+        <CustomBadge text={`Showing ${filteredConfirmationData.length} confirmations`} margin="ml-0" />
       </TabsContent>
       
       
       <TabsContent
         value="trades"
-        className="relative flex flex-col gap-4 overflow-auto px-4"
+        className="relative flex flex-col gap-4 overflow-auto"
       >
         <TradesGrid data={data.tradesAnalysisData} />
-        <CustomBadge text="Showing trades analysis" />
+        <CustomBadge text="Showing trades analysis" margin="ml-0" />
       </TabsContent>
 
       <TabsContent
         value="days"
-        className="relative flex flex-col gap-4 overflow-auto px-4"
+        className="relative flex flex-col gap-4 overflow-auto"
       >
         {(() => {
           // Transform day analysis data to match DayAnalysisGrid component structure
@@ -260,7 +260,7 @@ export function DataTable({
           
           return <DayAnalysisGrid data={processedDayData} />;
         })()}
-       <CustomBadge text={`Showing ${data.dayAnalysisData.length} days`} />
+       <CustomBadge text={`Showing ${data.dayAnalysisData.length} days`} margin="ml-0" />
       </TabsContent>
     </Tabs>
   )

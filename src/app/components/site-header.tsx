@@ -16,7 +16,7 @@ import { DataRefreshButton } from "./dataRefreshButton"
 export function SiteHeader({ onRefreshData }: { onRefreshData: () => void }) {
   return (
     <header className="bg-background sticky top-0 z-10 flex h-[70px] shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-[--header-height]">
-      <div className="flex w-full items-center gap-1 px-6">
+      <div className="flex w-full items-center gap-1 px-4 lg:px-6">
         <div className="flex items-center gap-2">
           <Image 
             src="/Deepsight logo.svg" 
